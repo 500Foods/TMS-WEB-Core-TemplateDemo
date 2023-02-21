@@ -1,6 +1,16 @@
 object LoginForm: TLoginForm
   Width = 640
   Height = 480
+  object msgLogin: TWebLabel
+    Left = 24
+    Top = 103
+    Width = 273
+    Height = 26
+    AutoSize = False
+    ElementID = 'msgLogin'
+    HeightPercent = 100.000000000000000000
+    WidthPercent = 100.000000000000000000
+  end
   object editUsername: TWebEdit
     Left = 24
     Top = 16
@@ -30,5 +40,6 @@ object LoginForm: TLoginForm
     ChildOrder = 2
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
+    OnClick = btnLoginClick
   end
 end

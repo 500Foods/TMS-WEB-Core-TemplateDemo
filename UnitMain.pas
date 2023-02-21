@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Classes, JS, Web, WEBLib.Graphics, WEBLib.Controls,
   WEBLib.Forms, WEBLib.Dialogs, Vcl.Controls, Vcl.StdCtrls, WEBLib.StdCtrls,
-  WEBLib.WebCtrls, System.DateUtils, WEBLib.ExtCtrls;
+  WEBLib.WebCtrls, System.DateUtils, WEBLib.ExtCtrls, XData.Web.Connection,
+  XData.Web.Client;
 
 type
   TMainForm = class(TWebForm)
@@ -14,12 +15,16 @@ type
     divLog: TWebHTMLDiv;
     btnLoginForm: TWebButton;
     btnClearForm: TWebButton;
+    XDataConn: TXDataWebConnection;
     procedure WebFormCreate(Sender: TObject);
     procedure LogAction(Action: String);
     procedure LoadForm(Form: String);
     procedure btnShowLogClick(Sender: TObject);
     procedure btnLoginFormClick(Sender: TObject);
     procedure btnClearFormClick(Sender: TObject);
+    [async] procedure XDataConnect;
+    [async] function XDataLogin(Username: String; Password: String):Boolean;
+    procedure resError(Error: TXDataClientError);
   private
     { Private declarations }
   public
@@ -29,8 +34,6 @@ type
     CurrentForm: TWebForm;
     CurrentFormName: String;
     LogVisible: Boolean;
-
-
   end;
 
 var
@@ -96,6 +99,13 @@ begin
   then divLog.HTML.Text := '<pre>'+ActionLog.DelimitedText+'</pre>';
 end;
 
+procedure TMainForm.resError(Error: TXDataClientError);
+begin
+  asm
+  console.log(error)
+  end;
+end;
+
 procedure TMainForm.btnClearFormClick(Sender: TObject);
 begin
   LogAction('CLICK: Clear Form');
@@ -151,6 +161,9 @@ begin
   divLog.Height := divHost.Height;
   divLog.Visible := False;
 
+  // Connect to XData - it will finish on its own time
+  XDataConnect;
+
   // Launch Login
   if not(LoggedIn) then
   begin
@@ -159,5 +172,109 @@ begin
 
 end;
 
+
+procedure TMainForm.XDataConnect;
+var
+  ElapsedTime: TDateTime;
+begin
+  ElapsedTime := Now;
+
+  if not(XDataConn.Connected) then
+  begin
+
+    // Should be updated to point at our XData server, wherever it may be
+    XDataConn.URL := 'http://localhost:12345/tms/xdata';
+
+    // Try and establish a connection to the server
+    try
+      LogAction('Connecting to: '+XDataConn.URL);
+      await(XDataConn.OpenAsync);
+      LogAction('Connection Established: ('+IntToStr(MillisecondsBetween(Now, ElapsedTime))+'ms)');
+    except on E: Exception do
+      begin
+        LogAction('Server Connection Failed: '+XDataConn.URL);
+        LogAction('Error: ['+E.ClassName+'] '+E.Message);
+      end;
+    end;
+  end;
+end;
+
+function TMainForm.XDataLogin(Username, Password: String):Boolean;
+var
+  Response: TXDataClientResponse;
+  ClientConn: TXDataWebClient;
+  Blob: JSValue;
+  JWT: String;
+  ElapsedTime: TDateTime;
+  TZ: String;
+
+  procedure ClientError(Error: TXDataClientError);
+  var
+    ErrResponse: JSValue;
+  begin
+    ErrResponse := Error.Response.Content;
+    asm
+      var reader = new FileReader();
+      reader.addEventListener('loadend', (e) => {
+        var ErrMessage = JSON.parse(e.srcElement.result);
+        pas.UnitMain.MainForm.LogAction(' --> '+ErrMessage.error.code);
+        pas.UnitMain.MainForm.LogAction(' --> '+ErrMessage.error.message);
+        msgLogin.innerHTML = ErrMessage.error.code+' / '+ErrMessage.error.message;
+      });
+      reader.readAsText(ErrResponse);
+    end;
+  end;
+
+begin
+
+  ElapsedTime := Now;
+  JWT := '';
+  TZ := '';
+  LogAction('');
+  LogAction('Attempting Login');
+
+  asm
+    TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  end;
+
+  await(XDataConnect);
+  if (XDataConn.Connected) then
+  begin
+    try
+
+      ClientConn := TXDataWebClient.Create(nil);
+      ClientConn.OnError := ClientError;
+      ClientConn.Connection := XDataConn;
+      Response := await(ClientConn.RawInvokeAsync('ISystemService.Login', [
+        Username,
+        Password,
+        'Testing', // API_KEY
+        TZ
+      ]));
+      Blob := Response.Result;
+      asm
+       JWT = await Blob.text();
+      end;
+    except on E: Exception do
+      begin
+        LogAction('Login Exception:');
+        LogAction(' --> ['+E.ClassName+']');
+        LogAction(' --> '+Copy(E.Message,1,Pos('.',E.Message)));
+        LogAction(' --> '+Copy(E.Message,Pos('Status code:',E.Message),16));
+      end;
+    end;
+  end;
+
+  // We've got a JWT
+  if Pos('Bearer ',JWT) = 1 then
+  begin
+    LogAction('Login Successful ('+IntToStr(MilliSecondsBetween(Now, ElapsedTime))+'ms)');
+    Result := True;
+  end
+  else
+  begin
+    Result := False;
+  end;
+end;
 
 end.

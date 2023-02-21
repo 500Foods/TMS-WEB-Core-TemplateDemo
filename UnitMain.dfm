@@ -41,7 +41,7 @@ object MainForm: TMainForm
     Top = 615
     Width = 121
     Height = 34
-    ElementClassName = 'p-1 rounded border bg-light border-dark'
+    ElementClassName = 'p-1 rounded border bg-light border-dark overflow-auto'
     ElementID = 'divLog'
     ChildOrder = 2
     ElementFont = efCSS
@@ -76,5 +76,9 @@ object MainForm: TMainForm
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
     OnClick = btnClearFormClick
+  end
+  object XDataConn: TXDataWebConnection
+    Left = 48
+    Top = 168
   end
 end
