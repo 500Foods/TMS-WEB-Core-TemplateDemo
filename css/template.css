@@ -1,0 +1,58 @@
+#divHost {
+  border-radius: 0px !important;
+  border: none !important;
+  top: 0px !important;
+  left: 0px !important;
+  width: 100% !important;
+  min-height: 100%;
+  overflow: auto;
+  z-index: 1;
+
+  background: linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+              linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+              linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+              linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+              linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+              linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+  background-color: #131313 !important;
+  background-size: 20px 20px;
+}
+
+#divToasts {
+  z-index: 999999;
+  position: absolute;
+  top: 5px !important;
+  right: 5px !important;
+  width: 230px !important;
+  left: unset !important;
+}
+
+.Login-Form {
+  background: rgb(131,58,180) !important;
+  background: linear-gradient(66deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%) !important;
+}
+
+.Login-Title {
+  filter: drop-shadow(0px 0px 4px black) drop-shadow(0px 0px 4px black);
+  font-size: 36px;
+  color: white;
+  line-height: 1.2;
+}
+
+.login-box, .register-box {
+  position: relative;
+  width: 360px;
+  margin: auto;
+  top: 50%;
+  transform: translate(0%,-50%);
+}
+
+div > span.info-box-text {
+  font-family: var(--bs-body-font-family) !important;
+  font-size: 16px !important;
+}
+
+#editPassword,
+#editUsername {
+  color-scheme: dark;
+}

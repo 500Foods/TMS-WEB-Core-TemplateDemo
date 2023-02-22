@@ -12,8 +12,11 @@ type
     editUsername: TWebEdit;
     editPassword: TWebEdit;
     btnLogin: TWebButton;
-    msgLogin: TWebLabel;
+    labelLoginTitle: TWebLabel;
     [async] procedure btnLoginClick(Sender: TObject);
+    procedure WebFormCreate(Sender: TObject);
+    procedure WebFormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -30,23 +33,33 @@ uses UnitMain;
 {$R *.dfm}
 
 procedure TLoginForm.btnLoginClick(Sender: TObject);
+var
+  LoginCheck: String;
 begin
-  btnLogin.Caption := 'Authorizing...';
-  asm
-    msgLogin.innerHTML = 'Please Wait...';
-  end;
-  if await(MainForm.XDataLogin(editUSername.Text, editPassword.Text)) then
+  btnLogin.Caption := 'Wait...';
+
+  LoginCheck := await(MainForm.XDataLogin(editUSername.Text, editPassword.Text));
+
+  if LoginCheck <> 'Success' then
   begin
-    btnLogin.Caption := 'Successful';
-    asm
-      msgLogin.innerHTML = '';
-    end;
-    MainForm.LogAction('Selecting First Page');
-  end
-  else
-  begin
-    btnLogin.Caption := 'Please Try Again';
+    btnLogin.Caption := 'Retry';
+    LoginCheck := StringReplace(LoginCheck,': ',':<br />',[]);
+    LoginCheck := StringReplace(LoginCheck,'. ','.<br />',[]);
+    MainForm.Toast(Copy(LoginCheck,1,Pos('/',LoginCheck) -2),Copy(LoginCheck, Pos('/',LoginCheck)+2,Length(LoginCheck)));
   end;
+end;
+
+procedure TLoginForm.WebFormCreate(Sender: TObject);
+begin
+  labelLoginTitle.Caption := MainForm.Caption;
+end;
+
+procedure TLoginForm.WebFormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+
+  if (Key = VK_RETURN) then btnLoginClick(Sender);
+  
 end;
 
 end.

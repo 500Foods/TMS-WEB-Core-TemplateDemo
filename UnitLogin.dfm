@@ -1,13 +1,15 @@
 object LoginForm: TLoginForm
   Width = 640
   Height = 480
-  object msgLogin: TWebLabel
+  OnCreate = WebFormCreate
+  OnKeyDown = WebFormKeyDown
+  object labelLoginTitle: TWebLabel
     Left = 24
-    Top = 103
-    Width = 273
-    Height = 26
-    AutoSize = False
-    ElementID = 'msgLogin'
+    Top = 152
+    Width = 67
+    Height = 13
+    Caption = 'labelLoginTitle'
+    ElementID = 'labelLoginTitle'
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
   end
@@ -16,6 +18,7 @@ object LoginForm: TLoginForm
     Top = 16
     Width = 121
     Height = 22
+    ElementID = 'editUsername'
     HeightPercent = 100.000000000000000000
     TextHint = 'Username'
     WidthPercent = 100.000000000000000000
@@ -26,6 +29,7 @@ object LoginForm: TLoginForm
     Width = 121
     Height = 22
     ChildOrder = 1
+    ElementID = 'editPassword'
     HeightPercent = 100.000000000000000000
     PasswordChar = '*'
     TextHint = 'Password'
@@ -38,6 +42,7 @@ object LoginForm: TLoginForm
     Height = 25
     Caption = 'Login'
     ChildOrder = 2
+    ElementID = 'btnLogin'
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
     OnClick = btnLoginClick

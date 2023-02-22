@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Width = 1034
-  Height = 672
+  Width = 1228
+  Height = 843
   Color = clSilver
   CSSLibrary = cssBootstrap
   ElementFont = efCSS
@@ -14,8 +14,8 @@ object MainForm: TMainForm
   object divHost: TWebHTMLDiv
     Left = 135
     Top = 8
-    Width = 842
-    Height = 641
+    Width = 1085
+    Height = 827
     ElementClassName = 'rounded border bg-white border-dark'
     ElementID = 'divHost'
     ElementFont = efCSS
@@ -77,8 +77,28 @@ object MainForm: TMainForm
     WidthPercent = 100.000000000000000000
     OnClick = btnClearFormClick
   end
+  object divToasts: TWebHTMLDiv
+    Left = 24
+    Top = 256
+    Width = 100
+    Height = 41
+    ElementID = 'divToasts'
+    ChildOrder = 5
+    ElementFont = efCSS
+    HTML.Strings = (
+      '<div class="toast-container">'
+      '</div>')
+    Role = ''
+  end
   object XDataConn: TXDataWebConnection
+    OnRequest = XDataConnRequest
     Left = 48
     Top = 168
+  end
+  object tmrJWTRenewal: TWebTimer
+    Enabled = False
+    OnTimer = tmrJWTRenewalTimer
+    Left = 48
+    Top = 328
   end
 end
