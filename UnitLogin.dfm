@@ -1,6 +1,8 @@
 object LoginForm: TLoginForm
   Width = 640
   Height = 480
+  CSSLibrary = cssBootstrap
+  ElementFont = efCSS
   OnCreate = WebFormCreate
   OnKeyDown = WebFormKeyDown
   object labelLoginTitle: TWebLabel
@@ -10,6 +12,7 @@ object LoginForm: TLoginForm
     Height = 13
     Caption = 'labelLoginTitle'
     ElementID = 'labelLoginTitle'
+    ElementFont = efCSS
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
   end
@@ -19,6 +22,7 @@ object LoginForm: TLoginForm
     Width = 121
     Height = 22
     ElementID = 'editUsername'
+    ElementFont = efCSS
     HeightPercent = 100.000000000000000000
     TextHint = 'Username'
     WidthPercent = 100.000000000000000000
@@ -30,6 +34,7 @@ object LoginForm: TLoginForm
     Height = 22
     ChildOrder = 1
     ElementID = 'editPassword'
+    ElementFont = efCSS
     HeightPercent = 100.000000000000000000
     PasswordChar = '*'
     TextHint = 'Password'
@@ -43,6 +48,7 @@ object LoginForm: TLoginForm
     Caption = 'Login'
     ChildOrder = 2
     ElementID = 'btnLogin'
+    ElementFont = efCSS
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
     OnClick = btnLoginClick

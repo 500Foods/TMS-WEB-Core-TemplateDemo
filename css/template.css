@@ -25,6 +25,7 @@
   right: 5px !important;
   width: 230px !important;
   left: unset !important;
+  pointer-events: none;
 }
 
 .Login-Form {

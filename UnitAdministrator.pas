@@ -4,11 +4,19 @@ interface
 
 uses
   System.SysUtils, System.Classes, JS, Web, WEBLib.Graphics, WEBLib.Controls,
-  WEBLib.Forms, WEBLib.Dialogs, WEBLib.ExtCtrls, WEBLib.JSON;
+  WEBLib.Forms, WEBLib.Dialogs, WEBLib.ExtCtrls, WEBLib.JSON, Vcl.Controls,
+  Vcl.StdCtrls, WEBLib.StdCtrls, WEBLib.WebCtrls;
 
 type
   TAdministratorForm = class(TWebForm)
     tmrAdministratorStart: TWebTimer;
+    labelCopyright: TWebLabel;
+    labelSlogan: TWebLabel;
+    labelName: TWebLabel;
+    spanPhoto: TWebLabel;
+    spanPhotoBig: TWebLabel;
+    labelNameTitle: TWebLabel;
+    labelAppTitle: TWebLabel;
     procedure WebFormCreate(Sender: TObject);
     [async] procedure tmrAdministratorStartTimer(Sender: TObject);
   private
@@ -36,14 +44,38 @@ begin
   if ResponseString <> '' then
   begin
     ResponseJSON := TJSONObject.ParseJSONValue(ResponseString) as TJSONObject;
+
+    labelName.HTML := MainForm.User_FirstName+' '+MainForm.User_LastName;
+    labelNameTitle.HTML := MainForm.User_FirstName+' '+MainForm.User_LastName+' - Administrator';
+    labelCopyright.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[3] as TJSONObject).GetValue('value') as TJSONString).Value;
+    labelSlogan.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[2] as TJSONObject).GetValue('value') as TJSONString).Value;
+    labelAppTitle.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[1] as TJSONObject).GetValue('value') as TJSONString).Value;
+
+    spanPhoto.HTML := (ResponseJSON.GetValue('Photo') as TJSONString).Value;
+    spanPhoto.ElementHandle.firstElementChild.className := 'user-image rounded-circle shadow';
+    spanPhoto.ElementHandle.firstElementChild.setAttribute('alt','User Photo');
+
+    spanPhotoBig.HTML := (ResponseJSON.GetValue('Photo') as TJSONString).Value;
+    spanPhotoBig.ElementHandle.firstElementChild.className := 'rounded-circle shadow';
+    spanPhotoBig.ElementHandle.firstElementChild.setAttribute('alt','User Photo');
+    (spanPhotoBig.ElementHandle.firstElementChild as TJSHTMLElement).style.setProperty('max-width','200px');
+
     asm
-      console.log(ResponseJSON);
+      console.log(JSON.parse(ResponseString));
     end;
   end;
 end;
 
 procedure TAdministratorForm.WebFormCreate(Sender: TObject);
 begin
+
+  labelCopyright.Caption := '';
+  labelSlogan.Caption := '';
+  labelName.Caption := '';
+  labelNameTitle.Caption := '';
+  spanPhoto.HTML := '';
+  spanPhotoBig.HTML := '';
+  labelAppTitle.HTML := '';
 
 
   asm {

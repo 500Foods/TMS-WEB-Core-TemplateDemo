@@ -119,16 +119,16 @@
       </li>
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-          <img src="assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image">
-          <span class="d-none d-md-inline">Alexander Pierce</span>
+          <span id="spanPhoto"></span>
+          <span class="d-none d-md-inline"><label id="labelName"></label></span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
           <!-- User image -->
           <li class="user-header text-bg-primary">
-            <img src="assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image">
+            <span id="spanPhotoBig"></span>
 
             <p>
-              Alexander Pierce - Web Developer
+             <label id="labelNameTitle"></label>
               <small>Member since Nov. 2023</small>
             </p>
           </li>
@@ -203,7 +203,7 @@
   <div class="sidebar-brand">
     <a href="./index.html" class="brand-link">
       <img src="assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
-      <span class="brand-text fw-light">AdminLTE 4</span>
+      <span id="labelAppTitle" class="brand-text fw-light"></span>
     </a>
     <a class="pushmenu d-none d-lg-block" data-lte-toggle="sidebar-mini" href="javascript:;" role="button"><i class="fa-solid fa-angle-double-left"></i></a>
   </div>
@@ -1280,231 +1280,11 @@
     <!-- Main Footer --><footer class="app-footer">
   <!-- To the end -->
   <div class="float-end d-none d-sm-inline">
-    Anything you want
+    <label id="labelSlogan"></label>
   </div>
   <!-- Default to the start -->
-  <strong>Copyright &copy; 2014-2023 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+  <label id="labelCopyright"></label>
 </footer>
     </div>
-    <!--  ./app-wrapper -->
-
-    <!-- OPTIONAL SCRIPTS --><!-- overlayScrollbars --><script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.0.3/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-/dwBbLeVyyWBtWfH3jHdL2oVVmLKoGnEFzoOSL3nJC0=" crossorigin="anonymous"></script>
-
-<!-- OPTIONAL SCRIPT For Bootstrap 5 --><script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-
-<!-- Bootstrap 5 --><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
-
-<!-- REQUIRED SCRIPTS --><!-- AdminLTE App --><script src="../../dist/js/adminlte.js"></script>
-
-<!-- OPTIONAL SCRIPTS --><script>
-  const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper'
-  const Default = {
-    scrollbarTheme: 'os-theme-light',
-    scrollbarAutoHide: 'leave'
-  }
-
-  document.addEventListener("DOMContentLoaded", function() {
-    if (typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-      OverlayScrollbarsGlobal.OverlayScrollbars(document.querySelector(SELECTOR_SIDEBAR_WRAPPER), {
-        scrollbars: {
-          theme: Default.scrollbarTheme,
-          autoHide: Default.scrollbarAutoHide,
-          clickScroll: true
-        }
-      })
-    }
-  })
-</script>
-
-<!-- DON'T USE THIS IN PRODUCTION --><script>
-  // Color Mode Toggler
- (() => {
-  'use strict'
-
-  const storedTheme = localStorage.getItem('theme')
-
-  const getPreferredTheme = () => {
-    if (storedTheme) {
-      return storedTheme
-    }
-
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  }
-
-  const setTheme = function (theme) {
-    if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.documentElement.setAttribute('data-bs-theme', 'dark')
-    } else {
-      document.documentElement.setAttribute('data-bs-theme', theme)
-    }
-  }
-
-  setTheme(getPreferredTheme())
-
-  const showActiveTheme = theme => {
-    const activeThemeIcon = document.querySelector('.theme-icon-active i')
-    const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
-    const svgOfActiveBtn = btnToActive.querySelector('i').getAttribute('class')
-
-    document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-      element.classList.remove('active')
-    })
-
-    btnToActive.classList.add('active')
-    activeThemeIcon.setAttribute('class', svgOfActiveBtn)
-  }
-
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (storedTheme !== 'light' || storedTheme !== 'dark') {
-      setTheme(getPreferredTheme())
-    }
-  })
-
-  window.addEventListener('DOMContentLoaded', () => {
-    showActiveTheme(getPreferredTheme())
-
-    document.querySelectorAll('[data-bs-theme-value]')
-      .forEach(toggle => {
-        toggle.addEventListener('click', () => {
-          const theme = toggle.getAttribute('data-bs-theme-value')
-          localStorage.setItem('theme', theme)
-          setTheme(theme)
-          showActiveTheme(theme)
-        })
-      })
-  })
-})()
-</script>
-
-    <!-- OPTIONAL SCRIPTS -->
-
-    <!-- ChartJS -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js" integrity="sha256-7lWo7cjrrponRJcS6bc8isfsPDwSKoaYfGIHgSheQkk=" crossorigin="anonymous"></script>
-
-    <script>
-      // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-      // IT'S ALL JUST JUNK FOR DEMO
-      // ++++++++++++++++++++++++++++++++++++++++++
-
-      /* ChartJS
-        * -------
-        * Here we will create a few charts using ChartJS
-        */
-
-      //-----------------------
-      // - MONTHLY SALES CHART -
-      //-----------------------
-      (function () {
-        'use strict'
-        // Get context with querySelector - using Chart.js .getContext('2d') method.
-        var salesChartCanvas = document.querySelector('#salesChart').getContext('2d')
-
-        var salesChartData = {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-          datasets: [
-            {
-              label: 'Digital Goods',
-              backgroundColor: 'rgba(60,141,188,0.9)',
-              borderColor: 'rgba(60,141,188,0.8)',
-              fill: true,
-              pointRadius: 0,
-              pointColor: '#3b8bba',
-              pointStrokeColor: 'rgba(60,141,188,1)',
-              pointHighlightFill: '#fff',
-              pointHighlightStroke: 'rgba(60,141,188,1)',
-              data: [28, 48, 40, 19, 86, 27, 90]
-            },
-            {
-              label: 'Electronics',
-              backgroundColor: 'rgba(210, 214, 222, 1)',
-              borderColor: 'rgba(210, 214, 222, 1)',
-              fill: true,
-              pointRadius: 0,
-              pointColor: 'rgba(210, 214, 222, 1)',
-              pointStrokeColor: '#c1c7d1',
-              pointHighlightFill: '#fff',
-              pointHighlightStroke: 'rgba(220,220,220,1)',
-              data: [65, 59, 80, 81, 56, 55, 40]
-            }
-          ]
-        }
-
-        var salesChartOptions = {
-          maintainAspectRatio: false,
-          responsive: true,
-          tension: 0.4,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            xAxes: {
-              gridLines: {
-                display: false
-              }
-            },
-            yAxes: {
-              gridLines: {
-                display: false
-              }
-            }
-          }
-        }
-
-        // This will get the first returned node in the js collection.
-        var salesChart = new Chart(salesChartCanvas, {
-          type: 'line',
-          data: salesChartData,
-          options: salesChartOptions
-        })
-
-        //---------------------------
-        // - END MONTHLY SALES CHART -
-        //---------------------------
-
-        //-------------
-        // - PIE CHART -
-        //-------------
-
-        // Get context with querySelector - using Chart.js .getContext('2d') method.
-        var pieChartCanvas = document.querySelector('#pieChart').getContext('2d')
-
-        var pieData = {
-          labels: [
-            'Chrome',
-            'IE',
-            'FireFox',
-            'Safari',
-            'Opera',
-            'Navigator'
-          ],
-          datasets: [
-            {
-              data: [700, 500, 400, 600, 300, 100],
-              backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de']
-            }
-          ]
-        }
-        var pieOptions = {
-          plugins: {
-            legend: {
-              display: false
-            }
-          }
-        }
-        // Create pie or douhnut chart
-        // You can switch between pie and douhnut using the method below.
-        // eslint-disable-next-line no-unused-vars
-        var pieChart = new Chart(pieChartCanvas, {
-          type: 'doughnut',
-          data: pieData,
-          options: pieOptions
-        })
-      })()
-      //-----------------
-      // - END PIE CHART -
-      //-----------------
-    </script>
   </body>
 </html>
