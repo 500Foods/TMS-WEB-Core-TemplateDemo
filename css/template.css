@@ -1,3 +1,8 @@
+/* Change Default Font*/
+body {
+  font-family: Cairo;
+}
+
 /* Main Application Container */
 #divHost {
   border-radius: 0px !important;
