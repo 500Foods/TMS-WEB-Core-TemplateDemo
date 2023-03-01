@@ -29,6 +29,8 @@ type
     procedure XDataConnRequest(Args: TXDataWebConnectionRequest);
     procedure Toast(Header: String; Body: String);
     procedure tmrJWTRenewalTimer(Sender: TObject);
+    procedure MenuClick(Menu: String);
+    procedure MenuAdd(Menu: String);
     [async] function JSONRequest(Endpoint: String; Params: Array of JSValue):String;
   private
     { Private declarations }
@@ -214,6 +216,17 @@ begin
   // If we're currently looking at the action log, then update it with what we just did
   if LogVisible
   then divLog.HTML.Text := '<pre>'+ActionLog.DelimitedText+'</pre>';
+end;
+
+procedure TMainForm.MenuAdd(Menu: String);
+begin
+  // Add a menu
+end;
+
+procedure TMainForm.MenuClick(Menu: String);
+begin
+  // A menu option has been selected.  Here we decide what to do about it.
+
 end;
 
 procedure TMainForm.tmrJWTRenewalTimer(Sender: TObject);
