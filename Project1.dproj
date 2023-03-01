@@ -89,7 +89,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <TMSWebPrivExts>$(TMSWebPrivExts);.map;.html</TMSWebPrivExts>
-        <PostBuildEvent><![CDATA[powershell -ExecutionPolicy Unrestricted -file .\PostBuild.ps1 "$(OUTPUTDIR)"
+        <PostBuildEvent><![CDATA[powershell -ExecutionPolicy Unrestricted -file ..\BuildScripts\PostBuildTemplate.ps1 "$(OUTPUTDIR)"
 $(PostBuildEvent)]]></PostBuildEvent>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -1177,7 +1177,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent>powershell -ExecutionPolicy Unrestricted -file .\PostBuild.ps1 &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEvent>powershell -ExecutionPolicy Unrestricted -file ..\BuildScripts\PostBuildTemplate.ps1 &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
 </Project>
