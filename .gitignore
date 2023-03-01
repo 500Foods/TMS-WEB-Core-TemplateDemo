@@ -83,3 +83,5 @@ AdminLTE-4-dev/
 PostBuild.ps1
 PostBuild.ps1
 PostBuild.ps1
+PostBuild.ps1
+*.ps1
