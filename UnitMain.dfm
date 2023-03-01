@@ -18,6 +18,7 @@ object MainForm: TMainForm
     Height = 827
     ElementClassName = 'rounded border bg-white border-dark'
     ElementID = 'divHost'
+    HeightStyle = ssAuto
     ElementFont = efCSS
     Role = ''
   end
@@ -28,7 +29,7 @@ object MainForm: TMainForm
     Height = 33
     Caption = 'Show Log'
     ChildOrder = 1
-    ElementClassName = 'btn btn-light'
+    ElementClassName = 'btn btn-light no-print'
     ElementID = 'btnShowLog'
     ElementFont = efCSS
     HeightStyle = ssAuto
@@ -41,7 +42,7 @@ object MainForm: TMainForm
     Top = 615
     Width = 121
     Height = 34
-    ElementClassName = 'p-1 rounded border bg-light border-dark overflow-auto'
+    ElementClassName = 'p-1 rounded border bg-light border-dark overflow-auto no-print'
     ElementID = 'divLog'
     ChildOrder = 2
     ElementFont = efCSS
@@ -54,7 +55,7 @@ object MainForm: TMainForm
     Height = 33
     Caption = 'Login Form'
     ChildOrder = 1
-    ElementClassName = 'btn btn-light'
+    ElementClassName = 'btn btn-light no-print'
     ElementID = 'btnLoginForm'
     ElementFont = efCSS
     HeightStyle = ssAuto
@@ -69,7 +70,7 @@ object MainForm: TMainForm
     Height = 33
     Caption = 'Clear Form'
     ChildOrder = 1
-    ElementClassName = 'btn btn-light'
+    ElementClassName = 'btn btn-light no-print'
     ElementID = 'btnClearForm'
     ElementFont = efCSS
     HeightStyle = ssAuto
@@ -82,6 +83,7 @@ object MainForm: TMainForm
     Top = 256
     Width = 100
     Height = 41
+    ElementClassName = 'no-print'
     ElementID = 'divToasts'
     ChildOrder = 5
     ElementFont = efCSS
