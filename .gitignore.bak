@@ -68,11 +68,6 @@ __recovery/
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
 
-# We want a largely commented-out version here so that the project
-# build process doesn't complain.  But we don't want to share our 
-# PostBuild script ultimately, as it may have proprietary links.
-*.ps1
-
 # These do not need to be included in the repository
 Win32/
 Win64/
@@ -81,4 +76,9 @@ TMSWeb/
 # This is the original AdminLTE folder copied to the project.
 # Don't need it in the repository.
 AdminLTE-4-dev/
+
+# We want a largely commented-out version here so that the project
+# build process doesn't complain.  But we don't want to share our 
+# PostBuild script ultimately, as it may have proprietary links.
+*.ps1
 
