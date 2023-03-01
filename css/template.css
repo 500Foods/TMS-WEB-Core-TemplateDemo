@@ -105,4 +105,9 @@ html[data-bs-theme="light"] #divHost {
 #editPassword,
 #editUsername {
   color-scheme: dark;
+  border-right: 1px solid var(--bs-border-color);
+}
+#editUsername:focus-visible,
+#editPassword:focus-visible {
+  border-right: 1px solid #86b7fe;
 }
