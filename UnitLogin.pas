@@ -42,16 +42,27 @@ begin
 
   if LoginCheck <> 'Success' then
   begin
+    console.log(LoginCheck);
     btnLogin.Caption := 'Retry';
     LoginCheck := StringReplace(LoginCheck,': ',':<br />',[]);
     LoginCheck := StringReplace(LoginCheck,'. ','.<br />',[]);
+    if Trim(LoginCheck) = '/'
+    then LoginCheck := 'System Error / Server connection could not be established.';
     MainForm.Toast(Copy(LoginCheck,1,Pos('/',LoginCheck) -2),Copy(LoginCheck, Pos('/',LoginCheck)+2,Length(LoginCheck)));
   end;
 end;
 
 procedure TLoginForm.WebFormCreate(Sender: TObject);
 begin
+  // Update Title
   labelLoginTitle.Caption := MainForm.Caption;
+
+  // Update Icons
+  asm
+    const IconSet = pas.UnitIcons.DMIcons;
+    document.getElementById('ticon-username').innerHTML = IconSet.Username;
+    document.getElementById('ticon-password').innerHTML = IconSet.Password;
+  end;
 end;
 
 procedure TLoginForm.WebFormKeyDown(Sender: TObject; var Key: Word;

@@ -89,6 +89,8 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <TMSWebPrivExts>$(TMSWebPrivExts);.map;.html</TMSWebPrivExts>
+        <PostBuildEvent><![CDATA[powershell -ExecutionPolicy Unrestricted -file .\PostBuild.ps1 "$(OUTPUTDIR)"
+$(PostBuildEvent)]]></PostBuildEvent>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -121,6 +123,11 @@
             <Form>AdministratorForm</Form>
             <FormType>dfm</FormType>
             <DesignClass>TWebForm</DesignClass>
+        </DCCReference>
+        <DCCReference Include="UnitIcons.pas">
+            <Form>DMIcons</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TWebDataModule</DesignClass>
         </DCCReference>
         <None Include="Project1.html"/>
         <None Include="css\adminlte.css"/>
@@ -1165,4 +1172,12 @@
     <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
     <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
     <Import Project="$(MSBuildProjectName).deployproj" Condition="Exists('$(MSBuildProjectName).deployproj')"/>
+    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win32'">
+        <PreBuildEvent/>
+        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
+        <PreLinkEvent/>
+        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
+        <PostBuildEvent>powershell -ExecutionPolicy Unrestricted -file .\PostBuild.ps1 &quot;$(OUTPUTDIR)&quot;</PostBuildEvent>
+        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
+    </PropertyGroup>
 </Project>

@@ -34,8 +34,15 @@ type
     { Private declarations }
   public
     { Public declarations }
+    App_Name: String;
+    App_Short: String;
+    App_Version: String;
+    App_Release: String;
+    App_Start: TDateTime;
+
     LoggedIn: Boolean;
     ActivityDetected: Boolean;
+    IconSet: String;
 
     ActionLog: TStringList;
     LogVisible: Boolean;
@@ -66,7 +73,72 @@ implementation
 
 {$R *.dfm}
 
-uses UnitLogin, UnitAdministrator;
+uses UnitIcons, UnitLogin, UnitAdministrator;
+
+procedure TMainForm.WebFormCreate(Sender: TObject);
+begin
+
+  // Application Information
+  App_Name := 'TMS WEB Core Template Demo';
+  App_Short := 'Template';
+  App_Version := '1.0';
+  App_Release := '2022-Feb-28';
+  App_Start := Now();
+  MainForm.Caption := App_Name;
+
+  // Load Icon Set
+  IconSet := document.documentElement.getAttribute('iconset');
+  if IconSet = '' then IconSet := 'default';
+  DMIcons.InitializeIcons(IconSet);
+
+  // Application State
+  LoggedIn := False;
+  LogVisible := False;
+
+  // JWT Handling
+  JWT := '';
+  JWT_Expiry := TTimeZone.Local.ToUniversalTime(Now);
+
+  // Form Management
+  CurrentForm := nil;
+  CurrentFormName := 'Initializing';
+
+  // Application Information
+  Caption := 'TMS WEB Core Template Demo';
+
+  // User Information
+  User_FirstName := '';
+  User_MiddleName :=  '';
+  User_LastName := '';
+  User_EMail := '';
+  User_Roles := TStringList.Create;
+
+  Role_Administrator := False;
+  Role_Sales := False;
+  Role_HR := False;
+
+  // Log what we're doing in the application
+  ActionLog := TStringList.Create;
+  ActionLog.Delimiter := chr(10);
+  LogAction('Application Startup');
+
+  // Setup the Log Viewer
+  divLog.Top := divHost.Top;
+  divLog.Left := divHost.Left;
+  divLog.Width := divHost.Width;
+  divLog.Height := divHost.Height;
+  divLog.Visible := False;
+
+  // Connect to XData - it will finish on its own time
+  XDataConnect;
+
+  // Launch Login
+  if not(LoggedIn) then
+  begin
+    LoadForm('Login');
+  end;
+
+end;
 
 procedure TMainForm.LoadForm(Form: String);
 var
@@ -264,64 +336,7 @@ begin
   LoadForm('Login');
 end;
 
-procedure TMainForm.WebFormCreate(Sender: TObject);
-begin
 
-  // Application State
-  LoggedIn := False;
-  LogVisible := False;
-
-  // JWT Handling
-  JWT := '';
-  JWT_Expiry := TTimeZone.Local.ToUniversalTime(Now);
-
-  // Form Management
-  CurrentForm := nil;
-  CurrentFormName := 'Initializing';
-
-  // Application Information
-  Caption := 'TMS WEB Core Template Demo';
-
-  // User Information
-  User_FirstName := '';
-  User_MiddleName :=  '';
-  User_LastName := '';
-  User_EMail := '';
-  User_Roles := TStringList.Create;
-
-  Role_Administrator := False;
-  Role_Sales := False;
-  Role_HR := False;
-
-  // Log what we're doing in the application
-  ActionLog := TStringList.Create;
-  ActionLog.Delimiter := chr(10);
-  LogAction('Application Startup');
-
-  // Setup the Log Viewer
-  divLog.Top := divHost.Top;
-  divLog.Left := divHost.Left;
-  divLog.Width := divHost.Width;
-  divLog.Height := divHost.Height;
-  divLog.Visible := False;
-
-  // Setup Toast placement
-// Handled via CSS now
-//  divToasts.Top := divHost.Top + 5;
-//  divToasts.Left := (divHost.Left + divHost.Width) - 235;
-//  divToasts.Width := 230;
-//  divToasts.Height := divHost.Height - 10;
-
-  // Connect to XData - it will finish on its own time
-  XDataConnect;
-
-  // Launch Login
-  if not(LoggedIn) then
-  begin
-    LoadForm('Login');
-  end;
-
-end;
 
 
 procedure TMainForm.XDataConnect;

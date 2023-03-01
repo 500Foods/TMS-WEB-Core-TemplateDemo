@@ -2,7 +2,7 @@
 
 /* Change Default Font */
 body {
-  font-family: Cairo;
+  font-family: "Source Sans Pro";
 }
 
 /* Dark Theme Background */
@@ -85,7 +85,7 @@ html[data-bs-theme="light"] #divHost {
 }
 
 .Login-Title {
-  filter: drop-shadow(0px 0px 4px black) drop-shadow(0px 0px 4px black);
+  filter: drop-shadow(0px 0px 4px royalblue) drop-shadow(0px 0px 4px royalblue);
   font-size: 36px;
   color: white;
   line-height: 1.2;
@@ -94,12 +94,16 @@ html[data-bs-theme="light"] #divHost {
 .login-box {
   position: absolute;
   width: 360px;
-  height: 547px;
+  height: 431px;
   top:0;
   bottom: 0;
   left: 0;
   right: 0;
   margin: auto;
+}
+.login-box > .card {
+  border-radius: 1rem;
+  overflow: hidden;
 }
 
 #editPassword,
