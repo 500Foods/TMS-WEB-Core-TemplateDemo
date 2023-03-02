@@ -3,4 +3,20 @@ This repository contains an example of using [TMS WEB Core](https://www.tmssoftw
 
 More details will be provded as this project unfolds.  Initially, only a few features have been implemented.  Starting with a Login page and a simple dashboard.  It is expected that this project will continue to advance in step with the XData project.
 
+## Usage Note
+
+The Delphi project included in this repository is configured with a post-build command that is used to further customize the html and css files that are generated when this project is built.  The command references a script that is outside of this repository. It should be updated to reference the script that is included in the PostBuild folder in this repository.  This change can be implemented by changing the  **Project** | **Options** | **Build Events** | **Post-build events** | **Command** entry:
+
+*Replace*
+
+```powershell -ExecutionPolicy Unrestricted -file ..\BuildScripts\PostBuildTemplate.ps1 "$(OUTPUTDIR)"```
+
+*With*
+
+```powershell -ExecutionPolicy Unrestricted -file .\BuildScripts\PostBuildTemplate.ps1 "$(OUTPUTDIR)"```
+
+This just involves removing a period to reference the script in the local folder rather than a folder outside of the local folder.
+
+
+## Donations
 If you like what you see, and you are interested in contributing financially, please consider donating via [Buy Me a :pizza:](https://www.buymeacoffee.com/andrewsimard500).
