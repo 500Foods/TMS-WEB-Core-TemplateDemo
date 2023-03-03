@@ -5,7 +5,7 @@ More details will be provded as this project unfolds.  Initially, only a few fea
 
 ## Usage Note: Post-Build Command
 
-The Delphi project included in this repository is configured with a post-build command that is used to further customize the html and css files that are generated when this project is built.  The command references a script that is outside of this repository. It should be updated to reference the script that is included in the PostBuild folder in this repository.  This change can be implemented by changing the  **Project** | **Options** | **Build Events** | **Post-build events** | **Command** entry:
+The Delphi project included in this repository is configured with a post-build command that is used to further customize the html and css files that are generated after this project is built.  The command defined in the project file references a script that is outside this repository. It should be updated to reference the script that is included in the PostBuild folder in this repository.  This change can be implemented by changing the  **Project** | **Options** | **Build Events** | **Post-build events** | **Command** entry:
 
 *Replace*
 
@@ -16,7 +16,6 @@ The Delphi project included in this repository is configured with a post-build c
 ```powershell -ExecutionPolicy Unrestricted -file .\BuildScripts\PostBuildTemplate.ps1 "$(OUTPUTDIR)"```
 
 This just involves removing a period to reference the script in this project folder rather than a script outside this project folder. The repository was configured this way to allow for personalized build scripts.  If you wish to customize this particular build script, simply move (or copy) the BuildScripts folder up one level and leave this command as-is.  You can then customize the build script however you like without it being overwritten by the repository.
-
 
 ## Sponsor / Donate / Support
 If you find this work interesting, helpful, or useful, or that it has sved you time, money, or both, please consider direclty supporting these efforts financially via [GitHub Sponsors](https://github.com/sponsors/500Foods) or donating via [Buy Me a Pizza](https://www.buymeacoffee.com/andrewsimard500). Also, be sure to check out these other [GitHub Repositories](https://github.com/500Foods?tab=repositories&q=&sort=stargazers) that may be of interest to you.
