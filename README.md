@@ -5,7 +5,7 @@ This repository contains an example of using [TMS WEB Core](https://www.tmssoftw
 
 Initially, only a few features have been implemented.  Starting with a Login page and a simple dashboard.  It is expected that this project will continue to advance in step with the XData project. However, it should be immediately usable, with the ability to login to the XData server, assuming that all the defaults are used in terms of ports, passwords and son on.  When the web application starts normally, the login form is displayed.
 
-![image](https://user-images.githubusercontent.com/41052272/222648993-3ea593f4-5b31-4165-83ad-20bda95e80e8.png)
+![image](https://user-images.githubusercontent.com/41052272/222652277-aededb14-0513-4e8c-a7fc-e029a1c72859.png)
 *Project Login Form*
 
 NOTE: The project can be configured for multiple icon sources.  Font Awesome 6 Pro Duotone icons are shown in this example. While the project supports these as a configuration option, these icons (and the required license) are not included in this project.
