@@ -15,7 +15,7 @@ The Delphi project included in this repository is configured with a post-build c
 
 ```powershell -ExecutionPolicy Unrestricted -file .\BuildScripts\PostBuildTemplate.ps1 "$(OUTPUTDIR)"```
 
-This just involves removing a period to reference the script in this project folder rather than a script outside this project folder. The repository was configured this way to allow for personalized build scripts.  If you wish to customize this particular build script, simply move the BuildScripts folder up one level and leave this command as-is.  You can then customize the build script however you like without it being overwritten by the repository.
+This just involves removing a period to reference the script in this project folder rather than a script outside this project folder. The repository was configured this way to allow for personalized build scripts.  If you wish to customize this particular build script, simply move (or copy) the BuildScripts folder up one level and leave this command as-is.  You can then customize the build script however you like without it being overwritten by the repository.
 
 
 ## Sponsor / Donate / Support
