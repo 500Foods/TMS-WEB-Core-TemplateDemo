@@ -21,7 +21,7 @@ This just involves removing a period to reference the script in this project fol
 As with any modern web application, other JavaScript libraries/dependencies have been used in this project. Most of the time, this is handled via a CDN link (usually JSDelivr) in the Project.html file. In some cases, for performance or other reasons, they may be included directly.
 - [TMS WEB Core](https://www.tmssoftware.com/site/tmswebcore.asp) - This is a TMS WEB Core project, after all
 - [AdminLTE 4](https://github.com/ColorlibHQ/AdminLTE/tree/v4-dev) - Naturally
-- [Tabulator](https://www.tabulator.info) - Fantastic pure JavaScript wweb data tables
+- [Tabulator](https://www.tabulator.info) - Fantastic pure JavaScript web data tables
 - [Font Awesome](https://www.fontawesome.com) - The very best icons
 
 ## Sponsor / Donate / Support
