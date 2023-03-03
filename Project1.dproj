@@ -109,22 +109,22 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="UnitMain.pas">
+        <DCCReference Include="units\UnitMain.pas">
             <Form>MainForm</Form>
             <FormType>dfm</FormType>
             <DesignClass>TWebForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="UnitLogin.pas">
+        <DCCReference Include="units\UnitLogin.pas">
             <Form>LoginForm</Form>
             <FormType>dfm</FormType>
             <DesignClass>TWebForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="UnitAdministrator.pas">
+        <DCCReference Include="units\UnitAdministrator.pas">
             <Form>AdministratorForm</Form>
             <FormType>dfm</FormType>
             <DesignClass>TWebForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="UnitIcons.pas">
+        <DCCReference Include="units\UnitIcons.pas">
             <Form>DMIcons</Form>
             <FormType>dfm</FormType>
             <DesignClass>TWebDataModule</DesignClass>

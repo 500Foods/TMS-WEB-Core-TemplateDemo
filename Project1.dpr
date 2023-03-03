@@ -5,10 +5,10 @@ program Project1;
 uses
   Vcl.Forms,
   WEBLib.Forms,
-  UnitMain in 'UnitMain.pas' {MainForm: TWebForm} {*.html},
-  UnitLogin in 'UnitLogin.pas' {LoginForm: TWebForm} {*.html},
-  UnitAdministrator in 'UnitAdministrator.pas' {AdministratorForm: TWebForm} {*.html},
-  UnitIcons in 'UnitIcons.pas' {DMIcons: TWebDataModule};
+  UnitMain in 'units\UnitMain.pas' {MainForm: TWebForm} {*.html},
+  UnitLogin in 'units\UnitLogin.pas' {LoginForm: TWebForm} {*.html},
+  UnitAdministrator in 'units\UnitAdministrator.pas' {AdministratorForm: TWebForm} {*.html},
+  UnitIcons in 'units\UnitIcons.pas' {DMIcons: TWebDataModule};
 
 {$R *.res}
 
