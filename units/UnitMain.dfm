@@ -10,6 +10,7 @@ object MainForm: TMainForm
   Font.Name = 'Tahoma'
   Font.Style = []
   ParentFont = False
+  OnClick = WebFormClick
   OnCreate = WebFormCreate
   OnKeyDown = WebFormKeyDown
   object divHost: TWebHTMLDiv
@@ -84,7 +85,7 @@ object MainForm: TMainForm
     Top = 256
     Width = 100
     Height = 41
-    ElementClassName = 'no-print'
+    ElementClassName = 'no-print toast-container'
     ElementID = 'divToasts'
     ChildOrder = 5
     ElementFont = efCSS
@@ -101,7 +102,13 @@ object MainForm: TMainForm
   object tmrJWTRenewal: TWebTimer
     Enabled = False
     OnTimer = tmrJWTRenewalTimer
-    Left = 48
+    Left = 56
     Top = 328
+  end
+  object tmrJWTRenewalWarning: TWebTimer
+    Enabled = False
+    OnTimer = tmrJWTRenewalWarningTimer
+    Left = 56
+    Top = 384
   end
 end

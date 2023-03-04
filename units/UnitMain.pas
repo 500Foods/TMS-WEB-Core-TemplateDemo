@@ -18,13 +18,14 @@ type
     XDataConn: TXDataWebConnection;
     divToasts: TWebHTMLDiv;
     tmrJWTRenewal: TWebTimer;
+    tmrJWTRenewalWarning: TWebTimer;
     procedure WebFormCreate(Sender: TObject);
     procedure LogAction(Action: String; Extend: Boolean);
     procedure btnShowLogClick(Sender: TObject);
     procedure btnLoginFormClick(Sender: TObject);
     procedure btnClearFormClick(Sender: TObject);
     procedure XDataConnRequest(Args: TXDataWebConnectionRequest);
-    procedure Toast(Header: String; Body: String);
+    procedure Toast(Header: String; Body: String; Timeout: Integer);
     procedure MenuClick(Menu: String);
     procedure MenuAdd(Menu: String);
     procedure ProcessJWT(aJWT: String);
@@ -35,6 +36,8 @@ type
     [async] procedure XDataConnect;
     [async] function XDataLogin(Username: String; Password: String):String;
     [async] procedure tmrJWTRenewalTimer(Sender: TObject);
+    procedure tmrJWTRenewalWarningTimer(Sender: TObject);
+    procedure WebFormClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -80,6 +83,12 @@ implementation
 {$R *.dfm}
 
 uses UnitIcons, UnitLogin, UnitAdministrator;
+
+procedure TMainForm.WebFormClick(Sender: TObject);
+begin
+  if (CurrentFormName <> 'Login')
+  then ActivityDetected := True;
+end;
 
 procedure TMainForm.WebFormCreate(Sender: TObject);
 begin
@@ -168,7 +177,7 @@ var
 
   procedure AfterCreate(AForm: TObject);
   begin
-    LogAction('Load Form: '+AForm.ClassName+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime))+'ms)', True);
+    LogAction('Load Form: '+AForm.ClassName+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime))+'ms)', False);
   end;
 
 begin
@@ -244,6 +253,10 @@ procedure TMainForm.Logout(Reason: String);
 var
   ResponseString: String;
 begin
+  // Make sure these don't fire
+  tmrJWTRenewal.Enabled := False;
+  tmrJWTRenewalWarning.Enabled := False;
+
   if CurrentFormName <> 'Login' then
   begin
     LogAction('Logout: '+Reason, False);
@@ -288,18 +301,25 @@ begin
 
   // If roles have changed since logging in, then inform the user
   if (CurrentFormName <> 'Login') and (User_Roles.CommaText <> (JWTClaims.Get('rol').JSONValue as TJSONString).Value)
-  then Toast('Updated Roles', 'The roles for this account have been updated. Please Logout and Login again to access them.');
+  then Toast('Updated Roles', 'The roles for this account have been updated. Please Logout and Login again to access them.', 15000);
   User_Roles.CommaText :=  (JWTClaims.Get('rol').JSONValue as TJSONString).Value;
 
   // Set renewal to one minute before expiration
   JWT_Expiry := UnixToDateTime((JWTClaims.Get('exp').JSONValue as TJSONNumber).AsInt);
   tmrJWTRenewal.Enabled := False;
-  tmrJWTRenewal.Interval := MillisecondsBetween(JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)) - 60000;
+  tmrJWTRenewal.Interval := MillisecondsBetween(JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)) - 30000;
+  tmrJWTRenewalWarning.Interval := MillisecondsBetween(JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)) - 90000;
 
   // If it has already expired, then not much point in continuing?
-  if tmrJWTRenewal.Interval <= 0
-  then Logout('JWT Expired')
-  else tmrJWTRenewal.Enabled := True;
+  if tmrJWTRenewal.Interval <= 0 then
+  begin
+    Logout('JWT Expired')
+  end
+  else
+  begin
+    tmrJWTRenewal.Enabled := True;
+    tmrJWTRenewalWarning.Enabled := True;
+  end;
 
   // Extract Roles
   Role_Administrator := False;
@@ -349,7 +369,14 @@ begin
   end;
 end;
 
-procedure TMainForm.Toast(Header, Body: String);
+procedure TMainForm.tmrJWTRenewalWarningTimer(Sender: TObject);
+begin
+  tmrJWTRenewalWarning.Enabled := False;
+  if not(ActivityDetected)
+  then Toast('Auto Logout','No activity has been detected.  Auto logout in $S seconds.', 60000);
+end;
+
+procedure TMainForm.Toast(Header, Body: String; Timeout: Integer);
 begin
   // Want ID to be unique
   ToastCount := ToastCount + 1;
@@ -362,14 +389,14 @@ begin
     toast.setAttribute('role','alert');
     toast.setAttribute('aria-live','assertive');
     toast.setAttribute('aria-atomic','true');
-    toast.setAttribute('data-bs-delay','15000');
+    toast.setAttribute('data-bs-delay', Timeout);
 
     // Create Toast Header
     var toasth = document.createElement('div');
     toasth.className = 'toast-header bg-danger text-white';
     toasth.innerHTML = '<strong class="me-auto">'+Header+'</strong>'+
                        '<small class="text-light">just now</small>'+
-                       '<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>';
+                       '<button type="button" onclick="pas.UnitMain.MainForm.ActivityDetected = true;"; class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>';
 
     // Create Toast Body
     var toastb = document.createElement('div');
@@ -379,10 +406,27 @@ begin
     // Make Toast
     toast.appendChild(toasth);
     toast.appendChild(toastb);
-    divToasts.firstElementChild.appendChild(toast);
+    divToasts.appendChild(toast);
 
     // Show Toast
-    new bootstrap.Toast(toast).show();
+    var newtoast = new bootstrap.Toast(toast).show();
+
+    if (Timeout = 60000) {
+      toast.setAttribute('countdown',60);
+      toast.lastElementChild.innerHTML = Body.replace('$S',toast.getAttribute('countdown'));
+      var toastc = setInterval(function() {
+        if (pas.UnitMain.MainForm.ActivityDetected == false) {
+          console.log('coundown '+toast.getAttribute('countdown'));
+          toast.setAttribute('countdown',toast.getAttribute('countdown')-1);
+          toast.lastElementChild.innerHTML = Body.replace('$S',toast.getAttribute('countdown'));
+        }
+        else {
+          clearInterval(toastc);
+          toast.remove();
+        }
+      },1000);
+    }
+
   end;
 end;
 
@@ -391,7 +435,7 @@ begin
   // More for testing purposes than anything else
   LogAction('CLICK: Clear Form', True);
   LoadForm('Clear');
-  Toast('divHost Component','Cleared.');
+  Toast('divHost Component','Cleared.',15000);
 end;
 
 procedure TMainForm.btnShowLogClick(Sender: TObject);
@@ -451,7 +495,7 @@ end;
 
 procedure TMainForm.btnLoginFormClick(Sender: TObject);
 begin
-  LogAction('CLICK: Login Form', True);
+  LogAction('CLICK: Login Form', False);
   LoadForm('Login');
 end;
 
