@@ -268,6 +268,12 @@ begin
     TWebLocalStorage.RemoveKey('Login.JWT');
     TWebLocalStorage.RemoveKey('Login.Expiry');
 
+    Toast('Logout','Processing. Please wait.',1000);
+    asm
+      async function sleep(msecs) {return new Promise((resolve) =>setTimeout(resolve, msecs));}
+      await sleep(1500);
+    end;
+
     window.location.reload(true);
   end;
 end;
@@ -342,8 +348,6 @@ var
 begin
   tmrJWTRenewal.Enabled := False;
 
-  console.log('Renewing JWT');
-
   ActionLogSend := ActionLogCurrent.Text;
   ActionLogCurrent.Text := '';
 
@@ -411,12 +415,12 @@ begin
     // Show Toast
     var newtoast = new bootstrap.Toast(toast).show();
 
+    // Add a Toast countdown timer
     if (Timeout = 60000) {
       toast.setAttribute('countdown',60);
       toast.lastElementChild.innerHTML = Body.replace('$S',toast.getAttribute('countdown'));
       var toastc = setInterval(function() {
         if (pas.UnitMain.MainForm.ActivityDetected == false) {
-          console.log('coundown '+toast.getAttribute('countdown'));
           toast.setAttribute('countdown',toast.getAttribute('countdown')-1);
           toast.lastElementChild.innerHTML = Body.replace('$S',toast.getAttribute('countdown'));
         }
