@@ -1,7 +1,14 @@
 # TMS WEB Core Template: Demo
-This repository contains an example of using [TMS WEB Core](https://www.tmssoftware.com/site/tmswebcore.asp) with the [AdminLTE 4](https://github.com/ColorlibHQ/AdminLTE/tree/v4-dev) (Bootstrap 5) template as a front-end to the [TMS XData Template: Demo Data](https://github.com/500Foods/TMS-XData-TemplateDemoData) REST API server.
+This repository contains an example of using [TMS WEB Core](https://www.tmssoftware.com/site/tmswebcore.asp) with the [AdminLTE 4](https://github.com/ColorlibHQ/AdminLTE/tree/v4-dev) (Bootstrap 5) template as a front-end to the [TMS XData Template: Demo Data](https://github.com/500Foods/TMS-XData-TemplateDemoData) REST API server. This project originated as part of a series of blog posts about using [TMS XData](https://www.tmssoftware.com/site/tmswebcore.asp) and [TMS WEB Core](https://www.tmssoftware.com/site/tmswebcore.asp) with different kinds of templates, the first of which can be found [here](https://www.tmssoftware.com/site/blog.asp?post=1068).
 
-More details will be provded as this project unfolds.  Initially, only a few features have been implemented.  Starting with a Login page and a simple dashboard.  It is expected that this project will continue to advance in step with the XData project.
+## Getting Started
+
+Initially, only a few features have been implemented.  Starting with a Login page and a simple dashboard.  It is expected that this project will continue to advance in step with the XData project. However, it should be immediately usable, with the ability to login to the XData server, assuming that all the defaults are used in terms of ports, passwords and son on.  When the web application starts normally, the login form is displayed.
+
+![image](https://user-images.githubusercontent.com/41052272/222652277-aededb14-0513-4e8c-a7fc-e029a1c72859.png)
+*Project Login Form*
+
+NOTE: The project can be configured for multiple icon sources.  Font Awesome 6 Pro Duotone icons are shown in this example. While the project supports these as a configuration option, these icons (and the required license) are not included in this project.
 
 ## Usage Note: Post-Build Command
 
