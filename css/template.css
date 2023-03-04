@@ -5,6 +5,10 @@ body {
   font-family: "Source Sans Pro";
 }
 
+:root {
+  --custom-rounding: 0.75rem;
+}
+
 /* Dark Theme Background */
 html[data-bs-theme="dark"] #divHost {
   background: linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
@@ -94,24 +98,40 @@ html[data-bs-theme="light"] #divHost {
 .login-box {
   position: absolute;
   width: 360px;
-  height: 431px;
+  height: 379px;
   top:0;
   bottom: 0;
   left: 0;
   right: 0;
   margin: auto;
+  opacity: 0;
+  transition: opacity 2s;
 }
 .login-box > .card {
-  border-radius: 1rem;
+  border-radius: var(--custom-rounding);
   overflow: hidden;
 }
 
 #editPassword,
 #editUsername {
   color-scheme: dark;
+  background: rgba(70, 90, 126, 0.4) !important;
   border-right: 1px solid var(--bs-border-color);
+
 }
 #editUsername:focus-visible,
 #editPassword:focus-visible {
   border-right: 1px solid #86b7fe;
+}
+
+
+
+/* DASHBOARDS */
+li.nav-item.dropdown.user-menu > ul {
+  right: -28px;
+  border-radius: var(--custom-rounding);
+}
+li.nav-item.dropdown.user-menu > ul > li.user-header.text-bg-primary {
+  border-top-left-radius: var(--custom-rounding);
+  border-top-right-radius: var(--custom-rounding);
 }

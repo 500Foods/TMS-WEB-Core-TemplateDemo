@@ -17,8 +17,13 @@ type
     spanPhotoBig: TWebLabel;
     labelNameTitle: TWebLabel;
     labelAppTitle: TWebLabel;
+    btnLogout: TWebButton;
+    btnActions: TWebButton;
+    btnProfile: TWebButton;
+    labelDashboard: TWebLabel;
     procedure WebFormCreate(Sender: TObject);
     [async] procedure tmrAdministratorStartTimer(Sender: TObject);
+    procedure btnLogoutClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -30,9 +35,14 @@ var
 
 implementation
 
-uses UnitMain;
+uses UnitMain, UnitIcons;
 
 {$R *.dfm}
+
+procedure TAdministratorForm.btnLogoutClick(Sender: TObject);
+begin
+  MainForm.Logout('Button');
+end;
 
 procedure TAdministratorForm.tmrAdministratorStartTimer(Sender: TObject);
 var
@@ -60,9 +70,9 @@ begin
     spanPhotoBig.ElementHandle.firstElementChild.setAttribute('alt','User Photo');
     (spanPhotoBig.ElementHandle.firstElementChild as TJSHTMLElement).style.setProperty('max-width','200px');
 
-    asm
-      console.log(JSON.parse(ResponseString));
-    end;
+//    asm
+//      console.log(JSON.parse(ResponseString));
+//    end;
   end;
 end;
 
@@ -76,6 +86,12 @@ begin
   spanPhoto.HTML := '';
   spanPhotoBig.HTML := '';
   labelAppTitle.HTML := '';
+
+  labelDashboard.Caption := 'Administrator Dashboard';
+
+  btnProfile.Caption := DMIcons.Profile+'Profile';
+  btnActions.Caption := DMIcons.Actions+'Actions';
+  btnLogout.Caption  := DMIcons.Logout+'Logout';
 
 
   asm {

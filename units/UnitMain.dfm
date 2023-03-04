@@ -11,6 +11,7 @@ object MainForm: TMainForm
   Font.Style = []
   ParentFont = False
   OnCreate = WebFormCreate
+  OnKeyDown = WebFormKeyDown
   object divHost: TWebHTMLDiv
     Left = 135
     Top = 8

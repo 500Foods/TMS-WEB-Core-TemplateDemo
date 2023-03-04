@@ -122,7 +122,7 @@
           <span id="spanPhoto"></span>
           <span class="d-none d-md-inline"><label id="labelName"></label></span>
         </a>
-        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+        <ul class="dropdown-menu dropdown-menu-xl dropdown-menu-end">
           <!-- User image -->
           <li class="user-header text-bg-primary">
             <span id="spanPhotoBig"></span>
@@ -148,9 +148,10 @@
             <!-- /.row -->
           </li>
           <!-- Menu Footer-->
-          <li class="user-footer">
-            <a href="#" class="btn btn-default btn-flat">Profile</a>
-            <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+          <li class="d-flex m-2 gap-2">
+            <button id="btnProfile">Profile</button>
+            <button id="btnActions">Actions</button>
+            <button id="btnLogout">Sign out</button>
           </li>
         </ul>
       </li>
@@ -477,7 +478,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-sm-6">
-                <h3 class="mb-0">Dashboard v2</h3>
+                <h3 id="labelDashboard" class="mb-0">Dashboard v2</h3>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">

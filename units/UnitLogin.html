@@ -1,36 +1,8 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<!-- Primary Meta Tags -->
-<title>AdminLTE 4 | Login Page</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="title" content="AdminLTE 4 | Login Page">
-<meta name="author" content="ColorlibHQ">
-<meta name="description" content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS.">
-<meta name="keywords" content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard">
-
-<!-- OPTIONAL LINKS -->
-
-<!-- Google Font: Source Sans Pro -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-
-<!-- overlayScrollbars -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.0.3/styles/overlayscrollbars.min.css" integrity="sha256-57dSpDS5wv9AYEEmLxcPfrVnygNCdqDWOXyoR46L9H0=" crossorigin="anonymous">
-
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
-
-<!-- REQUIRED LINKS -->
-
-<!-- Theme style -->
-
-  <script type="module" src="/@vite/client"></script>
-<script type="module" src="/@fs/c:/Users/Andrew Simard/Documents/Embarcadero/Studio/Projects/TMS-WEB-Core-TemplateDemo/AdminLTE-4-dev/node_modules/astro/dist/runtime/client/hmr.js?v=42c384f7"></script></head>
   <body class="login-page bg-body-secondary">
-    <div class="login-box">
-      <!-- /.login-logo -->
+    <div id="loginbox" class="login-box">
       <div class="card">
         <div class="card-body login-card-body">
 
@@ -40,71 +12,41 @@
 
           <p class="login-box-msg">Please login in to start your session.</p>
 
-          <form method="post">
-            <div class="input-group mb-3">
-              <input id="editUsername" type="email" class="form-control" placeholder="Email">
-              <div id="ticon-username" class="input-group-text">
-                <span class="fa-duotone fa-envelope"></span>
-              </div>
+          <div class="input-group mb-3">
+            <input id="editUsername" type="text" class="form-control" placeholder="Email">
+            <div id="ticon-username" class="input-group-text">
+              <span class="fa-duotone fa-envelope"></span>
             </div>
-            <div class="input-group mb-3">
-              <input id="editPassword" type="password" class="form-control" placeholder="Password">
-              <div id="ticon-password" class="input-group-text">
-                <span class="fa-duotone fa-lock"></span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-8">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                  <label class="form-check-label" for="flexCheckDefault">
-                    Remember Me
-                  </label>
-                </div>
-              </div>
+          </div>
 
-              <p class="mb-1">
-                <a href="forgot-password.html">I forgot my password</a>
-              </p>
-              <p class="mb-3">
-                <a href="register.html" class="text-center">Register a new membership</a>
-              </p>
-              <!-- /.col -->
-              <div class="col-4">
-                <div class="d-grid gap-2">
-                  <button id="btnLogin" type="submit" class="btn btn-primary">Login</button>
-                </div>
-              </div>
-              <!-- /.col -->
+          <div class="input-group mb-3">
+            <input id="editPassword" type="password" class="form-control" placeholder="Password">
+            <div id="ticon-password" class="input-group-text">
+              <span class="fa-duotone fa-lock"></span>
             </div>
-          </form>
+          </div>
+
+          <div class="row">
+
+            <div class="col-12">
+              <div class="d-flex p-0 gap-2 justify-content-center form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Remember Me
+                </label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="d-flex gap-3 mt-3">
+                <button id="btnForgot" type="submit" class="btn btn-danger w-100">Forgot Password</button>
+                <button id="btnLogin" type="submit" class="btn btn-primary w-100">Login</button>
+              </div>
+            </div>
+
+          </div>
         </div>
-        <!-- /.login-card-body -->
       </div>
     </div>
-    <!-- /.login-box -->
-
-    <!-- OPTIONAL SCRIPTS --><!-- overlayScrollbars --><script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.0.3/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-/dwBbLeVyyWBtWfH3jHdL2oVVmLKoGnEFzoOSL3nJC0=" crossorigin="anonymous"></script>
-
-
-<!-- OPTIONAL SCRIPTS --><script>
-  const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper'
-  const Default = {
-    scrollbarTheme: 'os-theme-light',
-    scrollbarAutoHide: 'leave'
-  }
-
-  document.addEventListener("DOMContentLoaded", function() {
-    if (typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-      OverlayScrollbarsGlobal.OverlayScrollbars(document.querySelector(SELECTOR_SIDEBAR_WRAPPER), {
-        scrollbars: {
-          theme: Default.scrollbarTheme,
-          autoHide: Default.scrollbarAutoHide,
-          clickScroll: true
-        }
-      })
-    }
-  })
-</script>
-
-  </body></html>
+  </body>
+</html>

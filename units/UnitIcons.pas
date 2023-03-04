@@ -14,6 +14,9 @@ type
     { Public declarations }
     Username: String;
     Password: String;
+    Logout: String;
+    Profile: String;
+    Actions: String;
   end;
 
 var
@@ -31,12 +34,18 @@ begin
   // Set default as FontAwesome 6 Free Icons
   Username := '<span class="fa-solid fa-envelope"></span>';
   Password := '<span class="fa-solid fa-lock"></span>';
+  Logout   := '<span class="fa-solid fa-right-from-bracket me-2"></span>';
+  Profile  := '<span class="fa-solid fa-user-secret me-2"></span>';
+  Actions  := '<span class="fa-solid fa-scroll me-2"></span>';
 
   // Override these icons if we're using FontAwesome6 Pro Duo
   if (Uppercase(IconSet) = 'DUOTONE') then
   begin
     Username := '<span class="fa-duotone fa-key fa-swap-opacity"></span>';
     Password := '<span class="fa-duotone fa-lock fa-swap-opacity"></span>';
+    Logout   := '<span class="fa-duotone fa-right-from-bracket me-2"></span>';
+    Profile  := '<span class="fa-duotone fa-user-secret me-2"></span>';
+    Actions  := '<span class="fa-duotone fa-scroll me-2"></span>';
   end;
 
 end;
