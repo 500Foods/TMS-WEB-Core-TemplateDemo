@@ -268,7 +268,7 @@ begin
     TWebLocalStorage.RemoveKey('Login.JWT');
     TWebLocalStorage.RemoveKey('Login.Expiry');
 
-    Toast('Logout','Processing. Please wait.',1000);
+    Toast(DMIcons.Logout+'Logout','Processing. Please wait.',1000);
     asm
       async function sleep(msecs) {return new Promise((resolve) =>setTimeout(resolve, msecs));}
       await sleep(1500);
@@ -307,7 +307,7 @@ begin
 
   // If roles have changed since logging in, then inform the user
   if (CurrentFormName <> 'Login') and (User_Roles.CommaText <> (JWTClaims.Get('rol').JSONValue as TJSONString).Value)
-  then Toast('Updated Roles', 'The roles for this account have been updated. Please Logout and Login again to access them.', 15000);
+  then Toast(DMIcons.Certificate+'Updated Roles', 'The roles for this account have been updated. Please Logout and Login again to access them.', 15000);
   User_Roles.CommaText :=  (JWTClaims.Get('rol').JSONValue as TJSONString).Value;
 
   // Set renewal to one minute before expiration
@@ -377,7 +377,7 @@ procedure TMainForm.tmrJWTRenewalWarningTimer(Sender: TObject);
 begin
   tmrJWTRenewalWarning.Enabled := False;
   if not(ActivityDetected)
-  then Toast('Auto Logout','No activity has been detected.  Auto logout in $S seconds.', 60000);
+  then Toast(DMIcons.Logout+'Auto Logout','No activity has been detected.  Auto logout in $S seconds.', 60000);
 end;
 
 procedure TMainForm.Toast(Header, Body: String; Timeout: Integer);
@@ -416,7 +416,7 @@ begin
     var newtoast = new bootstrap.Toast(toast).show();
 
     // Add a Toast countdown timer
-    if (Timeout = 60000) {
+    if (Timeout == 60000) {
       toast.setAttribute('countdown',60);
       toast.lastElementChild.innerHTML = Body.replace('$S',toast.getAttribute('countdown'));
       var toastc = setInterval(function() {

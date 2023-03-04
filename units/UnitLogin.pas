@@ -31,7 +31,7 @@ var
 
 implementation
 
-uses UnitMain;
+uses UnitMain, UnitIcons;
 
 {$R *.dfm}
 
@@ -93,7 +93,7 @@ begin
     LoginCheck := StringReplace(LoginCheck,'. ','.<br />',[]);
     if Trim(LoginCheck) = '/'
     then LoginCheck := 'System Error / Server connection could not be established.';
-    MainForm.Toast(Copy(LoginCheck,1,Pos('/',LoginCheck) -2),Copy(LoginCheck, Pos('/',LoginCheck)+2,Length(LoginCheck)),15000);
+    MainForm.Toast(DMIcons.Login+Copy(LoginCheck,1,Pos('/',LoginCheck) -2),Copy(LoginCheck, Pos('/',LoginCheck)+2,Length(LoginCheck)),15000);
   end;
 end;
 
