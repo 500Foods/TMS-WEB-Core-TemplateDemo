@@ -7,7 +7,7 @@ object LoginForm: TLoginForm
   OnKeyDown = WebFormKeyDown
   object labelLoginTitle: TWebLabel
     Left = 24
-    Top = 112
+    Top = 160
     Width = 67
     Height = 13
     Caption = 'labelLoginTitle'
@@ -26,6 +26,7 @@ object LoginForm: TLoginForm
     HeightPercent = 100.000000000000000000
     TextHint = 'Username'
     WidthPercent = 100.000000000000000000
+    OnChange = editUsernameChange
   end
   object editPassword: TWebEdit
     Left = 24
@@ -39,6 +40,7 @@ object LoginForm: TLoginForm
     PasswordChar = '*'
     TextHint = 'Password'
     WidthPercent = 100.000000000000000000
+    OnChange = editUsernameChange
   end
   object btnLogin: TWebButton
     Left = 24
@@ -49,13 +51,14 @@ object LoginForm: TLoginForm
     ChildOrder = 2
     ElementID = 'btnLogin'
     ElementFont = efCSS
+    Enabled = False
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
     OnClick = btnLoginClick
   end
   object checkRemember: TWebCheckBox
     Left = 24
-    Top = 131
+    Top = 179
     Width = 113
     Height = 22
     Caption = 'Remember Me'
@@ -70,7 +73,7 @@ object LoginForm: TLoginForm
   end
   object divLoginBox: TWebHTMLDiv
     Left = 20
-    Top = 159
+    Top = 207
     Width = 100
     Height = 41
     ElementClassName = 'login-box'
@@ -79,11 +82,25 @@ object LoginForm: TLoginForm
     ElementFont = efCSS
     Role = ''
   end
+  object btnForgot: TWebButton
+    Left = 24
+    Top = 103
+    Width = 96
+    Height = 25
+    Caption = 'Forgot Password'
+    ChildOrder = 2
+    ElementID = 'btnForgot'
+    ElementFont = efCSS
+    Enabled = False
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    WidthPercent = 100.000000000000000000
+  end
   object tmrLoginStart: TWebTimer
     Enabled = False
     Interval = 10
     OnTimer = tmrLoginStartTimer
     Left = 40
-    Top = 216
+    Top = 264
   end
 end

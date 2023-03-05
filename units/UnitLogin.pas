@@ -16,10 +16,12 @@ type
     checkRemember: TWebCheckBox;
     tmrLoginStart: TWebTimer;
     divLoginBox: TWebHTMLDiv;
+    btnForgot: TWebButton;
     procedure WebFormCreate(Sender: TObject);
     procedure WebFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tmrLoginStartTimer(Sender: TObject);
     [async] procedure btnLoginClick(Sender: TObject);
+    procedure editUsernameChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -112,9 +114,35 @@ end;
 procedure TLoginForm.WebFormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  if (Key = VK_RETURN)
+     and (trim(editUsername.Text) <> '')
+     and (Trim(editPassword.Text) <> '')
+  then btnLoginClick(Sender)
+  else editUsernameChange(Sender);
+end;
 
-  if (Key = VK_RETURN) then btnLoginClick(Sender);
-  
+procedure TLoginForm.editUsernameChange(Sender: TObject);
+begin
+  if (Trim(editUsername.Text) = '') and (Trim(editPassword.Text) = '') then
+  begin
+    btnLogin.Enabled := False;
+    btnForgot.Enabled := False;
+  end
+  else if (Trim(editUsername.Text) = '') then
+  begin
+    btnLogin.Enabled := False;
+    btnForgot.Enabled := False;
+  end
+  else if (Trim(editPassword.Text) = '') then
+  begin
+    btnLogin.Enabled := False;
+    btnForgot.Enabled := True;
+  end
+  else
+  begin
+    btnLogin.Enabled := True;
+    btnForgot.Enabled := True;
+  end;
 end;
 
 procedure TLoginForm.tmrLoginStartTimer(Sender: TObject);
@@ -152,7 +180,7 @@ begin
   begin
     // Update Icons
     asm
-     const IconSet = pas.UnitIcons.DMIcons;
+      const IconSet = pas.UnitIcons.DMIcons;
       document.getElementById('ticon-username').innerHTML = IconSet.Username;
       document.getElementById('ticon-password').innerHTML = IconSet.Password;
     end;
@@ -163,10 +191,12 @@ begin
     begin
       editUsername.Text := Remembered;
       editPassword.SetFocus;
+      editUsernameChange(Sender);
     end
     else
     begin
-      editUSername.SetFocus;
+      editUsername.SetFocus;
+      editUsernameChange(Sender);
     end;
 
     // Add CAPS-LOCK highlighting

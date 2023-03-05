@@ -5,8 +5,17 @@ body {
   font-family: "Source Sans Pro";
 }
 
+/* Custom Variables */
 :root {
   --custom-rounding: 0.75rem;
+  --custom-delay-short: 0.5s;
+  --custom-delay-long: 2s;
+}
+
+/* Override Bootstrap opacity values */
+.btn {
+  --bs-btn-disabled-opacity: 0.4;
+  transition: opacity var(--custom-delay-short);
 }
 
 /* Dark Theme Background */
@@ -105,7 +114,7 @@ html[data-bs-theme="light"] #divHost {
   right: 0;
   margin: auto;
   opacity: 0;
-  transition: opacity 2s;
+  transition: var(--custom-delay-long);
 }
 .login-box > .card {
   border-radius: var(--custom-rounding);
