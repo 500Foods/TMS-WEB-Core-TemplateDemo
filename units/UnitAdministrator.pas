@@ -9,7 +9,6 @@ uses
 
 type
   TAdministratorForm = class(TWebForm)
-    tmrAdministratorStart: TWebTimer;
     labelCopyright: TWebLabel;
     labelSlogan: TWebLabel;
     labelName: TWebLabel;
@@ -20,10 +19,15 @@ type
     btnLogout: TWebButton;
     btnActions: TWebButton;
     btnProfile: TWebButton;
-    labelDashboard: TWebLabel;
-    procedure WebFormCreate(Sender: TObject);
-    [async] procedure tmrAdministratorStartTimer(Sender: TObject);
+    labelLoggedIn: TWebLabel;
+    menuSidebar: TWebHTMLDiv;
+    divSubform: TWebHTMLDiv;
     procedure btnLogoutClick(Sender: TObject);
+    procedure btnProfileClick(Sender: TObject);
+    procedure btnActionsClick(Sender: TObject);
+    [async] procedure WebFormCreate(Sender: TObject);
+    [async] procedure MenuClicked(MenuForm: String; MenuType: String; MenuName: String);
+
   private
     { Private declarations }
   public
@@ -35,161 +39,88 @@ var
 
 implementation
 
-uses UnitMain, UnitIcons;
+uses UnitMain, UnitIcons, UnitMenus;
 
 {$R *.dfm}
+
+procedure TAdministratorForm.btnActionsClick(Sender: TObject);
+begin
+  MenuClicked('Administrator', 'User', 'Actions');
+end;
 
 procedure TAdministratorForm.btnLogoutClick(Sender: TObject);
 begin
   MainForm.Logout('Button');
 end;
 
-procedure TAdministratorForm.tmrAdministratorStartTimer(Sender: TObject);
-var
-  ResponseString: String;
-  ResponseJSON: TJSONObject;
+procedure TAdministratorForm.btnProfileClick(Sender: TObject);
 begin
-  tmrAdministratorStart.Enabled := False;
-  ResponseString := await(MainForm.JSONRequest('IDashboardService.AdministratorDashboard',[]));
-  if ResponseString <> '' then
+  MenuClicked('Administrator', 'User', 'Profile');
+end;
+
+procedure TAdministratorForm.MenuClicked(MenuForm, MenuType, MenuName: String);
+begin
+  MainForm.LogAction('Menu Clicked ['+MenuForm+'] ['+MenuType+'] ['+MenuName+']',true);
+
+  if MenuForm = 'Administrator' then
   begin
-    ResponseJSON := TJSONObject.ParseJSONValue(ResponseString) as TJSONObject;
 
-    labelName.HTML := MainForm.User_FirstName+' '+MainForm.User_LastName;
-    labelNameTitle.HTML := MainForm.User_FirstName+' '+MainForm.User_LastName+' - Administrator';
-    labelCopyright.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[3] as TJSONObject).GetValue('value') as TJSONString).Value;
-    labelSlogan.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[2] as TJSONObject).GetValue('value') as TJSONString).Value;
-    labelAppTitle.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[1] as TJSONObject).GetValue('value') as TJSONString).Value;
+    if MenuType = 'Dashboard' then
+    begin
+       divSubForm.ElementHandle.style.setProperty('opacity','0');
+       asm await sleep (500); end;
 
-    spanPhoto.HTML := (ResponseJSON.GetValue('Photo') as TJSONString).Value;
-    spanPhoto.ElementHandle.firstElementChild.className := 'user-image rounded-circle shadow';
-    spanPhoto.ElementHandle.firstElementChild.setAttribute('alt','User Photo');
+      MainForm.LoadSubForm('AdministratorSub',divSubForm, DMIcons.Administrator_Menu);
+    end
 
-    spanPhotoBig.HTML := (ResponseJSON.GetValue('Photo') as TJSONString).Value;
-    spanPhotoBig.ElementHandle.firstElementChild.className := 'rounded-circle shadow';
-    spanPhotoBig.ElementHandle.firstElementChild.setAttribute('alt','User Photo');
-    (spanPhotoBig.ElementHandle.firstElementChild as TJSHTMLElement).style.setProperty('max-width','200px');
+    else if MenuType = 'User' then
+    begin
+       divSubForm.ElementHandle.style.setProperty('opacity','0');
+       asm await sleep (500); end;
 
-//    asm
-//      console.log(JSON.parse(ResponseString));
-//    end;
+       if MenuName = 'Profile' then MainForm.LoadSubForm('UserProfileSub',divSubForm, DMIcons.Profile_Menu);
+       if MenuName = 'Actions' then MainForm.LoadSubForm('UserActionsSub',divSubform, DMIcons.Actions_Menu);
+
+    end;
+
   end;
+
 end;
 
 procedure TAdministratorForm.WebFormCreate(Sender: TObject);
+var
+  ResponseString: String;
+  ResponseJSON: TJSONObject;
+
 begin
 
-  labelCopyright.Caption := '';
-  labelSlogan.Caption := '';
-  labelName.Caption := '';
-  labelNameTitle.Caption := '';
-  spanPhoto.HTML := '';
-  spanPhotoBig.HTML := '';
-  labelAppTitle.HTML := '';
+  // Set linked element values that we already know
+  labelLoggedIn.HTML := '<small>Logged in at '+FormatDateTime('hh:nn',Now)+'<small>';
 
-  labelDashboard.Caption := 'Administrator Dashboard';
-
+  // User Menu Buttons Buttons
   btnProfile.Caption := DMIcons.Profile+'Profile';
   btnActions.Caption := DMIcons.Actions+'Actions';
   btnLogout.Caption  := DMIcons.Logout+'Logout';
 
+  // Clear menu
+  asm menuSidebar.replaceChildren(); end;
+
+  // Add Available Dashboards
+  DMMenus.AddDashboards(menuSidebar.ElementID, 'Administrator');
+
+  // Administrator Database Menu
+  DMMenus.AddMenuGroup(menuSidebar.ElementID, 'Database', 'Administrator');
+  DMMenus.AddMenuItem('Database', 'Endpoints', 'Administrator');
+  DMMenus.AddMenuItem('Database', 'Logins', 'Administrator');
+  DMMenus.AddMenuItem('Database', 'Failed_Logins', 'Administrator');
+
+  // Administrator Network Menu
+  DMMenus.AddMenuGroup(menuSidebar.ElementID, 'Network', 'Administrator');
+  DMMenus.AddMenuItem('Network', 'Tokens', 'Administrator');
+  DMMenus.AddMenuItem('Network', 'IP_Allow', 'Administrator');
+  DMMenus.AddMenuItem('Network', 'IP_Block', 'Administrator');
 
   asm {
-
-    var salesChartCanvas = document.querySelector('#salesChart').getContext('2d');
-    var salesChartData = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-        {
-          label: 'Digital Goods',
-          backgroundColor: 'rgba(60,141,188,0.9)',
-          borderColor: 'rgba(60,141,188,0.8)',
-          fill: true,
-          pointRadius: 0,
-          pointColor: '#3b8bba',
-          pointStrokeColor: 'rgba(60,141,188,1)',
-          pointHighlightFill: '#fff',
-          pointHighlightStroke: 'rgba(60,141,188,1)',
-          data: [28, 48, 40, 19, 86, 27, 90]
-        },
-        {
-          label: 'Electronics',
-          backgroundColor: 'rgba(210, 214, 222, 1)',
-          borderColor: 'rgba(210, 214, 222, 1)',
-          fill: true,
-          pointRadius: 0,
-          pointColor: 'rgba(210, 214, 222, 1)',
-          pointStrokeColor: '#c1c7d1',
-          pointHighlightFill: '#fff',
-          pointHighlightStroke: 'rgba(220,220,220,1)',
-          data: [65, 59, 80, 81, 56, 55, 40]
-        }
-      ]
-    }
-    var salesChartOptions = {
-      maintainAspectRatio: false,
-      responsive: true,
-      tension: 0.4,
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        xAxes: {
-          gridLines: {
-            display: false
-          }
-        },
-        yAxes: {
-          gridLines: {
-            display: false
-          }
-        }
-      }
-    }
-    // This will get the first returned node in the js collection.
-    var salesChart = new Chart(salesChartCanvas, {
-      type: 'line',
-      data: salesChartData,
-      options: salesChartOptions
-    });
-
-
-    var pieChartCanvas = document.querySelector('#pieChart').getContext('2d');
-    var pieData = {
-      labels: [
-        'Chrome',
-        'IE',
-        'FireFox',
-        'Safari',
-        'Opera',
-        'Navigator'
-      ],
-      datasets: [
-        {
-          data: [700, 500, 400, 600, 300, 100],
-          backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de']
-        }
-      ]
-    }
-    var pieOptions = {
-      plugins: {
-        legend: {
-          display: false
-        }
-      }
-    }
-    // Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    // eslint-disable-next-line no-unused-vars
-    var pieChart = new Chart(pieChartCanvas, {
-      type: 'doughnut',
-      data: pieData,
-      options: pieOptions
-    });
-
-
     window.document.dispatchEvent(new Event("DOMContentLoaded", {
       bubbles: true,
       cancelable: true
@@ -202,7 +133,7 @@ begin
       scrollbarAutoHide: 'leave'
     }
     if (typeof OverlayScrollbarsGlobal !== 'undefined') {
-      if (typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+      if (typeof OverlayScrollbarsGlobal.OverlayScrollbars !== 'undefined') {
         OverlayScrollbarsGlobal.OverlayScrollbars(document.querySelector(SELECTOR_SIDEBAR_WRAPPER), {
           scrollbars: {
             theme: Default.scrollbarTheme,
@@ -230,9 +161,9 @@ begin
     }
     setTheme(getPreferredTheme());
     const showActiveTheme = theme => {
-      const activeThemeIcon = document.querySelector('.theme-icon-active i')
+      const activeThemeIcon = document.querySelector('.theme-icon-active i, .theme-icon-active svg')
       const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
-      const svgOfActiveBtn = btnToActive.querySelector('i').getAttribute('class')
+      const svgOfActiveBtn = btnToActive.querySelector('i,svg').getAttribute('class')
       document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
         element.classList.remove('active')
       })
@@ -262,8 +193,31 @@ begin
 
   } end;
 
-  tmrAdministratorStart.Enabled := True;
+  ResponseString := await(MainForm.JSONRequest('IDashboardService.AdministratorDashboard',[]));
+  if ResponseString <> '' then
+  begin
+    ResponseJSON := TJSONObject.ParseJSONValue(ResponseString) as TJSONObject;
 
+    labelName.HTML := MainForm.User_FirstName+' '+MainForm.User_LastName;
+    labelNameTitle.HTML := MainForm.User_FirstName+' '+MainForm.User_LastName+' - Administrator';
+    labelCopyright.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[3] as TJSONObject).GetValue('value') as TJSONString).Value;
+    labelSlogan.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[2] as TJSONObject).GetValue('value') as TJSONString).Value;
+    labelAppTitle.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[1] as TJSONObject).GetValue('value') as TJSONString).Value;
+
+    spanPhoto.HTML := (ResponseJSON.GetValue('Photo') as TJSONString).Value;
+    spanPhoto.ElementHandle.firstElementChild.className := 'user-image rounded-circle shadow';
+    spanPhoto.ElementHandle.firstElementChild.setAttribute('alt','User Photo');
+
+    spanPhotoBig.HTML := (ResponseJSON.GetValue('Photo') as TJSONString).Value;
+    spanPhotoBig.ElementHandle.firstElementChild.className := 'rounded-circle shadow';
+    spanPhotoBig.ElementHandle.firstElementChild.setAttribute('alt','User Photo');
+    (spanPhotoBig.ElementHandle.firstElementChild as TJSHTMLElement).style.setProperty('max-width','200px');
+  end;
+
+  // Show the form
+  MenuClicked('Administrator', 'Dashboard', 'AdminstratorSub');
+  MainForm.divHost.ElementHandle.style.setProperty('opacity','1');
+  divSubForm.ElementHandle.style.setProperty('opacity','1');
 end;
 
 end.

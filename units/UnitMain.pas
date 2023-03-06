@@ -31,13 +31,15 @@ type
     procedure ProcessJWT(aJWT: String);
     procedure WebFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     [async] procedure Logout(Reason: String);
-    [async] procedure LoadForm(Form: String);
+    [async] procedure LoadForm(Form: String; FormIcon: String);
+    [async] procedure LoadSubForm(SubForm: String; divSubForm: TWebHTMLDiv; SubFormIcon: String);
     [async] function JSONRequest(Endpoint: String; Params: Array of JSValue):String;
     [async] procedure XDataConnect;
     [async] function XDataLogin(Username: String; Password: String):String;
     [async] procedure tmrJWTRenewalTimer(Sender: TObject);
     procedure tmrJWTRenewalWarningTimer(Sender: TObject);
     procedure WebFormClick(Sender: TObject);
+    procedure SubFormShow;
   private
     { Private declarations }
   public
@@ -58,19 +60,26 @@ type
 
     CurrentForm: TWebForm;
     CurrentFormName: String;
+    CurrentFormIcon: String;
+
+    CurrentSubForm: TWebForm;
+    CurrentSubFormName: String;
+    CurrentSubFormIcon: String;
 
     JWT: String;
     JWT_Expiry: TDateTime;
+    Remember: Boolean;
 
     User_FirstName: String;
     User_MiddleName: String;
     User_LastName: String;
     User_EMail: String;
-    User_Roles: TStringList;
 
+    User_Roles: TStringList;
     Role_Administrator: Boolean;
     Role_Sales: Boolean;
     Role_HR: Boolean;
+    Roles: String;
 
     ToastCount: Integer;
   end;
@@ -82,7 +91,10 @@ implementation
 
 {$R *.dfm}
 
-uses UnitIcons, UnitLogin, UnitAdministrator;
+uses
+  UnitIcons, UnitLogin,
+  UnitUserProfileSub, UnitUserActionsSub,
+  UnitAdministrator, UnitAdministratorSub;
 
 procedure TMainForm.WebFormClick(Sender: TObject);
 begin
@@ -99,7 +111,10 @@ begin
   App_Version := '1.0';
   App_Release := '2022-Feb-28';
   App_Start := Now();
+
+  // MainForm Options
   MainForm.Caption := App_Name;
+  MainForm.divHost.ElementHandle.style.setProperty('opacity','0');
 
   // Load Icon Set
   IconSet := document.documentElement.getAttribute('iconset');
@@ -113,10 +128,16 @@ begin
   // JWT Handling
   JWT := '';
   JWT_Expiry := TTimeZone.Local.ToUniversalTime(Now);
+  Remember := True;
 
   // Form Management
   CurrentForm := nil;
   CurrentFormName := 'Initializing';
+  CurrentFormIcon := '';
+
+  CurrentSubForm := nil;
+  CurrentSubFormName := '';
+  CurrentSubFormIcon := '';
 
   // Application Information
   Caption := 'TMS WEB Core Template Demo';
@@ -126,11 +147,12 @@ begin
   User_MiddleName :=  '';
   User_LastName := '';
   User_EMail := '';
-  User_Roles := TStringList.Create;
 
+  User_Roles := TStringList.Create;
   Role_Administrator := False;
   Role_Sales := False;
   Role_HR := False;
+  Roles := '';
 
   // Log what we're doing in the application
   ActionLog := TStringList.Create;
@@ -152,26 +174,41 @@ begin
   // Launch Login
   if not(LoggedIn) then
   begin
-    LoadForm('Login');
+    LoadForm('Login', DMIcons.Login);
   end;
 
   // What to do if the browser closes unexpectedly
   asm
     window.addEventListener('beforeunload', function (e) {
-      pas.UnitMain.MainForm.Logout('Browser Closed');
+
+// Option 1:
+// This logs out user when tab is closed
+// Highest security
+//      pas.UnitMain.MainForm.Logout('Browser Closed');
+
+// Option 2:
+// Do nothing
+// Lower security but more convenient
+// - don't have to login as often.
+// - survvies browser restart.
+
+// Option 3:
+// This enables annoying browser dialog
+// Can be used with either of the above options
 //      e.preventDefault();
 //      e.returnValue = '';
     });
+
+    window.sleep = async function(msecs) {return new Promise((resolve) => setTimeout(resolve, msecs));}
   end;
 end;
 
-procedure TMainForm.WebFormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TMainForm.WebFormKeyDown(Sender: TObject; var Key: Word;    Shift: TShiftState);
 begin
   if Key= VK_F4 then Logout('F4');
 end;
 
-procedure TMainForm.LoadForm(Form: String);
+procedure TMainForm.LoadForm(Form: String; FormIcon: String);
 var
   ElapsedTime: TDateTime;
 
@@ -185,6 +222,9 @@ begin
   ElapsedTime := Now;
 
   LogAction('', False);
+  LogAction('Load Form: '+Form, False);
+  CurrentFormName := Form;
+  CurrentFormIcon := FormIcon;
 
   if Assigned(CurrentForm) then
   begin
@@ -196,22 +236,21 @@ begin
     end;
   end;
 
-  LogAction('Load Form: '+Form, False);
-  CurrentFormName := Form;
 
   // Login Form
   if Form = 'Login' then
   begin
-    divHost.ElementHandle.className := 'rounded border border-dark Login-Form';
     CurrentForm := TLoginForm.CreateNew(divHost.ElementID, @AfterCreate);
+    divHost.ElementHandle.className := 'Login-Form';
   end
 
   // Administrator Form
   else if Form = 'Administrator' then
   begin
-    TWebLocalStorage.SetValue('Login.CurrentForm', Form);
-    divHost.ElementHandle.className := 'rounded border border-dark Administrator-Form';
     CurrentForm := TAdministratorForm.CreateNew(divHost.ElementID, @AfterCreate);
+    divHost.ElementHandle.className := 'Administrator-Form';
+    TWebLocalStorage.SetValue('Login.CurrentForm', Form);
+    TWebLocalStorage.SetValue('Login.CurrentFormIcon', FormIcon);
   end
 
   // Not A Valid Form
@@ -229,6 +268,70 @@ begin
 
 end;
 
+procedure TMainForm.LoadSubForm(SubForm: String; divSubForm: TWebHTMLDiv; SubFormIcon: String);
+var
+  ElapsedTime: TDateTime;
+
+  procedure AfterCreate(AForm: TObject);
+  begin
+    LogAction('Load SubForm: '+AForm.ClassName+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime))+'ms)', False);
+  end;
+
+begin
+  // Time this action
+  ElapsedTime := Now;
+
+  LogAction('', False);
+
+  if Assigned(CurrentSubForm) then
+  begin
+    LogAction('Removing SubForm: '+CurrentSubForm.ClassName, False);
+    CurrentSubForm.Close;
+    CurrentSubForm.Free;
+    divSubForm.HTML.TExt := '';
+//    asm
+//      divSubForm.replaceChildren();
+//    end;
+  end;
+
+  LogAction('Load SubForm: '+SubForm, False);
+  CurrentSubFormName := SubForm;
+  CurrentSubFormIcon := SubFormIcon;
+
+  // User Profile SubForm
+  if SubForm = 'UserProfileSub' then
+  begin
+    divSubForm.ElementHandle.className := 'app-main User-Profile-SubForm';
+    CurrentSubForm := TUserProfileSubForm.CreateNew(divSubForm.ElementID, @AfterCreate);
+  end
+  // User Profile SubForm
+  else if SubForm = 'UserActionsSub' then
+  begin
+    divSubForm.ElementHandle.className := 'app-main User-Actions-SubForm';
+    CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.ElementID, @AfterCreate);
+  end
+
+  else if SubForm = 'AdministratorSub' then
+  begin
+    divSubForm.ElementHandle.className := 'app-main Administrator-SubForm';
+    CurrentSubForm := TAdministratorSubForm.CreateNew(divSubForm.ElementID, @AfterCreate);
+  end
+
+  // Not A Valid Form
+  else
+  begin
+    divSubForm.ElementHandle.className := 'rounded border bg-white border-dark';
+    CurrentSubFormName := 'Invalid Form';
+    LogAction('SubForm Not Found: '+SubForm, False);
+
+    // Probably display a better error message or redirect to another default
+    // form if an attempt is made to load an unexpected form.
+    if SubForm <> 'Clear'
+    then divSubForm.HTML.Text := 'ERROR: Form Not Found ('+SubForm+')';
+  end;
+
+end;
+
 procedure TMainForm.LogAction(Action: String; Extend: Boolean);
 var
   FilterAction: String;
@@ -241,6 +344,9 @@ begin
   ActionLog.Add(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz',  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+CurrentFormName.PadRight(15)+']  '+FilterAction);
   ActionLogCurrent.Add(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz',  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+CurrentFormName.PadRight(15)+']  '+FilterAction);
 
+  // Log to Console
+//  console.Log(FilterAction);
+
   // Be mindful that generating log entries can reset the ActivityDetected state
   if Extend then ActivityDetected := True;
 
@@ -250,8 +356,6 @@ begin
 end;
 
 procedure TMainForm.Logout(Reason: String);
-var
-  ResponseString: String;
 begin
   // Make sure these don't fire
   tmrJWTRenewal.Enabled := False;
@@ -260,18 +364,19 @@ begin
   if CurrentFormName <> 'Login' then
   begin
     LogAction('Logout: '+Reason, False);
+    Toast(DMIcons.Logout+'Logout','Processing. Please wait.',1000);
 
-    ResponseString := await(JSONRequest('ISystemService.Logout',[ActionLogCurrent.Text]));
+    await(JSONRequest('ISystemService.Logout',[ActionLogCurrent.Text]));
 
     JWT := '';
-    TWebLocalStorage.setValue('Login.CurrentForm','Login');
+    TWebLocalStorage.SetValue('Login.CurrentForm','Login');
     TWebLocalStorage.RemoveKey('Login.JWT');
     TWebLocalStorage.RemoveKey('Login.Expiry');
 
-    Toast(DMIcons.Logout+'Logout','Processing. Please wait.',1000);
     asm
-      async function sleep(msecs) {return new Promise((resolve) =>setTimeout(resolve, msecs));}
-      await sleep(1500);
+      await sleep(1000);
+      divHost.style.setProperty('opacity','0');
+      await sleep(1000);
     end;
 
     window.location.reload(true);
@@ -288,6 +393,7 @@ begin
   // A menu option has been selected.  Here we decide what to do about it.
 
 end;
+
 
 procedure TMainForm.ProcessJWT(aJWT: String);
 var
@@ -306,9 +412,12 @@ begin
   User_EMail :=  (JWTClaims.Get('eml').JSONValue as TJSONString).Value;
 
   // If roles have changed since logging in, then inform the user
-  if (CurrentFormName <> 'Login') and (User_Roles.CommaText <> (JWTClaims.Get('rol').JSONValue as TJSONString).Value)
+  if (CurrentFormName <> 'Login')
+     and (User_Roles.CommaText <> (JWTClaims.Get('rol').JSONValue as TJSONString).Value)
+     and (User_Roles.CommaText <> '')
   then Toast(DMIcons.Certificate+'Updated Roles', 'The roles for this account have been updated. Please Logout and Login again to access them.', 15000);
   User_Roles.CommaText :=  (JWTClaims.Get('rol').JSONValue as TJSONString).Value;
+  Roles := (JWTClaims.Get('rol').JSONValue as TJSONString).Value;
 
   // Set renewal to one minute before expiration
   JWT_Expiry := UnixToDateTime((JWTClaims.Get('exp').JSONValue as TJSONNumber).AsInt);
@@ -325,6 +434,13 @@ begin
   begin
     tmrJWTRenewal.Enabled := True;
     tmrJWTRenewalWarning.Enabled := True;
+
+    if Remember then
+    begin
+      TWebLocalStorage.SetValue('Login.JWT', MainForm.JWT);
+      TWebLocalStorage.SetValue('Login.Expiry', FloatToStr(MainForm.JWT_Expiry));
+    end;
+
   end;
 
   // Extract Roles
@@ -338,6 +454,17 @@ begin
     if User_Roles[i] = '2' then Role_Sales := True;
     if User_Roles[i] = '3' then Role_HR := True;
     i := i + 1;
+  end;
+end;
+
+procedure TMainForm.SubFormShow;
+begin
+  asm
+    var subform = document.getElementById('divSubForm');
+    subform.style.setProperty('opacity', '1');
+    subform.style.setProperty('font-family', 'unset');
+    subform.style.setProperty('font-size', 'unset');
+    subform.style.setProperty('font-style', 'unset');
   end;
 end;
 
@@ -355,7 +482,7 @@ begin
   if ActivityDetected then
   begin
     ResponseString := await(JSONRequest('ISystemService.Renew',[ActionLogSend]));
-    if ResponseString <> '' then
+    if Copy(ResponseString,1,6) =  'Bearer' then
     begin
       LogAction('Login Renewed', False);
       ProcessJWT(ResponseString);
@@ -364,6 +491,7 @@ begin
     else
     begin
     // Otherwise perform an automatic logout of this session
+      LogAction('Login NOT Renewed', False);
       Logout('NNoRenewal');
     end
   end
@@ -377,7 +505,7 @@ procedure TMainForm.tmrJWTRenewalWarningTimer(Sender: TObject);
 begin
   tmrJWTRenewalWarning.Enabled := False;
   if not(ActivityDetected)
-  then Toast(DMIcons.Logout+'Auto Logout','No activity has been detected.  Auto logout in $S seconds.', 60000);
+  then Toast(DMIcons.Logout+'Auto Logout','No activity has been detected.  Auto Logout in $S seconds.', 60000);
 end;
 
 procedure TMainForm.Toast(Header, Body: String; Timeout: Integer);
@@ -438,7 +566,7 @@ procedure TMainForm.btnClearFormClick(Sender: TObject);
 begin
   // More for testing purposes than anything else
   LogAction('CLICK: Clear Form', True);
-  LoadForm('Clear');
+  LoadForm('Clear','');
   Toast('divHost Component','Cleared.',15000);
 end;
 
@@ -500,7 +628,7 @@ end;
 procedure TMainForm.btnLoginFormClick(Sender: TObject);
 begin
   LogAction('CLICK: Login Form', False);
-  LoadForm('Login');
+  LoadForm('Login', DMIcons.Login);
 end;
 
 procedure TMainForm.XDataConnect;
@@ -545,7 +673,6 @@ var
   TZ: String;
   ErrorCode: String;
   ErrorMessage: String;
-  i: Integer;
 begin
 
   ElapsedTime := Now;

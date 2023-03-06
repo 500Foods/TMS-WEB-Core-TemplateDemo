@@ -36,6 +36,7 @@ object MainForm: TMainForm
     ElementFont = efCSS
     HeightStyle = ssAuto
     HeightPercent = 100.000000000000000000
+    Visible = False
     WidthPercent = 100.000000000000000000
     OnClick = btnShowLogClick
   end
@@ -62,6 +63,7 @@ object MainForm: TMainForm
     ElementFont = efCSS
     HeightStyle = ssAuto
     HeightPercent = 100.000000000000000000
+    Visible = False
     WidthPercent = 100.000000000000000000
     OnClick = btnLoginFormClick
   end
@@ -77,6 +79,7 @@ object MainForm: TMainForm
     ElementFont = efCSS
     HeightStyle = ssAuto
     HeightPercent = 100.000000000000000000
+    Visible = False
     WidthPercent = 100.000000000000000000
     OnClick = btnClearFormClick
   end

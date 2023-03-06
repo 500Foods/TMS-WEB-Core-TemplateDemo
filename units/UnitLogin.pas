@@ -19,9 +19,9 @@ type
     btnForgot: TWebButton;
     procedure WebFormCreate(Sender: TObject);
     procedure WebFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure tmrLoginStartTimer(Sender: TObject);
-    [async] procedure btnLoginClick(Sender: TObject);
     procedure editUsernameChange(Sender: TObject);
+    [async] procedure tmrLoginStartTimer(Sender: TObject);
+    [async] procedure btnLoginClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -43,6 +43,7 @@ var
 begin
   btnLogin.Caption := 'Authorizing...';
 
+
   LoginCheck := await(MainForm.XDataLogin(editUSername.Text, editPassword.Text));
 //  console.log(LoginCheck);
 
@@ -51,18 +52,24 @@ begin
     // Briefly show successful login message
     btnLogin.Caption := 'Login Successful';
     asm
-      async function sleep(msecs) {return new Promise((resolve) =>setTimeout(resolve, msecs));}
       await sleep(500);
+    end;
+    // hide the login page
+    MainForm.divHost.ElementHandle.style.setProperty('opacity','0');
+    asm
+      await sleep(1000);
     end;
 
     if checkRemember.checked then
     begin
+      MainForm.Remember := True;
       TWebLocalStorage.SetValue('Login.Username', editUsername.Text);
       TWebLocalStorage.SetValue('Login.JWT', MainForm.JWT);
       TWebLocalStorage.SetValue('Login.Expiry', FloatToStr(MainForm.JWT_Expiry));
     end
     else
     begin
+      MainForm.Remember := False;
       TWebLocalStorage.RemoveKey('Login.Username');
       TWebLocalStorage.RemoveKey('Login.JWT');
       TWebLocalStorage.RemoveKey('Login.Expiry');
@@ -76,16 +83,17 @@ begin
     // Load selected form
     if MainForm.Role_Administrator then
     begin
-      MainForm.LoadForm('Administrator');
+      MainForm.LoadForm('Administrator', DMIcons.Administrator_Menu);
     end
     else if MainForm.Role_HR then
     begin
-      MainForm.LoadForm('HR')
+      MainForm.LoadForm('HR', DMIcons.Administrator_Menu)
     end
     else if MainForm.Role_Sales then
     begin
-      MainForm.LoadForm('Sales');
+      MainForm.LoadForm('Sales', DMIcons.Administrator_Menu);
     end;
+
 
   end
   else
@@ -162,11 +170,12 @@ begin
       if MainForm.JWT_Expiry > (TTimeZone.Local.ToUniversalTime(Now) + 60/86400) then
       begin
         MainForm.LogAction('AutoLogin / JWT Time Remaining: '+IntToStr(SecondsBetween(MainForm.JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)))+'s', False);
-//        console.log('AutoLogin/JWT Time Remaining: '+IntToStr(SecondsBetween(MainForm.JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)))+'s');
-
         LoggedIn := True;
+
         MainForm.ProcessJWT(TWebLocalStorage.GetValue('Login.JWT'));
-        MainForm.LoadForm(TWebLocalStorage.GetValue('Login.CurrentForm'));
+        MainForm.LoadForm(TWebLocalStorage.GetValue('Login.CurrentForm'),TWebLocalStorage.GetValue('Login.CurrentFormIcon') );
+        MainForm.divHost.ElementHandle.style.setProperty('opacity','1');
+
       end
       else
       begin
@@ -214,9 +223,16 @@ begin
       });
     end;
 
+    // Show the login page
+    MainForm.divHost.ElementHandle.style.setProperty('opacity','1');
+    asm
+      await sleep(1000);
+    end;
     // Show the login form
     divLoginBox.ElementHandle.style.setProperty('opacity','1');
+
   end;
+
 
 end;
 

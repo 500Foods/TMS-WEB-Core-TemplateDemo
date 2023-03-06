@@ -96,21 +96,21 @@ object AdministratorForm: TAdministratorForm
     HTMLType = tSPAN
     WidthPercent = 100.000000000000000000
   end
-  object labelDashboard: TWebLabel
+  object labelLoggedIn: TWebLabel
     Left = 72
-    Top = 280
-    Width = 82
+    Top = 182
+    Width = 76
     Height = 13
-    Caption = 'Dashboard Name'
-    ElementID = 'labelDashboard'
+    Caption = 'Logged In Since'
+    ElementID = 'labelLoggedIn'
     ElementFont = efCSS
     HeightStyle = ssAuto
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
   end
   object btnLogout: TWebButton
-    Left = 72
-    Top = 244
+    Left = 284
+    Top = 97
     Width = 96
     Height = 25
     Caption = 'Logout'
@@ -124,8 +124,8 @@ object AdministratorForm: TAdministratorForm
     OnClick = btnLogoutClick
   end
   object btnActions: TWebButton
-    Left = 72
-    Top = 213
+    Left = 284
+    Top = 66
     Width = 96
     Height = 25
     Caption = 'Actions'
@@ -136,11 +136,11 @@ object AdministratorForm: TAdministratorForm
     HeightStyle = ssAuto
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
-    OnClick = btnLogoutClick
+    OnClick = btnActionsClick
   end
   object btnProfile: TWebButton
-    Left = 72
-    Top = 182
+    Left = 284
+    Top = 35
     Width = 96
     Height = 25
     Caption = 'Profile'
@@ -151,13 +151,28 @@ object AdministratorForm: TAdministratorForm
     HeightStyle = ssAuto
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
-    OnClick = btnLogoutClick
+    OnClick = btnProfileClick
   end
-  object tmrAdministratorStart: TWebTimer
-    Enabled = False
-    Interval = 10
-    OnTimer = tmrAdministratorStartTimer
-    Left = 568
-    Top = 24
+  object menuSidebar: TWebHTMLDiv
+    Left = 280
+    Top = 135
+    Width = 100
+    Height = 41
+    ElementID = 'menuSidebar'
+    ChildOrder = 12
+    ElementFont = efCSS
+    Role = ''
+  end
+  object divSubform: TWebHTMLDiv
+    Left = 280
+    Top = 182
+    Width = 100
+    Height = 40
+    ElementID = 'divSubForm'
+    HeightStyle = ssAuto
+    ChildOrder = 13
+    ElementPosition = epIgnore
+    ElementFont = efCSS
+    Role = ''
   end
 end
