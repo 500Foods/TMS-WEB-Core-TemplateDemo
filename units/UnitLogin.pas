@@ -83,15 +83,15 @@ begin
     // Load selected form
     if MainForm.Role_Administrator then
     begin
-      MainForm.LoadForm('Administrator', DMIcons.Administrator_Menu);
+      MainForm.LoadForm('Administrator', DMIcons.Icon('Administrator_Menu'));
     end
     else if MainForm.Role_HR then
     begin
-      MainForm.LoadForm('HR', DMIcons.Administrator_Menu)
+      MainForm.LoadForm('HR', DMIcons.Icon('Administrator_Menu'))
     end
     else if MainForm.Role_Sales then
     begin
-      MainForm.LoadForm('Sales', DMIcons.Administrator_Menu);
+      MainForm.LoadForm('Sales', DMIcons.Icon('Administrator_Menu'));
     end;
 
 
@@ -103,7 +103,7 @@ begin
     LoginCheck := StringReplace(LoginCheck,'. ','.<br />',[]);
     if Trim(LoginCheck) = '/'
     then LoginCheck := 'System Error / Server connection could not be established.';
-    MainForm.Toast(DMIcons.Login+Copy(LoginCheck,1,Pos('/',LoginCheck) -2),Copy(LoginCheck, Pos('/',LoginCheck)+2,Length(LoginCheck)),15000);
+    MainForm.Toast(DMIcons.Icon('Login')+Copy(LoginCheck,1,Pos('/',LoginCheck) -2),Copy(LoginCheck, Pos('/',LoginCheck)+2,Length(LoginCheck)),15000);
   end;
 end;
 
@@ -188,11 +188,8 @@ begin
   if not(LoggedIn) then
   begin
     // Update Icons
-    asm
-      const IconSet = pas.UnitIcons.DMIcons;
-      document.getElementById('ticon-username').innerHTML = IconSet.Username;
-      document.getElementById('ticon-password').innerHTML = IconSet.Password;
-    end;
+    document.getElementById('ticon-username').innerHTML := DMIcons.Icon('Username');
+    document.getElementById('ticon-password').innerHTML := DMIcons.Icon('Password');
 
     // Check if we have remembered a Username
     Remembered :=  TWebLocalStorage.GetValue('Login.Username');

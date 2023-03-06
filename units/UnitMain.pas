@@ -174,7 +174,7 @@ begin
   // Launch Login
   if not(LoggedIn) then
   begin
-    LoadForm('Login', DMIcons.Login);
+    LoadForm('Login', DMIcons.Icon('Login'));
   end;
 
   // What to do if the browser closes unexpectedly
@@ -364,7 +364,7 @@ begin
   if CurrentFormName <> 'Login' then
   begin
     LogAction('Logout: '+Reason, False);
-    Toast(DMIcons.Logout+'Logout','Processing. Please wait.',1000);
+    Toast(DMIcons.Icon('Logout')+'Logout','Processing. Please wait.',1000);
 
     await(JSONRequest('ISystemService.Logout',[ActionLogCurrent.Text]));
 
@@ -415,7 +415,7 @@ begin
   if (CurrentFormName <> 'Login')
      and (User_Roles.CommaText <> (JWTClaims.Get('rol').JSONValue as TJSONString).Value)
      and (User_Roles.CommaText <> '')
-  then Toast(DMIcons.Certificate+'Updated Roles', 'The roles for this account have been updated. Please Logout and Login again to access them.', 15000);
+  then Toast(DMIcons.Icon('Certificate')+'Updated Roles', 'The roles for this account have been updated. Please Logout and Login again to access them.', 15000);
   User_Roles.CommaText :=  (JWTClaims.Get('rol').JSONValue as TJSONString).Value;
   Roles := (JWTClaims.Get('rol').JSONValue as TJSONString).Value;
 
@@ -505,7 +505,7 @@ procedure TMainForm.tmrJWTRenewalWarningTimer(Sender: TObject);
 begin
   tmrJWTRenewalWarning.Enabled := False;
   if not(ActivityDetected)
-  then Toast(DMIcons.Logout+'Auto Logout','No activity has been detected.  Auto Logout in $S seconds.', 60000);
+  then Toast(DMIcons.Icon('Logout')+'Auto Logout','No activity has been detected.  Auto Logout in $S seconds.', 60000);
 end;
 
 procedure TMainForm.Toast(Header, Body: String; Timeout: Integer);
@@ -628,7 +628,7 @@ end;
 procedure TMainForm.btnLoginFormClick(Sender: TObject);
 begin
   LogAction('CLICK: Login Form', False);
-  LoadForm('Login', DMIcons.Login);
+  LoadForm('Login', DMIcons.Icon('Login'));
 end;
 
 procedure TMainForm.XDataConnect;

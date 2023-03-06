@@ -39,10 +39,10 @@ end;
 
 procedure TUserActionsSubForm.WebFormCreate(Sender: TObject);
 begin
-  labelDashboard.HTML := DMIcons.Actions_Menu+'User Actions';
-  bcDashboards.HTML := DMICons.Dashboard_Menu+'Dashboards';
+  labelDashboard.HTML := DMIcons.Icon('Actions_Menu')+'User Actions';
+  bcDashboards.HTML := DMICons.Icon('Dashboard_Menu')+'Dashboards';
   bcDashboard.HTML := mainForm.CurrentFormIcon+MainForm.CurrentFormName;
-  bcCurrent.hTML := DMIcons.Actions_Menu+'User Actions';
+  bcCurrent.hTML := DMIcons.Icon('Actions_Menu')+'User Actions';
 end;
 
 procedure TUserActionsSubForm.WebFormShow(Sender: TObject);

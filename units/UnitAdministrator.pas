@@ -70,7 +70,7 @@ begin
        divSubForm.ElementHandle.style.setProperty('opacity','0');
        asm await sleep (500); end;
 
-      MainForm.LoadSubForm('AdministratorSub',divSubForm, DMIcons.Administrator_Menu);
+      MainForm.LoadSubForm('AdministratorSub',divSubForm, DMIcons.Icon('Administrator_Menu'));
     end
 
     else if MenuType = 'User' then
@@ -78,8 +78,8 @@ begin
        divSubForm.ElementHandle.style.setProperty('opacity','0');
        asm await sleep (500); end;
 
-       if MenuName = 'Profile' then MainForm.LoadSubForm('UserProfileSub',divSubForm, DMIcons.Profile_Menu);
-       if MenuName = 'Actions' then MainForm.LoadSubForm('UserActionsSub',divSubform, DMIcons.Actions_Menu);
+       if MenuName = 'Profile' then MainForm.LoadSubForm('UserProfileSub',divSubForm, DMIcons.Icon('Profile_Menu'));
+       if MenuName = 'Actions' then MainForm.LoadSubForm('UserActionsSub',divSubform, DMIcons.Icon('Actions_Menu'));
 
     end;
 
@@ -98,9 +98,9 @@ begin
   labelLoggedIn.HTML := '<small>Logged in at '+FormatDateTime('hh:nn',Now)+'<small>';
 
   // User Menu Buttons Buttons
-  btnProfile.Caption := DMIcons.Profile+'Profile';
-  btnActions.Caption := DMIcons.Actions+'Actions';
-  btnLogout.Caption  := DMIcons.Logout+'Logout';
+  btnProfile.Caption := DMIcons.Icon('Profile')+'Profile';
+  btnActions.Caption := DMIcons.Icon('Actions')+'Actions';
+  btnLogout.Caption  := DMIcons.Icon('Logout')+'Logout';
 
   // Clear menu
   asm menuSidebar.replaceChildren(); end;

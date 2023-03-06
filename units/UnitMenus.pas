@@ -35,7 +35,7 @@ begin
   asm
     // Setup a link to the sidebar menu and to our icons
     var menu = document.getElementById(SideMenu);
-    var iconset = pas.UnitIcons.DMIcons;
+    var icon = pas.UnitIcons.DMIcons.Lookup;
     var roles = JSON.parse('['+pas.UnitMain.MainForm.Roles+']');
 
     // Top-level of this menu block
@@ -45,7 +45,7 @@ begin
     // Header for this menu block
     var menuName = document.createElement('div');
     menuName.className = 'nav-link active px-1 cursor-pointer';
-    menuName.innerHTML = '<strong>'+iconset.Dashboard_Nav+'</strong><p><strong>Dashboards</strong>'+iconset.ArrowRight_Nav+'</p>';
+    menuName.innerHTML = '<strong>'+icon["Dashboard_Nav"]+'</strong><p><strong>Dashboards</strong>'+icon["ArrowRight_Nav"]+'</p>';
 
     // Add to page
     menu.appendChild(menuTop);
@@ -73,7 +73,7 @@ begin
       var menuEntry = document.createElement('li');
       menuEntry.className = 'nav-item cursor-pointer';
       var menuLink = document.createElement('div');
-      menuLink.innerHTML = eval('iconset.'+dash.replace('_','')+'_Menu')+'<p>'+dash+'</p>';
+      menuLink.innerHTML = icon[dash.replace('_','')+'_Menu']+'<p>'+dash+'</p>';
       menuLink.setAttribute('id',Dashboard.replace('_','')+'_Dashboard_'+dash.replace('_',''));
 
       // Highlight dashboard item if it is the current dashboard
@@ -105,7 +105,7 @@ begin
   asm
     // Setup a link to the sidebar menu and to our icons
     var menu = document.getElementById(SideMenu);
-    var iconset = pas.UnitIcons.DMIcons;
+    var icon = pas.UnitIcons.DMIcons.Lookup;
 
     // Top-level of this menu block
     var menuTop = document.createElement('li');
@@ -114,7 +114,7 @@ begin
     // Header for this menu block
     var menuName = document.createElement('div');
     menuName.className = 'nav-link active px-1 cursor-pointer';
-    menuName.innerHTML = '<strong>'+ eval('iconset.'+MenuGroup.replace('_','')+'_Menu')+'</strong><p><strong>'+MenuGroup.replace('_',' ')+'</strong>'+iconset.ArrowRight_Nav+'</p>';
+    menuName.innerHTML = '<strong>'+icon[MenuGroup.replace('_','')+'_Menu']+'</strong><p><strong>'+MenuGroup.replace('_',' ')+'</strong>'+icon["ArrowRight_Nav"]+'</p>';
 
     // Add to page
     menu.appendChild(menuTop);
@@ -133,13 +133,13 @@ procedure TDMMenus.AddMenuItem(MenuGroup, MenuItem, Dashboard: String);
 begin
   asm
     var menuTree = document.getElementById('Menu_'+Dashboard.replace('_','')+'_'+MenuGroup.replace('_',''));
-    var iconset = pas.UnitIcons.DMIcons;
+    var icon = pas.UnitIcons.DMIcons.Lookup;
 
     // Create menu item
     var menuEntry = document.createElement('li');
     menuEntry.className = 'nav-item cursor-pointer';
     var menuLink = document.createElement('div');
-    menuLink.innerHTML = eval('iconset.'+MenuItem.replace('_','')+'_Menu')+'<p>'+MenuItem.replace('_',' ')+'</p>';
+    menuLink.innerHTML = icon[MenuItem.replace('_','')+'_Menu']+'<p>'+MenuItem.replace('_',' ')+'</p>';
     menuLink.setAttribute('id',Dashboard.replace('_','')+'_'+MenuGroup.replace('_','')+'_'+MenuItem.replace('_',''));
     menuLink.className = 'nav-link';
 
@@ -165,7 +165,7 @@ begin
   MainForm.LogAction('Menu Clicked ['+MenuForm+'] ['+MenuType+'] ['+MenuName+']',true);
 
   asm
-    FormIcon = eval('pas.UnitIcons.DMIcons.'+MenuName+'_Menu');
+    FormIcon = icon[MenuName+'_Menu'];
   end;
 
   // Hide either the current subform or the main form

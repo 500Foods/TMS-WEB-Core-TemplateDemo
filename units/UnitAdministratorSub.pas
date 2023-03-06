@@ -31,9 +31,9 @@ uses
 
 procedure TAdministratorSubForm.WebFormCreate(Sender: TObject);
 begin
-  labelDashboard.HTML := DMIcons.Administrator_Menu+'Administrator Dashboard';
-  bcDashboards.HTML := DMICons.Dashboard_Menu+'Dashboards';
-  bcDashboard.HTML := DMIcons.Administrator_Menu+'Administrator';
+  labelDashboard.HTML := DMIcons.Icon('Administrator_Menu')+'Administrator Dashboard';
+  bcDashboards.HTML := DMICons.Icon('Dashboard_Menu')+'Dashboards';
+  bcDashboard.HTML := DMIcons.Icon('Administrator_Menu')+'Administrator';
 
   asm {
 

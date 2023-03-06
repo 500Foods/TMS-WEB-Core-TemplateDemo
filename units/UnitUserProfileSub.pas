@@ -33,10 +33,10 @@ uses
 
 procedure TUserProfileSubForm.WebFormCreate(Sender: TObject);
 begin
-  labelDashboard.HTML := DMIcons.Profile_Menu+'User Profile';
-  bcDashboards.HTML := DMICons.Dashboard_Menu+'Dashboards';
+  labelDashboard.HTML := DMIcons.Icon('Profile_Menu')+'User Profile';
+  bcDashboards.HTML := DMICons.Icon('Dashboard_Menu')+'Dashboards';
   bcDashboard.HTML := mainForm.CurrentFormIcon+MainForm.CurrentFormName;
-  bcCurrent.hTML := DMIcons.Profile_Menu+'User Profile';
+  bcCurrent.hTML := DMIcons.Icon('Profile_Menu')+'User Profile';
 end;
 
 procedure TUserProfileSubForm.WebFormShow(Sender: TObject);
