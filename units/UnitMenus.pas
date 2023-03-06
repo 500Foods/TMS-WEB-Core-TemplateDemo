@@ -74,7 +74,7 @@ begin
       menuEntry.className = 'nav-item cursor-pointer';
       var menuLink = document.createElement('div');
       menuLink.innerHTML = eval('iconset.'+dash.replace('_','')+'_Menu')+'<p>'+dash+'</p>';
-      menuLink.setAttribute('id',Dashboard+'_Dashboard_'+dash);
+      menuLink.setAttribute('id',Dashboard.replace('_','')+'_Dashboard_'+dash.replace('_',''));
 
       // Highlight dashboard item if it is the current dashboard
       if (dash == Dashboard) { menuLink.className = 'nav-link active'; }
@@ -85,7 +85,7 @@ begin
       menuEntry.appendChild(menuLink);
 
       // Add click event
-      menuEntry.addEventListener('click', (menu) => {
+      menuLink.addEventListener('click', (menu) => {
         pas.UnitMenus.DMMenus.MenuClicked(
           menu.target.id.split('_')[0],
           menu.target.id.split('_')[1],
