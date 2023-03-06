@@ -9,6 +9,8 @@ echo "PostBuild Script is Running"
 # Files that we might be updating
 $ProjectFile=$args[0].Substring(0,$args[0].Length-1)+'\Project1.html'
 $TemplateFile=$args[0].Substring(0,$args[0].Length-1)+'\css\template.css'
+$TemplateSrc='css\template.css'
+copy $TemplateSrc $TemplateFile
 # echo $args[0]
 # echo $ProjectFile
 # echo $TemplateFile

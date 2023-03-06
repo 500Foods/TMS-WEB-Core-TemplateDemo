@@ -22,7 +22,5 @@ begin
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TDMIcons, DMIcons);
   Application.CreateForm(TDMMenus, DMMenus);
-  Application.CreateForm(TUserActionsSubForm, UserActionsSubForm);
-  Application.CreateForm(TAdministratorSubForm, AdministratorSubForm);
   Application.Run;
 end.

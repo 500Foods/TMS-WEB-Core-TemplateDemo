@@ -60,7 +60,7 @@ begin
     Icon[ "People_Menu"         ] = '<i class="fa-solid fa-people-group fa-fw me-2"></i>';
     Icon[ "Profile"             ] = '<span class="fa-solid fa-user-secret me-2"></span>';
     Icon[ "Profile_Menu"        ] = '<i class="fa-solid fa-user-secret fa-fw me-2"></i>';
-    Icon[ "Tokens_Menu"         ] = '<i class="fa-solidfa-shield fa-fw me-2"></i>';
+    Icon[ "Tokens_Menu"         ] = '<i class="fa-solid fa-shield fa-fw me-2"></i>';
     Icon[ "Username"            ] = '<span class="fa-solid fa-envelope"></span>';
 
     // Override these icons if we're using FontAwesome 6 Pro Duo
