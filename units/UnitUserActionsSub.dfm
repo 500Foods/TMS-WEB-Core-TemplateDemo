@@ -1,6 +1,8 @@
 object UserActionsSubForm: TUserActionsSubForm
   Width = 640
   Height = 480
+  CSSLibrary = cssBootstrap
+  ElementFont = efCSS
   OnCreate = WebFormCreate
   OnShow = WebFormShow
   object labelDashboard: TWebLabel

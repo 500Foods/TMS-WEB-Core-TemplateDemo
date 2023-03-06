@@ -27,7 +27,7 @@ type
     procedure btnActionsClick(Sender: TObject);
     [async] procedure WebFormCreate(Sender: TObject);
     [async] procedure MenuClicked(MenuForm: String; MenuType: String; MenuName: String);
-
+    procedure CreateMenu;
   private
     { Private declarations }
   public
@@ -56,6 +56,28 @@ end;
 procedure TAdministratorForm.btnProfileClick(Sender: TObject);
 begin
   MenuClicked('Administrator', 'User', 'Profile');
+end;
+
+procedure TAdministratorForm.CreateMenu;
+begin
+  // Clear menu
+  asm menuSidebar.replaceChildren(); end;
+
+  // Add Available Dashboards
+  DMMenus.AddDashboards(menuSidebar.ElementID, 'Administrator');
+
+  // Administrator Database Menu
+  DMMenus.AddMenuGroup(menuSidebar.ElementID, 'Database', 'Administrator');
+  DMMenus.AddMenuItem('Database', 'Endpoints', 'Administrator');
+  DMMenus.AddMenuItem('Database', 'Logins', 'Administrator');
+  DMMenus.AddMenuItem('Database', 'Failed_Logins', 'Administrator');
+
+  // Administrator Network Menu
+  DMMenus.AddMenuGroup(menuSidebar.ElementID, 'Network', 'Administrator');
+  DMMenus.AddMenuItem('Network', 'Tokens', 'Administrator');
+  DMMenus.AddMenuItem('Network', 'IP_Allow', 'Administrator');
+  DMMenus.AddMenuItem('Network', 'IP_Block', 'Administrator');
+
 end;
 
 procedure TAdministratorForm.MenuClicked(MenuForm, MenuType, MenuName: String);
@@ -102,30 +124,7 @@ begin
   btnActions.Caption := DMIcons.Icon('Actions')+'Actions';
   btnLogout.Caption  := DMIcons.Icon('Logout')+'Logout';
 
-  // Clear menu
-  asm menuSidebar.replaceChildren(); end;
-
-  // Add Available Dashboards
-  DMMenus.AddDashboards(menuSidebar.ElementID, 'Administrator');
-
-  // Administrator Database Menu
-  DMMenus.AddMenuGroup(menuSidebar.ElementID, 'Database', 'Administrator');
-  DMMenus.AddMenuItem('Database', 'Endpoints', 'Administrator');
-  DMMenus.AddMenuItem('Database', 'Logins', 'Administrator');
-  DMMenus.AddMenuItem('Database', 'Failed_Logins', 'Administrator');
-
-  // Administrator Network Menu
-  DMMenus.AddMenuGroup(menuSidebar.ElementID, 'Network', 'Administrator');
-  DMMenus.AddMenuItem('Network', 'Tokens', 'Administrator');
-  DMMenus.AddMenuItem('Network', 'IP_Allow', 'Administrator');
-  DMMenus.AddMenuItem('Network', 'IP_Block', 'Administrator');
-
   asm {
-    window.document.dispatchEvent(new Event("DOMContentLoaded", {
-      bubbles: true,
-      cancelable: true
-    }));
-
 
     const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper'
     const Default = {

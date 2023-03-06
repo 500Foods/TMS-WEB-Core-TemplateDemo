@@ -1,6 +1,8 @@
 object UserProfileSubForm: TUserProfileSubForm
   Width = 736
   Height = 548
+  CSSLibrary = cssBootstrap
+  ElementFont = efCSS
   OnCreate = WebFormCreate
   OnShow = WebFormShow
   object labelDashboard: TWebLabel
@@ -52,5 +54,206 @@ object UserProfileSubForm: TUserProfileSubForm
     HeightStyle = ssAuto
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
+  end
+  object iconBirthday: TWebLabel
+    Left = 256
+    Top = 120
+    Width = 59
+    Height = 13
+    Caption = 'iconBirthday'
+    ElementID = 'iconBirthday'
+    ElementFont = efCSS
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object labelBirthday: TWebLabel
+    Left = 256
+    Top = 139
+    Width = 62
+    Height = 13
+    Caption = 'labelBirthday'
+    ElementID = 'labelBirthday'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object iconAnniversary: TWebLabel
+    Left = 256
+    Top = 169
+    Width = 77
+    Height = 13
+    Caption = 'iconAnniversary'
+    ElementID = 'iconAnniversary'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object labelAnniversary: TWebLabel
+    Left = 256
+    Top = 188
+    Width = 80
+    Height = 13
+    Caption = 'labelAnniversary'
+    ElementID = 'labelAnniversary'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object iconEMail: TWebLabel
+    Left = 253
+    Top = 217
+    Width = 43
+    Height = 13
+    Caption = 'iconEMail'
+    ElementID = 'iconEMail'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object labelEMail: TWebLabel
+    Left = 253
+    Top = 236
+    Width = 46
+    Height = 13
+    Caption = 'labelEMail'
+    ElementID = 'labelEMail'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object iconPhone: TWebLabel
+    Left = 253
+    Top = 265
+    Width = 49
+    Height = 13
+    Caption = 'iconPhone'
+    ElementID = 'iconPhone'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object labelPhone: TWebLabel
+    Left = 253
+    Top = 284
+    Width = 52
+    Height = 13
+    Caption = 'labelPhone'
+    ElementID = 'labelPhone'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object iconLastLogin: TWebLabel
+    Left = 253
+    Top = 313
+    Width = 64
+    Height = 13
+    Caption = 'iconLastLogin'
+    ElementID = 'iconLastLogin'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object labelLastLogin: TWebLabel
+    Left = 253
+    Top = 332
+    Width = 67
+    Height = 13
+    Caption = 'labelLastLogin'
+    ElementID = 'labelLastLogin'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object labelRecentLogins: TWebLabel
+    Left = 253
+    Top = 380
+    Width = 86
+    Height = 13
+    Caption = 'labelRecentLogins'
+    ElementID = 'labelRecentLogins'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object iconRecentLogins: TWebLabel
+    Left = 253
+    Top = 361
+    Width = 83
+    Height = 13
+    Caption = 'iconRecentLogins'
+    ElementID = 'iconRecentLogins'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object titleImage: TWebLabel
+    Left = 83
+    Top = 421
+    Width = 48
+    Height = 13
+    Caption = 'titleImage'
+    ElementID = 'titleImage'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object titleContacts: TWebLabel
+    Left = 320
+    Top = 429
+    Width = 61
+    Height = 13
+    Caption = 'titleContacts'
+    ElementID = 'titleContacts'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object imageProfile: TWebHTMLDiv
+    Left = 80
+    Top = 440
+    Width = 100
+    Height = 41
+    ElementID = 'imageProfile'
+    ChildOrder = 16
+    ElementFont = efCSS
+    Role = ''
+  end
+  object tableContacts: TWebHTMLDiv
+    Left = 320
+    Top = 448
+    Width = 100
+    Height = 41
+    ElementID = 'tableContacts'
+    ChildOrder = 18
+    ElementFont = efCSS
+    Role = ''
   end
 end

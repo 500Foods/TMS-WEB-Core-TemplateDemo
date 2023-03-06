@@ -132,6 +132,18 @@ begin
 
   } end;
 
+
+
+  asm
+    menuSidebar.replaceWith(menuSidebar.cloneNode(true));
+    pas.UnitMain.MainForm.CurrentForm.CreateMenu();
+    window.document.dispatchEvent(new Event("DOMContentLoaded", {
+      bubbles: true,
+      cancelable: true
+    }));
+  end;
+
+  (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1');
 end;
 
 procedure TAdministratorSubForm.WebFormShow(Sender: TObject);

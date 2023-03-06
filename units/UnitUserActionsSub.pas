@@ -43,6 +43,18 @@ begin
   bcDashboards.HTML := DMICons.Icon('Dashboard_Menu')+'Dashboards';
   bcDashboard.HTML := mainForm.CurrentFormIcon+MainForm.CurrentFormName;
   bcCurrent.hTML := DMIcons.Icon('Actions_Menu')+'User Actions';
+
+  asm
+    menuSidebar.replaceWith(menuSidebar.cloneNode(true));
+    pas.UnitMain.MainForm.CurrentForm.CreateMenu();
+    window.document.dispatchEvent(new Event("DOMContentLoaded", {
+      bubbles: true,
+      cancelable: true
+    }));
+
+  end;
+
+  (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1');
 end;
 
 procedure TUserActionsSubForm.WebFormShow(Sender: TObject);

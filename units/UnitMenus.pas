@@ -74,7 +74,7 @@ begin
       menuEntry.className = 'nav-item cursor-pointer';
       var menuLink = document.createElement('div');
       menuLink.innerHTML = icon[dash.replace('_','')+'_Menu']+'<p>'+dash+'</p>';
-      menuLink.setAttribute('id',Dashboard.replace('_','')+'_Dashboard_'+dash.replace('_',''));
+      menuLink.lastElementChild.setAttribute('id',Dashboard.replace('_','')+'_Dashboard_'+dash.replace('_',''));
 
       // Highlight dashboard item if it is the current dashboard
       if (dash == Dashboard) { menuLink.className = 'nav-link active'; }
@@ -85,7 +85,7 @@ begin
       menuEntry.appendChild(menuLink);
 
       // Add click event
-      menuLink.addEventListener('click', (menu) => {
+      menuLink.lastElementChild.addEventListener('click', (menu) => {
         pas.UnitMenus.DMMenus.MenuClicked(
           menu.target.id.split('_')[0],
           menu.target.id.split('_')[1],
@@ -114,7 +114,7 @@ begin
     // Header for this menu block
     var menuName = document.createElement('div');
     menuName.className = 'nav-link active px-1 cursor-pointer';
-    menuName.innerHTML = '<strong>'+icon[MenuGroup.replace('_','')+'_Menu']+'</strong><p><strong>'+MenuGroup.replace('_',' ')+'</strong>'+icon["ArrowRight_Nav"]+'</p>';
+    menuName.innerHTML = '<strong>'+icon[MenuGroup.replace('_','')+'_Menu']+'</strong><p class="pe-none"><strong>'+MenuGroup.replace('_',' ')+'</strong>'+icon["ArrowRight_Nav"]+'</p>';
 
     // Add to page
     menu.appendChild(menuTop);
@@ -139,8 +139,8 @@ begin
     var menuEntry = document.createElement('li');
     menuEntry.className = 'nav-item cursor-pointer';
     var menuLink = document.createElement('div');
-    menuLink.innerHTML = icon[MenuItem.replace('_','')+'_Menu']+'<p>'+MenuItem.replace('_',' ')+'</p>';
-    menuLink.setAttribute('id',Dashboard.replace('_','')+'_'+MenuGroup.replace('_','')+'_'+MenuItem.replace('_',''));
+    menuLink.innerHTML = icon[MenuItem.replace('_','')+'_Menu']+'<p class="pe-none">'+MenuItem.replace('_',' ')+'</p>';
+    menuLink.lastElementChild.setAttribute('id',Dashboard.replace('_','')+'_'+MenuGroup.replace('_','')+'_'+MenuItem.replace('_',''));
     menuLink.className = 'nav-link';
 
     // And menu item to menu tree
@@ -148,7 +148,7 @@ begin
     menuEntry.appendChild(menuLink);
 
     // Add click event
-    menuEntry.addEventListener('click', (menu) => {
+    menuLink.lastElementChild.addEventListener('click', (menu) => {
       pas.UnitMain.MainForm.CurrentForm.MenuClicked(
         menu.target.id.split('_')[0],
         menu.target.id.split('_')[1],
@@ -159,14 +159,8 @@ begin
 end;
 
 procedure TDMMenus.MenuClicked(MenuForm: String; MenuType: String; MenuName: String);
-var
-  FormIcon: String;
 begin
-  MainForm.LogAction('Menu Clicked ['+MenuForm+'] ['+MenuType+'] ['+MenuName+']',true);
-
-  asm
-    FormIcon = icon[MenuName+'_Menu'];
-  end;
+  MainForm.LogAction('Dashboard Menu Clicked ['+MenuForm+'] ['+MenuType+'] ['+MenuName+']',true);
 
   // Hide either the current subform or the main form
   if MainForm.CurrentFormName = MenuName then
@@ -180,7 +174,7 @@ begin
   begin
     MainForm.divHost.ElementHandle.style.setProperty('opacity','0');
     asm await sleep(500); end;
-    MainForm.LoadForm(MenuName,FormIcon);
+    MainForm.LoadForm(MenuName,DMIcons.Icon(MenuName+'_Menu'));
   end;
 end;
 

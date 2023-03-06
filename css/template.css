@@ -115,6 +115,7 @@ html[data-bs-theme="light"] #divHost {
 .info-box {
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: var(--custom-rounding);
+  overflow: hidden;
 }
 
 /* card adjustments */

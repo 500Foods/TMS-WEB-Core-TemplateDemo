@@ -345,7 +345,7 @@ begin
   ActionLogCurrent.Add(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz',  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+CurrentFormName.PadRight(15)+']  '+FilterAction);
 
   // Log to Console
-//  console.Log(FilterAction);
+  console.Log(FilterAction);
 
   // Be mindful that generating log entries can reset the ActivityDetected state
   if Extend then ActivityDetected := True;
@@ -379,7 +379,7 @@ begin
       await sleep(1000);
     end;
 
-    window.location.reload(true);
+//    window.location.reload(true);
   end;
 end;
 
@@ -461,7 +461,7 @@ procedure TMainForm.SubFormShow;
 begin
   asm
     var subform = document.getElementById('divSubForm');
-    subform.style.setProperty('opacity', '1');
+//    subform.style.setProperty('opacity', '1');
     subform.style.setProperty('font-family', 'unset');
     subform.style.setProperty('font-size', 'unset');
     subform.style.setProperty('font-style', 'unset');

@@ -18,79 +18,136 @@
             <!-- Info boxes -->
             <div class="row mt-3">
 
-
+              <!-- Birthday -->
               <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                 <div class="info-box">
-                  <span class="info-box-icon text-bg-primary shadow-sm"><i class="fa-solid fa-cog"></i></span>
+                  <span id="iconBirthday" class="info-box-icon text-bg-danger shadow-sm flex-shrink-0"></span>
                   <div class="info-box-content">
-                    <span class="info-box-text">CPU Traffic</span>
-                    <span class="info-box-number">
-                      10
-                      <small>%</small>
-                    </span>
+                    <span class="info-box-text">Birthday</span>
+                    <span id="labelBirthday"class="info-box-number text-nowrap"></span>
                   </div>
                 </div>
               </div>
 
-
+              <!--  Work  Anniversary -->
               <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                 <div class="info-box">
-                  <span class="info-box-icon text-bg-danger shadow-sm"><i class="fa-solid fa-thumbs-up"></i></span>
+                  <span id="iconAnniversary" class="info-box-icon text-bg-primary shadow-sm flex-shrink-0"></span>
                   <div class="info-box-content">
-                    <span class="info-box-text">Likes</span>
-                    <span class="info-box-number">41,410</span>
+                    <span class="info-box-text">Joined</span>
+                    <span id="labelAnniversary" class="info-box-number text-nowrap"></span>
                   </div>
                 </div>
               </div>
 
-
+              <!-- EMail -->
               <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                 <div class="info-box">
-                  <span class="info-box-icon text-bg-success shadow-sm"><i class="fa-solid fa-shopping-cart"></i></span>
+                  <span id="iconEMail" class="info-box-icon text-bg-success shadow-sm flex-shrink-0"></span>
                   <div class="info-box-content">
-                    <span class="info-box-text">Sales</span>
-                    <span class="info-box-number">760</span>
+                    <span class="info-box-text">E-Mail</span>
+                    <span id="labelEMail" class="info-box-number text-nowrap"></span>
                   </div>
                 </div>
               </div>
 
-
+              <!-- Phone -->
               <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                 <div class="info-box">
-                  <span class="info-box-icon text-bg-success shadow-sm"><i class="fa-solid fa-shopping-cart"></i></span>
+                  <span id="iconPhone" class="info-box-icon text-bg-success shadow-sm flex-shrink-0"></span>
                   <div class="info-box-content">
-                    <span class="info-box-text">Sales</span>
-                    <span class="info-box-number">760</span>
+                    <span class="info-box-text">Telephone</span>
+                    <span id="labelPhone" class="info-box-number text-nowrap"></span>
                   </div>
                 </div>
               </div>
 
-
+              <!-- Last Login -->
               <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                 <div class="info-box">
-                  <span class="info-box-icon text-bg-success shadow-sm"><i class="fa-solid fa-shopping-cart"></i></span>
+                  <span id="iconLastLogin" class="info-box-icon text-bg-warning shadow-sm flex-shrink-0"></span>
                   <div class="info-box-content">
-                    <span class="info-box-text">Sales</span>
-                    <span class="info-box-number">760</span>
+                    <span class="info-box-text">Last Login</span>
+                    <span id="labelLastLogin" class="info-box-number text-nowrap"></span>
                   </div>
                 </div>
               </div>
 
+              <!-- Recent Logins -->
               <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-warning shadow-sm"><i class="fa-solid fa-users"></i></span>
+                <div class="info-box overflow-hidden">
+                  <span id="iconRecentLogins" class="info-box-icon text-bg-danger shadow-sm flex-shrink-0"></span>
                   <div class="info-box-content">
-                    <span class="info-box-text">New Members</span>
-                    <span class="info-box-number">2,000</span>
+                    <span class="info-box-text">Recent Logins</span>
+                    <span id="labelRecentLogins" class="info-box-number text-nowrap"></span>
                   </div>
                 </div>
               </div>
-
 
             </div>
             <!-- /.row -->
 
 
+
+            <div class="row">
+
+              <!-- Picture Box -->
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 id="titleImage" class="card-title">Profile Photo</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                        <i class="fa-solid fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-lte-dismiss="card-remove">
+                        <i class="fa-solid fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body p-0">
+                    <div id="imageProfile" class="rounded-bottom"></div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Contacts -->
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 id="titleContacts" class="card-title"></h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                        <i class="fa-solid fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-lte-dismiss="card-remove">
+                        <i class="fa-solid fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                      <table class="table m-0">
+                        <thead>
+                        <tr>
+                          <th></th>
+                          <th>Type</th>
+                          <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableContacts">
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+            </div>
+            <!-- /.row -->
 
           </div>
           <!-- /.container-fluid -->
