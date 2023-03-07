@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Classes, JS, Web, WEBLib.Graphics, WEBLib.Controls,
   WEBLib.Forms, WEBLib.Dialogs, Vcl.Controls, Vcl.StdCtrls, WEBLib.StdCtrls,
   WEBLib.WebCtrls, System.DateUtils, WEBLib.ExtCtrls, XData.Web.Connection,
-  XData.Web.Client, WEBLib.Toast, WEBLib.JSON,jsdelphisystem,WEBLib.Storage;
+  XData.Web.Client, WEBLib.Toast, WEBLib.JSON, jsdelphisystem, WEBLib.Storage;
 
 type
   TMainForm = class(TWebForm)
@@ -19,15 +19,13 @@ type
     divToasts: TWebHTMLDiv;
     tmrJWTRenewal: TWebTimer;
     tmrJWTRenewalWarning: TWebTimer;
-    procedure WebFormCreate(Sender: TObject);
+    [async] procedure WebFormCreate(Sender: TObject);
     procedure LogAction(Action: String; Extend: Boolean);
     procedure btnShowLogClick(Sender: TObject);
     procedure btnLoginFormClick(Sender: TObject);
     procedure btnClearFormClick(Sender: TObject);
     procedure XDataConnRequest(Args: TXDataWebConnectionRequest);
     procedure Toast(Header: String; Body: String; Timeout: Integer);
-    procedure MenuClick(Menu: String);
-    procedure MenuAdd(Menu: String);
     procedure ProcessJWT(aJWT: String);
     procedure WebFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     [async] procedure Logout(Reason: String);
@@ -39,7 +37,6 @@ type
     [async] procedure tmrJWTRenewalTimer(Sender: TObject);
     procedure tmrJWTRenewalWarningTimer(Sender: TObject);
     procedure WebFormClick(Sender: TObject);
-    procedure SubFormShow;
   private
     { Private declarations }
   public
@@ -76,12 +73,16 @@ type
     User_EMail: String;
 
     User_Roles: TStringList;
-    Role_Administrator: Boolean;
-    Role_Sales: Boolean;
-    Role_HR: Boolean;
     Roles: String;
+    Role_Administrator: Boolean;
 
     ToastCount: Integer;
+
+    procedure StopLinkerRemoval(P: Pointer);
+    procedure PreventCompilerHint(I: integer); overload;
+    procedure PreventCompilerHint(S: string); overload;
+    procedure PreventCompilerHint(J: JSValue); overload;
+    procedure PreventCompilerHint(H: TJSHTMLElement); overload;
   end;
 
 var
@@ -98,7 +99,7 @@ uses
 
 procedure TMainForm.WebFormClick(Sender: TObject);
 begin
-  if (CurrentFormName <> 'Login')
+  if (CurrentFormName <> 'LoginForm')
   then ActivityDetected := True;
 end;
 
@@ -130,28 +131,15 @@ begin
   JWT_Expiry := TTimeZone.Local.ToUniversalTime(Now);
   Remember := True;
 
-  // Form Management
-  CurrentForm := nil;
-  CurrentFormName := 'Initializing';
-  CurrentFormIcon := '';
-
-  CurrentSubForm := nil;
-  CurrentSubFormName := '';
-  CurrentSubFormIcon := '';
-
-  // Application Information
-  Caption := 'TMS WEB Core Template Demo';
-
   // User Information
   User_FirstName := '';
   User_MiddleName :=  '';
   User_LastName := '';
   User_EMail := '';
 
+  // Role Information
   User_Roles := TStringList.Create;
   Role_Administrator := False;
-  Role_Sales := False;
-  Role_HR := False;
   Roles := '';
 
   // Log what we're doing in the application
@@ -159,7 +147,41 @@ begin
   ActionLog.Delimiter := chr(10);
   ActionLogCurrent := TStringList.Create;
   ActionLogCurrent.Delimiter := chr(10);
+  CurrentFormName := 'MODULE/ORM-SUBFORM';
+  LogAction('============================================================', False);
+
+  // Form Management
+  CurrentForm := nil;
+  CurrentFormName := 'Initializing';
+  CurrentFormIcon := '';
+  CurrentSubForm := nil;
+  CurrentSubFormName := '';
+  CurrentSubFormIcon := '';
+
+  // Forms and SubForms that we've defined so far in this project
+  asm
+    window.ValidForms = [
+      'AdministratorForm',
+      'LoginForm'
+    ];
+    window.ValidSubForms = [
+      'AdministratorSub',
+      'UserActionsSub',
+      'UserProfileSub'
+    ]
+  end;
+
+  // Application Details
   LogAction('Application Startup', False);
+  LogAction(' -> '+App_Name, False);
+  LogAction(' -> Version '+App_Version, False);
+  LogAction(' -> Release '+App_Release, False);
+  asm
+    this.LogAction(' -> '+window.ValidForms.length+' Forms', false);
+    this.LogAction(' -> '+window.ValidSubForms.length+' SubForms', false);
+    this.LogAction(' -> '+Object.keys(pas.UnitIcons.DMIcons.Lookup).length+' Icons', false);
+  end;
+  LogAction('============================================================', False);
 
   // Setup the Log Viewer
   divLog.Top := divHost.Top;
@@ -168,14 +190,17 @@ begin
   divLog.Height := divHost.Height;
   divLog.Visible := False;
 
-  // Connect to XData - it will finish on its own time
+  // Setup global sleep function :)
+  asm window.sleep = async function(msecs) {return new Promise((resolve) => setTimeout(resolve, msecs)); } end;
+
+  // Connect to XData - it will finish on its own time but give it a moment to connect
+  LogAction('', False);
   XDataConnect;
+  asm await sleep(100); end;
 
   // Launch Login
-  if not(LoggedIn) then
-  begin
-    LoadForm('Login', DMIcons.Icon('Login'));
-  end;
+  CurrentFormName := 'LoginForm';
+  LoadForm('LoginForm', DMIcons.Icon('Login'));
 
   // What to do if the browser closes unexpectedly
   asm
@@ -199,150 +224,147 @@ begin
 //      e.returnValue = '';
     });
 
-    window.sleep = async function(msecs) {return new Promise((resolve) => setTimeout(resolve, msecs));}
   end;
+
 end;
 
 procedure TMainForm.WebFormKeyDown(Sender: TObject; var Key: Word;    Shift: TShiftState);
 begin
-  if Key= VK_F4 then Logout('F4');
+  if (Key = VK_F4) then Logout('F4');
 end;
 
 procedure TMainForm.LoadForm(Form: String; FormIcon: String);
 var
   ElapsedTime: TDateTime;
+  ValidForm: Boolean;
 
   procedure AfterCreate(AForm: TObject);
   begin
-    LogAction('Load Form: '+AForm.ClassName+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime))+'ms)', False);
+    LogAction('Load Form: '+Form+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime)-500)+'ms)', False);
   end;
 
 begin
   // Time this action
   ElapsedTime := Now;
 
+  // Big change
   LogAction('', False);
-  LogAction('Load Form: '+Form, False);
-  CurrentFormName := Form;
-  CurrentFormIcon := FormIcon;
 
+  // Is this a valid Form?
+  ValidForm := False;
+  asm if (window.ValidForms.includes(Form)) { ValidForm = true; } end;
+  if not(ValidForm) then
+  begin
+    LogAction('ERROR: Form Not Found: '+Form, False);
+    Toast('Form Error', 'Form Not Found: <br />[ '+Form+' ]',15000);
+    exit;
+  end;
+
+  // Hide the old Form
+  MainForm.divHost.ElementHandle.style.setProperty('opacity','0','important');
+  asm await sleep(500); end;
+
+  // Remove old Form
   if Assigned(CurrentForm) then
   begin
-    LogAction('Removing Form: '+CurrentForm.ClassName, False);
+    LogAction('Drop Form: '+CurrentFormName, False);
     CurrentForm.Close;
-    CurrentForm.Free;
     asm
       divHost.replaceChildren();
     end;
   end;
 
-
-  // Login Form
-  if Form = 'Login' then
+  // Note the new Form
+  CurrentFormName := Form;
+  CurrentFormIcon := FormIcon;
+  divHost.ElementHandle.className := Form;
+  LogAction('Load Form: '+Form, False);
+  if (Form <> 'LoginForm') then
   begin
-    CurrentForm := TLoginForm.CreateNew(divHost.ElementID, @AfterCreate);
-    divHost.ElementHandle.className := 'Login-Form';
-  end
-
-  // Administrator Form
-  else if Form = 'Administrator' then
-  begin
-    CurrentForm := TAdministratorForm.CreateNew(divHost.ElementID, @AfterCreate);
-    divHost.ElementHandle.className := 'Administrator-Form';
     TWebLocalStorage.SetValue('Login.CurrentForm', Form);
     TWebLocalStorage.SetValue('Login.CurrentFormIcon', FormIcon);
-  end
-
-  // Not A Valid Form
-  else
-  begin
-    divHost.ElementHandle.className := 'rounded border bg-white border-dark';
-    CurrentFormName := 'Invalid Form';
-    LogAction('Form Not Found: '+Form, False);
-
-    // Probably display a better error message or redirect to another default
-    // form if an attempt is made to load an unexpected form.
-    if Form <> 'Clear'
-    then divHost.HTML.Text := 'ERROR: Form Not Found ('+Form+')';
   end;
+
+  // Launch Form
+  if      (Form = 'LoginForm')         then CurrentForm := TLoginForm.CreateNew(divHost.ElementID, @AfterCreate)
+  else if (Form = 'AdministratorForm') then CurrentForm := TAdministratorForm.CreateNew(divHost.ElementID, @AfterCreate);
 
 end;
 
 procedure TMainForm.LoadSubForm(SubForm: String; divSubForm: TWebHTMLDiv; SubFormIcon: String);
 var
   ElapsedTime: TDateTime;
+  ValidSubForm: Boolean;
 
   procedure AfterCreate(AForm: TObject);
   begin
-    LogAction('Load SubForm: '+AForm.ClassName+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime))+'ms)', False);
+    LogAction('Load SubForm: '+AForm.ClassName+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime)-500)+'ms)', False);
   end;
 
 begin
   // Time this action
   ElapsedTime := Now;
 
-  LogAction('', False);
+  // Is this a valid SubForm?
+  ValidSubForm := False;
+  asm if (window.ValidSubForms.includes(SubForm)) { ValidSubForm = true; } end;
+  if not(ValidSubForm) then
+  begin
+    LogAction('SubForm Not Found: '+SubForm, False);
+    Toast('ERROR: SubForm Error', 'SubForm Not Found: <br />[ '+SubForm+' ]',15000);
+    exit;
+  end;
 
+  // Hide the old SubForm
+  asm
+    document.getElementById('divSubForm').style.setProperty('opacity','0','important');
+    await sleep(500);
+  end;
+
+  // Remove the old SubForm
   if Assigned(CurrentSubForm) then
   begin
-    LogAction('Removing SubForm: '+CurrentSubForm.ClassName, False);
+    LogAction('Drop SubForm: '+CurrentSubFormName, False);
     CurrentSubForm.Close;
-    CurrentSubForm.Free;
-    divSubForm.HTML.TExt := '';
-//    asm
-//      divSubForm.replaceChildren();
-//    end;
+    asm
+      document.getElementById('divSubForm').replaceChildren();
+    end;
   end;
 
-  LogAction('Load SubForm: '+SubForm, False);
+  // Note the new SubForm
   CurrentSubFormName := SubForm;
   CurrentSubFormIcon := SubFormIcon;
-
-  // User Profile SubForm
-  if SubForm = 'UserProfileSub' then
-  begin
-    divSubForm.ElementHandle.className := 'app-main User-Profile-SubForm';
-    CurrentSubForm := TUserProfileSubForm.CreateNew(divSubForm.ElementID, @AfterCreate);
-  end
-  // User Profile SubForm
-  else if SubForm = 'UserActionsSub' then
-  begin
-    divSubForm.ElementHandle.className := 'app-main User-Actions-SubForm';
-    CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.ElementID, @AfterCreate);
-  end
-
-  else if SubForm = 'AdministratorSub' then
-  begin
-    divSubForm.ElementHandle.className := 'app-main Administrator-SubForm';
-    CurrentSubForm := TAdministratorSubForm.CreateNew(divSubForm.ElementID, @AfterCreate);
-  end
-
-  // Not A Valid Form
-  else
-  begin
-    divSubForm.ElementHandle.className := 'rounded border bg-white border-dark';
-    CurrentSubFormName := 'Invalid Form';
-    LogAction('SubForm Not Found: '+SubForm, False);
-
-    // Probably display a better error message or redirect to another default
-    // form if an attempt is made to load an unexpected form.
-    if SubForm <> 'Clear'
-    then divSubForm.HTML.Text := 'ERROR: Form Not Found ('+SubForm+')';
+  asm
+    document.getElementById('divSubForm').className = 'app-main '+SubForm;
   end;
+  LogAction('Load SubForm: '+SubForm, False);
+  TWebLocalStorage.SetValue('Login.CurrentSubForm', SubForm);
+  TWebLocalStorage.SetValue('Login.CurrentSubFormIcon', SubFormIcon);
+
+  // Launch SubForm
+  if      (SubForm = 'UserProfileSub')   then CurrentSubForm := TUserProfileSubForm.CreateNew(divSubForm.ElementID, @AfterCreate)
+  else if (SubForm = 'UserActionsSub')   then CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.ElementID, @AfterCreate)
+  else if (SubForm = 'AdministratorSub') then CurrentSubForm := TAdministratorSubForm.CreateNew(divSubForm.ElementID, @AfterCreate);
 
 end;
 
 procedure TMainForm.LogAction(Action: String; Extend: Boolean);
 var
   FilterAction: String;
+  Module: String;
 begin
   FilterAction := StringReplace(Action, chr(10), '', [rfReplaceAll]);
   FilterAction := StringReplace(FilterAction, chr(13), '', [rfReplaceAll]);
   FilterAction := StringReplace(FilterAction, '"', '''', [rfReplaceAll]);
 
+  Module := StringReplace(CurrentFormName,'Form','',[]);
+  if (CurrentSubFormName <> '')
+  then Module := Module +'-'+StringReplace(CurrentSubFormName,'Sub','',[]);
+  Module := Module.PadRight(30);
+
   // Log the action to a TStringList
-  ActionLog.Add(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz',  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+CurrentFormName.PadRight(15)+']  '+FilterAction);
-  ActionLogCurrent.Add(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz',  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+CurrentFormName.PadRight(15)+']  '+FilterAction);
+  ActionLog.Add(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz',  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+Module+']  '+FilterAction);
+  ActionLogCurrent.Add(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz',  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+Module+']  '+FilterAction);
 
   // Log to Console
 //  console.Log(FilterAction);
@@ -382,18 +404,6 @@ begin
     window.location.reload(true);
   end;
 end;
-
-procedure TMainForm.MenuAdd(Menu: String);
-begin
-  // Add a menu
-end;
-
-procedure TMainForm.MenuClick(Menu: String);
-begin
-  // A menu option has been selected.  Here we decide what to do about it.
-
-end;
-
 
 procedure TMainForm.ProcessJWT(aJWT: String);
 var
@@ -445,26 +455,11 @@ begin
 
   // Extract Roles
   Role_Administrator := False;
-  Role_Sales := False;
-  Role_HR := False;
   i := 0;
   while i < User_Roles.Count do
   begin
     if User_Roles[i] = '1' then Role_Administrator := True;
-    if User_Roles[i] = '2' then Role_Sales := True;
-    if User_Roles[i] = '3' then Role_HR := True;
     i := i + 1;
-  end;
-end;
-
-procedure TMainForm.SubFormShow;
-begin
-  asm
-    var subform = document.getElementById('divSubForm');
-//    subform.style.setProperty('opacity', '1');
-    subform.style.setProperty('font-family', 'unset');
-    subform.style.setProperty('font-size', 'unset');
-    subform.style.setProperty('font-style', 'unset');
   end;
 end;
 
@@ -596,11 +591,13 @@ var
   ClientConn: TXDataWebClient;
   Response: TXDataClientResponse;
   Blob: JSValue;
+  ErrorCode: String;
+  ErrorMessage: String;
   Elapsed: TDateTime;
 begin
   Elapsed := Now;
   Result := '';
-  LogAction('Request: '+Endpoint, False);
+  LogAction('Requested: '+Endpoint, False);
 
   await(XDataConnect);
   if (XdataConn.Connected) then
@@ -609,20 +606,32 @@ begin
       ClientConn := TXDataWebClient.Create(nil);
       ClientConn.Connection := XDataConn;
       Response := await(ClientConn.RawInvokeAsync(Endpoint, Params));
+
       Blob := Response.Result;
-      asm
-        Result = await Blob.text();
-      end;
+      asm Result = await Blob.text(); end;
+
     except on E: Exception do
       begin
-        LogAction('Request Exception: '+Endpoint, False);
+        // Get the error message we created in XData
+        asm {
+          var ErrorDetail = JSON.parse( await E.FErrorResult.FResponse.$o.FXhr.response.text() );
+          ErrorCode = ErrorDetail.error.code;
+          ErrorMessage = ErrorDetail.error.message;
+        } end;
+
+        // Log the error, but leave out the URI (because it includes the password)
+        LogAction('Request Exception:'+Endpoint, False);
         LogAction(' --> ['+E.ClassName+']', False);
-        LogAction(' --> '+E.Message, False);
+        LogAction(' --> '+Copy(E.Message,1,Pos('Uri:',E.Message)-2), False);
+        LogAction(' --> '+Copy(E.Message,Pos('Status code:',E.Message),16), False);
+        LogAction(' --> '+ErrorCode, False);
+        LogAction(' --> '+ErrorMessage, False);
       end;
     end;
   end;
 
-  LogAction('Response: '+Endpoint+' ('+IntToStr(MillisecondsBetween(Now, Elapsed))+'ms)', False);
+  LogAction('Responded: '+Endpoint+' ('+IntToStr(MillisecondsBetween(Now, Elapsed))+'ms)', False);
+  PreventCompilerHint(Blob);
 end;
 
 procedure TMainForm.btnLoginFormClick(Sender: TObject);
@@ -703,10 +712,10 @@ begin
         'Testing', // API_KEY
         TZ
       ]));
+
       Blob := Response.Result;
-      asm
-        NewJWT = await Blob.text();
-      end;
+      asm NewJWT = await Blob.text(); end;
+
     except on E: Exception do
       begin
         // Get the error message we created in XData
@@ -737,15 +746,20 @@ begin
     // Figure out what to do with the JWT
     ProcessJWT(NewJWT);
 
-    // If nothing happens in 15 minutes, we'll automatically logout
-//    ActivityDetected := False;
   end
   else
   begin
     LoggedIn := False;
     Result := ErrorCode+' / '+ErrorMessage;
   end;
+
+  PreventCompilerHint(Blob);
 end;
 
+procedure TMainForm.StopLinkerRemoval(P: Pointer);                          begin end;
+procedure TMainForm.PreventCompilerHint(S: string);               overload; begin end;
+procedure TMainForm.PreventCompilerHint(I: integer);              overload; begin end;
+procedure TMainForm.PreventCompilerHint(J: JSValue);              overload; begin end;
+procedure TMainForm.PreventCompilerHint(H: TJSHTMLElement);       overload; begin end;
 
 end.

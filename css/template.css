@@ -76,6 +76,10 @@ html[data-bs-theme="dark"] ::-webkit-scrollbar-track {
   background-color: var(--bs-secondary);
   border-radius: 200px;
 }
+html[data-bs-theme="dark"] .tabulator ::-webkit-scrollbar-track {
+  background-color: var(--bs-secondary);
+  border-radius: 0px;
+}
 html[data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
   background-color: var(--bs-dark);
   border-radius: 200px;
@@ -146,7 +150,7 @@ html[data-bs-theme="light"] ::-webkit-scrollbar-thumb {
   position: absolute;
   top: 5px !important;
   right: 5px !important;
-  width: 230px !important;
+  width: 300px !important;
   left: unset !important;
   pointer-events: none;
 }
@@ -165,7 +169,7 @@ html[data-bs-theme="light"] ::-webkit-scrollbar-thumb {
 
 /* LOGIN FORM */
 
-.Login-Form {
+.LoginForm {
   background: rgb(131,58,180) !important;
   background: linear-gradient(66deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%) !important;
 }

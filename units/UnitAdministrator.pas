@@ -26,7 +26,7 @@ type
     procedure btnProfileClick(Sender: TObject);
     procedure btnActionsClick(Sender: TObject);
     [async] procedure WebFormCreate(Sender: TObject);
-    [async] procedure MenuClicked(MenuForm: String; MenuType: String; MenuName: String);
+    [async] procedure MenuClicked(MenuForm: String; MenuType: String; MenuName: String; Automatic: Boolean);
     procedure CreateMenu;
   private
     { Private declarations }
@@ -45,7 +45,7 @@ uses UnitMain, UnitIcons, UnitMenus;
 
 procedure TAdministratorForm.btnActionsClick(Sender: TObject);
 begin
-  MenuClicked('Administrator', 'User', 'Actions');
+  MenuClicked('Administrator', 'User', 'Actions', False);
 end;
 
 procedure TAdministratorForm.btnLogoutClick(Sender: TObject);
@@ -55,7 +55,7 @@ end;
 
 procedure TAdministratorForm.btnProfileClick(Sender: TObject);
 begin
-  MenuClicked('Administrator', 'User', 'Profile');
+  MenuClicked('Administrator', 'User', 'Profile', False);
 end;
 
 procedure TAdministratorForm.CreateMenu;
@@ -80,29 +80,44 @@ begin
 
 end;
 
-procedure TAdministratorForm.MenuClicked(MenuForm, MenuType, MenuName: String);
+procedure TAdministratorForm.MenuClicked(MenuForm, MenuType, MenuName: String; Automatic: Boolean);
+var
+  Handled: Boolean;
 begin
-  MainForm.LogAction('Menu Clicked ['+MenuForm+'] ['+MenuType+'] ['+MenuName+']',true);
+
+  Handled := False;
+  if not(Automatic)
+  then MainForm.LogAction('Selected ['+MenuForm+'] ['+MenuType+'] ['+MenuName+']',true);
 
   if MenuForm = 'Administrator' then
   begin
 
     if MenuType = 'Dashboard' then
     begin
-       divSubForm.ElementHandle.style.setProperty('opacity','0','important');
-       asm await sleep (500); end;
-
       MainForm.LoadSubForm('AdministratorSub',divSubForm, DMIcons.Icon('Administrator_Menu'));
+      Handled := True;
     end
 
     else if MenuType = 'User' then
     begin
-       divSubForm.ElementHandle.style.setProperty('opacity','0','important');
-       asm await sleep (500); end;
 
-       if MenuName = 'Profile' then MainForm.LoadSubForm('UserProfileSub',divSubForm, DMIcons.Icon('Profile_Menu'));
-       if MenuName = 'Actions' then MainForm.LoadSubForm('UserActionsSub',divSubform, DMIcons.Icon('Actions_Menu'));
+       if MenuName = 'Profile' then
+       begin
+         MainForm.LoadSubForm('UserProfileSub',divSubForm, DMIcons.Icon('Profile_Menu'));
+         Handled := True;
+       end
+       else if MenuName = 'Actions' then
+       begin
+         MainForm.LoadSubForm('UserActionsSub',divSubform, DMIcons.Icon('Actions_Menu'));
+         Handled := True;
+       end;
 
+    end;
+
+    if not(Handled) then
+    begin
+      MainForm.LogAction('ERROR: SubForm Not Found: '+MenuForm+' | '+MenuType+' | '+MenuName, false);
+      MainForm.Toast('SubForm Error','SubForm Not Found:<br />'+MenuType+' | '+MenuName,15000);
     end;
 
   end;
@@ -214,7 +229,7 @@ begin
   end;
 
   // Show the form
-  MenuClicked('Administrator', 'Dashboard', 'AdminstratorSub');
+  MenuClicked('Administrator', 'Dashboard', 'AdminstratorSub', True);
   MainForm.divHost.ElementHandle.style.setProperty('opacity','1');
   divSubForm.ElementHandle.style.setProperty('opacity','1');
 end;

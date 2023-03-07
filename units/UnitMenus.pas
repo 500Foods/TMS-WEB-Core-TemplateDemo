@@ -12,7 +12,7 @@ type
   public
     { Public declarations }
     procedure AddDashboards(SideMenu: String; Dashboard: String);
-    [async] procedure MenuClicked(MenuForm: String; MenuType: String; MenuName: String);
+    [async] procedure MenuClicked(Dashboard: String; MenuGroup: String; MenuName: String);
     procedure AddMenuGroup(SideMenu: String; MenuGroup:String; Dashboard: String);
     procedure AddMenuItem(MenuGroup:String; MenuItem: String; Dashboard: String);
   end;
@@ -72,20 +72,20 @@ begin
       // Create menu item
       var menuEntry = document.createElement('li');
       menuEntry.className = 'nav-item cursor-pointer';
+      menuEntry.setAttribute('id',dash.replace('_','')+'_Dashboard_'+Dashboard.replace('_',''));
       var menuLink = document.createElement('div');
       menuLink.innerHTML = icon[dash.replace('_','')+'_Menu']+'<p>'+dash+'</p>';
-      menuLink.lastElementChild.setAttribute('id',Dashboard.replace('_','')+'_Dashboard_'+dash.replace('_',''));
 
       // Highlight dashboard item if it is the current dashboard
-      if (dash == Dashboard) { menuLink.className = 'nav-link active'; }
-      else { menuLink.className = 'nav-link'; }
+      if (dash == Dashboard) { menuLink.className = 'pe-none nav-link active'; }
+      else { menuLink.className = 'pe-none nav-link'; }
 
       // And menu item to menu tree
       menuTree.appendChild(menuEntry);
       menuEntry.appendChild(menuLink);
 
       // Add click event
-      menuLink.lastElementChild.addEventListener('click', (menu) => {
+      menuEntry.addEventListener('click', (menu) => {
         pas.UnitMenus.DMMenus.MenuClicked(
           menu.target.id.split('_')[0],
           menu.target.id.split('_')[1],
@@ -138,18 +138,18 @@ begin
     // Create menu item
     var menuEntry = document.createElement('li');
     menuEntry.className = 'nav-item cursor-pointer';
+    menuEntry.setAttribute('id',Dashboard.replace('_','')+'_'+MenuGroup.replace('_','')+'_'+MenuItem.replace('_',''));
     var menuLink = document.createElement('div');
-    menuLink.innerHTML = icon[MenuItem.replace('_','')+'_Menu']+'<p class="pe-none">'+MenuItem.replace('_',' ')+'</p>';
-    menuLink.lastElementChild.setAttribute('id',Dashboard.replace('_','')+'_'+MenuGroup.replace('_','')+'_'+MenuItem.replace('_',''));
-    menuLink.className = 'nav-link';
+    menuLink.innerHTML = icon[MenuItem.replace('_','')+'_Menu']+'<p>'+MenuItem.replace('_',' ')+'</p>';
+    menuLink.className = 'pe-none nav-link';
 
     // And menu item to menu tree
     menuTree.appendChild(menuEntry);
     menuEntry.appendChild(menuLink);
 
     // Add click event
-    menuLink.lastElementChild.addEventListener('click', (menu) => {
-      pas.UnitMain.MainForm.CurrentForm.MenuClicked(
+    menuEntry.addEventListener('click', (menu) => {
+      pas.UnitMenus.DMMenus.MenuClicked(
         menu.target.id.split('_')[0],
         menu.target.id.split('_')[1],
         menu.target.id.split('_')[2]
@@ -158,23 +158,20 @@ begin
   end;
 end;
 
-procedure TDMMenus.MenuClicked(MenuForm: String; MenuType: String; MenuName: String);
+procedure TDMMenus.MenuClicked(Dashboard: String; MenuGroup: String; MenuName: String);
 begin
-  MainForm.LogAction('Dashboard Menu Clicked ['+MenuForm+'] ['+MenuType+'] ['+MenuName+']',true);
-
   // Hide either the current subform or the main form
-  if MainForm.CurrentFormName = MenuName then
+  if MainForm.CurrentFormName = Dashboard+'Form' then
   begin
     asm
       document.getElementById('divSubForm').style.setProperty('opacity','0','important')
-      pas.UnitMain.MainForm.CurrentForm.MenuClicked(MenuForm, MenuType, MenuName);
+      pas.UnitMain.MainForm.CurrentForm.MenuClicked(Dashboard, MenuGroup, MenuName, false);
     end
   end
   else
   begin
-    MainForm.divHost.ElementHandle.style.setProperty('opacity','0','important');
-    asm await sleep(500); end;
-    MainForm.LoadForm(MenuName,DMIcons.Icon(MenuName+'_Menu'));
+    MainForm.LogAction('Dashboard Selected ['+Dashboard+'] ['+MenuGroup+'] ['+MenuName+']',true);
+    MainForm.LoadForm(Dashboard+'Form',DMIcons.Icon(Dashboard+'_Menu'));
   end;
 end;
 

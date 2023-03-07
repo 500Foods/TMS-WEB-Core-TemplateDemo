@@ -4,7 +4,6 @@ object UserProfileSubForm: TUserProfileSubForm
   CSSLibrary = cssBootstrap
   ElementFont = efCSS
   OnCreate = WebFormCreate
-  OnShow = WebFormShow
   object labelDashboard: TWebLabel
     Left = 72
     Top = 232

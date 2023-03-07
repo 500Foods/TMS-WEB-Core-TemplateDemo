@@ -43,23 +43,19 @@ var
 begin
   btnLogin.Caption := 'Authorizing...';
 
-
   LoginCheck := await(MainForm.XDataLogin(editUSername.Text, editPassword.Text));
-//  console.log(LoginCheck);
 
   if LoginCheck = 'Success' then
   begin
     // Briefly show successful login message
     btnLogin.Caption := 'Login Successful';
-    asm
-      await sleep(500);
-    end;
-    // hide the login page
-    MainForm.divHost.ElementHandle.style.setProperty('opacity','0');
-    asm
-      await sleep(1000);
-    end;
+    asm await sleep(500); end;
 
+    // Remove Toasts
+    asm divToasts.replaceChildren(); end;
+
+
+    // Process Remembering
     if checkRemember.checked then
     begin
       MainForm.Remember := True;
@@ -75,23 +71,10 @@ begin
       TWebLocalStorage.RemoveKey('Login.Expiry');
     end;
 
-    // Remove Toasts
-    asm
-      divToasts.replaceChildren();
-    end;
-
     // Load selected form
     if MainForm.Role_Administrator then
     begin
-      MainForm.LoadForm('Administrator', DMIcons.Icon('Administrator_Menu'));
-    end
-    else if MainForm.Role_HR then
-    begin
-      MainForm.LoadForm('HR', DMIcons.Icon('Administrator_Menu'))
-    end
-    else if MainForm.Role_Sales then
-    begin
-      MainForm.LoadForm('Sales', DMIcons.Icon('Administrator_Menu'));
+      MainForm.LoadForm('AdministratorForm', DMIcons.Icon('Administrator_Menu'));
     end;
 
 
@@ -157,29 +140,37 @@ procedure TLoginForm.tmrLoginStartTimer(Sender: TObject);
 var
   Remembered: String;
   LoggedIn: Boolean;
+  CheckForm: String;
+  CheckSubForm: String;
+  CheckForms: Boolean;
 begin
   tmrLoginStart.Enabled := False;
   LoggedIn := False;
+  CheckForms := False;
 
-  // Check if we have remembered a JWT
-  if TWebLocalStorage.GetValue('Login.CurrentForm') <> 'Login' then
+  // Check for valid state information
+  CheckForm := TWebLocalStorage.GetValue('Login.CurrentForm');
+  CheckSubform := TWebLocalStorage.GetValue('Login.CurrentSubForm');
+  asm if (window.ValidForms.includes(CheckForm) && window.ValidSubForms.includes(CheckSubForm)) { CheckForms = true; } end;
+
+  if (CheckForms = True) then
   begin
-    if TWebLocalStorage.GetValue('Login.Expiry') <> '' then
+    if (CheckForm <> 'LoginForm') then
     begin
-      MainForm.JWT_Expiry := StrToFloat(TWebLocalStorage.GetValue('Login.Expiry'));
-      if MainForm.JWT_Expiry > (TTimeZone.Local.ToUniversalTime(Now) + 60/86400) then
+      if (TWebLocalStorage.GetValue('Login.Expiry') <> '') then
       begin
-        MainForm.LogAction('AutoLogin / JWT Time Remaining: '+IntToStr(SecondsBetween(MainForm.JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)))+'s', False);
-        LoggedIn := True;
-
-        MainForm.ProcessJWT(TWebLocalStorage.GetValue('Login.JWT'));
-        MainForm.LoadForm(TWebLocalStorage.GetValue('Login.CurrentForm'),TWebLocalStorage.GetValue('Login.CurrentFormIcon') );
-        MainForm.divHost.ElementHandle.style.setProperty('opacity','1');
-
-      end
-      else
-      begin
-        MainForm.Logout('JWT Expired');
+        MainForm.JWT_Expiry := StrToFloat(TWebLocalStorage.GetValue('Login.Expiry'));
+        if MainForm.JWT_Expiry > (TTimeZone.Local.ToUniversalTime(Now) + 60/86400) then
+        begin
+          LoggedIn := True;
+          MainForm.LogAction('AutoLogin - JWT Time Remaining: '+IntToStr(SecondsBetween(MainForm.JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)))+'s', False);
+          MainForm.ProcessJWT(TWebLocalStorage.GetValue('Login.JWT'));
+          MainForm.LoadForm(CheckForm, TWebLocalStorage.GetValue('Login.CurrentFormIcon') );
+        end
+        else
+        begin
+          MainForm.Logout('AutoLogin - JWT Expired');
+        end;
       end;
     end;
   end;
@@ -222,15 +213,14 @@ begin
 
     // Show the login page
     MainForm.divHost.ElementHandle.style.setProperty('opacity','1');
-    asm
-      await sleep(1000);
-    end;
+    asm await sleep(500); end;
+
     // Show the login form
     divLoginBox.ElementHandle.style.setProperty('opacity','1');
 
   end;
 
-
+  MainForm.PreventCompilerHint(CheckSubForm);
 end;
 
 end.

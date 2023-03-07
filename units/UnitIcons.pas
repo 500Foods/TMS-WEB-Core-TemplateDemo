@@ -27,9 +27,8 @@ implementation
 
 function TDMIcons.Icon(LookupIcon: String):String;
 begin
-  asm
-    Result = this.Lookup[LookupIcon];
-  end;
+  Result :='';
+  asm Result = this.Lookup[LookupIcon]; end;
 end;
 
 procedure TDMIcons.InitializeIcons(IconSet: String);
@@ -108,10 +107,8 @@ begin
       Icon[ "Username"            ] = '<span class="fa-duotone fa-key fa-swap-opacity"></span>';
     }
 
-
     this.Lookup = Icon;
   end;
-
 
 end;
 

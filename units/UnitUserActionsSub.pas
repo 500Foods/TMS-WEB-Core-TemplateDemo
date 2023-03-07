@@ -14,7 +14,6 @@ type
     bcCurrent: TWebLabel;
     actionsTitle: TWebLabel;
     actionsHistory: TWebLabel;
-    procedure WebFormShow(Sender: TObject);
     procedure WebFormCreate(Sender: TObject);
     procedure bcDashboardClick(Sender: TObject);
   private
@@ -35,7 +34,7 @@ uses UnitMain, UnitIcons;
 procedure TUserActionsSubForm.bcDashboardClick(Sender: TObject);
 begin
   asm
-    pas.UnitMain.MainForm.CurrentForm.MenuClicked(pas.UnitMain.MainForm.CurrentFormName,'Dashboard','Sub')
+    pas.UnitMain.MainForm.CurrentForm.MenuClicked(pas.UnitMain.MainForm.CurrentFormName.replace('Form',''),'Dashboard','Sub', false)
   end;
 end;
 
@@ -62,11 +61,7 @@ begin
   end;
 
   (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1','important');
-end;
-
-procedure TUserActionsSubForm.WebFormShow(Sender: TObject);
-begin
-  MainForm.SubFormShow;
+  MainForm.LogAction('', False);
 end;
 
 end.

@@ -11,7 +11,6 @@ type
     bcDashboard: TWebLabel;
     bcDashboards: TWebLabel;
     labelDashboard: TWebLabel;
-    procedure WebFormShow(Sender: TObject);
     procedure WebFormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -144,11 +143,7 @@ begin
   end;
 
   (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1','important');
-end;
-
-procedure TAdministratorSubForm.WebFormShow(Sender: TObject);
-begin
-  MainForm.SubFormShow;
+  MainForm.LogAction('', False);
 end;
 
 end.

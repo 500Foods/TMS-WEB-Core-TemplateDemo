@@ -1,8 +1,9 @@
 object AdministratorSubForm: TAdministratorSubForm
   Width = 640
   Height = 480
+  CSSLibrary = cssBootstrap
+  ElementFont = efCSS
   OnCreate = WebFormCreate
-  OnShow = WebFormShow
   object bcDashboard: TWebLabel
     Left = 72
     Top = 270
