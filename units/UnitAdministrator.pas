@@ -89,7 +89,7 @@ begin
 
     if MenuType = 'Dashboard' then
     begin
-       divSubForm.ElementHandle.style.setProperty('opacity','0');
+       divSubForm.ElementHandle.style.setProperty('opacity','0','important');
        asm await sleep (500); end;
 
       MainForm.LoadSubForm('AdministratorSub',divSubForm, DMIcons.Icon('Administrator_Menu'));
@@ -97,7 +97,7 @@ begin
 
     else if MenuType = 'User' then
     begin
-       divSubForm.ElementHandle.style.setProperty('opacity','0');
+       divSubForm.ElementHandle.style.setProperty('opacity','0','important');
        asm await sleep (500); end;
 
        if MenuName = 'Profile' then MainForm.LoadSubForm('UserProfileSub',divSubForm, DMIcons.Icon('Profile_Menu'));

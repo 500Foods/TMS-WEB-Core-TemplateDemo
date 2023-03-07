@@ -166,13 +166,13 @@ begin
   if MainForm.CurrentFormName = MenuName then
   begin
     asm
-      document.getElementById('divSubForm').style.setProperty('opacity','0')
+      document.getElementById('divSubForm').style.setProperty('opacity','0','important')
       pas.UnitMain.MainForm.CurrentForm.MenuClicked(MenuForm, MenuType, MenuName);
     end
   end
   else
   begin
-    MainForm.divHost.ElementHandle.style.setProperty('opacity','0');
+    MainForm.divHost.ElementHandle.style.setProperty('opacity','0','important');
     asm await sleep(500); end;
     MainForm.LoadForm(MenuName,DMIcons.Icon(MenuName+'_Menu'));
   end;

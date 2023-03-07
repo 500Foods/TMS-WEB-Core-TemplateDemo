@@ -143,7 +143,7 @@ begin
     }));
   end;
 
-  (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1');
+  (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1','important');
 end;
 
 procedure TAdministratorSubForm.WebFormShow(Sender: TObject);

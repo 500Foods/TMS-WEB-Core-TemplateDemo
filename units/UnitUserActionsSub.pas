@@ -12,6 +12,8 @@ type
     bcDashboards: TWebLabel;
     bcDashboard: TWebLabel;
     bcCurrent: TWebLabel;
+    actionsTitle: TWebLabel;
+    actionsHistory: TWebLabel;
     procedure WebFormShow(Sender: TObject);
     procedure WebFormCreate(Sender: TObject);
     procedure bcDashboardClick(Sender: TObject);
@@ -44,6 +46,11 @@ begin
   bcDashboard.HTML := mainForm.CurrentFormIcon+MainForm.CurrentFormName;
   bcCurrent.hTML := DMIcons.Icon('Actions_Menu')+'User Actions';
 
+  actionsTitle.HTML := DMIcons.Icon('Actions_Menu')+'User Actions';
+  actionsHistory.HTML := '<pre>'+MainForm.ActionLog.Text+'</pre>';
+  actionsHistory.ElementHandle.style.setProperty('max-height',IntToStr(MainForm.Height - 325)+'px');
+  actionsHistory.ElementHandle.style.setProperty('margin','16px');
+
   asm
     menuSidebar.replaceWith(menuSidebar.cloneNode(true));
     pas.UnitMain.MainForm.CurrentForm.CreateMenu();
@@ -54,7 +61,7 @@ begin
 
   end;
 
-  (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1');
+  (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1','important');
 end;
 
 procedure TUserActionsSubForm.WebFormShow(Sender: TObject);

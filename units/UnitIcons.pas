@@ -47,6 +47,7 @@ begin
     Icon[ "ArrowRight_Nav"      ] = '<i class="nav-arrow fa-solid fa-angle-right"></i>';
     Icon[ "Birthday"            ] = '<i class="fa-solid fa-cake-candles"></i>';
     Icon[ "Certificate"         ] = '<span class="fa-solid fa-certificate me-2"></span>';
+    Icon[ "Clock"               ] = '<i class="fa-solid fa-clock fa-fw"></i>';
     Icon[ "Dashboard_Menu"      ] = '<i class="fa-solid fa-gauge-high me-2 fa-fw"></i>';
     Icon[ "Dashboard_Nav"       ] = '<i class="nav-icon fa-solid fa-gauge-high me-2 fa-fw"></i>';
     Icon[ "Database_Menu"       ] = '<i class="fa-solid fa-database fa-fw me-2"></i>';
@@ -81,6 +82,7 @@ begin
       Icon[ "ArrowRight_Nav"      ] = '<i class="nav-arrow fa-duotone fa-caret-right"></i>';
       Icon[ "Birthday"            ] = '<i class="fa-duotone fa-cake-candles"></i>';
       Icon[ "Certificate"         ] = '<span class="fa-duotone fa-certificate me-2"></span>';
+      Icon[ "Clock"               ] = '<i class="fa-duotone fa-clock fa-fw fa-swap-opacity"></i>';
       Icon[ "Dashboard_Menu"      ] = '<i class="fa-duotone fa-chart-simple me-2 fa-fw"></i>';
       Icon[ "Dashboard_Nav"       ] = '<i class="nav-icon fa-duotone fa-chart-simple me-2 fa-fw"></i>';
       Icon[ "Database_Menu"       ] = '<i class="fa-duotone fa-database fa-fw me-2"></i>';
@@ -99,7 +101,7 @@ begin
       Icon[ "Photo"               ] = '<i class="fa-duotone fa-portrait"></i>';
       Icon[ "Profile"             ] = '<span class="fa-duotone fa-user-secret me-2"></span>';
       Icon[ "Profile_Menu"        ] = '<i class="fa-duotone fa-user-secret fa-fw me-2"></i>';
-      Icon[ "Telephone"           ] = '<i class="fa-duotone fa-phone-office fa-fw"></i>';
+      Icon[ "Telephone"           ] = '<i class="fa-duotone fa-phone-office fa-swap-opacity fa-fw"></i>';
       Icon[ "TelephoneHome"       ] = '<i class="fa-duotone fa-phone-rotary fa-fw"></i>';
       Icon[ "TelephoneMobile"     ] = '<i class="fa-duotone fa-mobile fa-fw"></i>';
       Icon[ "Tokens_Menu"         ] = '<i class="fa-duotone fa-shield fa-fw me-2"></i>';

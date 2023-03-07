@@ -224,12 +224,25 @@ object UserProfileSubForm: TUserProfileSubForm
     WidthPercent = 100.000000000000000000
   end
   object titleContacts: TWebLabel
-    Left = 320
-    Top = 429
+    Left = 296
+    Top = 421
     Width = 61
     Height = 13
     Caption = 'titleContacts'
     ElementID = 'titleContacts'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    HTMLType = tSPAN
+    WidthPercent = 100.000000000000000000
+  end
+  object titleHistory: TWebLabel
+    Left = 488
+    Top = 421
+    Width = 52
+    Height = 13
+    Caption = 'titleHistory'
+    ElementID = 'titleHistory'
     ElementFont = efCSS
     HeightStyle = ssAuto
     HeightPercent = 100.000000000000000000
@@ -247,11 +260,21 @@ object UserProfileSubForm: TUserProfileSubForm
     Role = ''
   end
   object tableContacts: TWebHTMLDiv
-    Left = 320
-    Top = 448
+    Left = 296
+    Top = 440
     Width = 100
     Height = 41
     ElementID = 'tableContacts'
+    ChildOrder = 18
+    ElementFont = efCSS
+    Role = ''
+  end
+  object tableHistory: TWebHTMLDiv
+    Left = 488
+    Top = 440
+    Width = 100
+    Height = 41
+    ElementID = 'tableHistory'
     ChildOrder = 18
     ElementFont = efCSS
     Role = ''

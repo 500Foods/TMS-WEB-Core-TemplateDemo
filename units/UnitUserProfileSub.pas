@@ -29,6 +29,8 @@ type
     titleImage: TWebLabel;
     tableContacts: TWebHTMLDiv;
     titleContacts: TWebLabel;
+    titleHistory: TWebLabel;
+    tableHistory: TWebHTMLDiv;
     procedure WebFormShow(Sender: TObject);
     procedure bcDashboardClick(Sender: TObject);
     [async] procedure WebFormCreate(Sender: TObject);
@@ -65,8 +67,7 @@ begin
       var icon = pas.UnitIcons.DMIcons.Lookup;
       var data = JSON.parse(ResponseString);
 
-      console.log(data);
-//      luxon.DateTime.fromISO('2023-03-06T13:34:37',{zone:"utc"}).setZone("system").toFormat('yyyy-MMM-dd HH:mm:ss');
+//      console.log(data);
 
       iconBirthday.innerHTML = icon['Birthday'];
       labelBirthday.innerHTML =  luxon.DateTime.fromISO(data['Profile'][0]['birthdate'].split(' ')[0]).toFormat('yyyy-MMM-dd');
@@ -101,7 +102,7 @@ begin
       iconLastLogin.innerHTML = icon['Login'];
       labelLastLogin.innerHTML = '<span title="'+lastlogin+'">'+lastlogin+'</span>';
 
-      iconRecentLogins.innerHTML = icon['Login'];
+      iconRecentLogins.innerHTML = icon['Clock'];
       labelRecentLogins.innerHTML = data['RecentLogins'].length+' <small class="text-secondary me-3"> 7d </small> '+data['Logins'][0]['logins']+' <small class="text-secondary"> All </small>';
 
       titleImage.innerHTML = icon['Photo']+'<span class="ms-2">Profile Photo</span>';
@@ -125,6 +126,22 @@ begin
       }
       tableContacts.innerHTML = tablerows;
 
+      titleHistory.innerHTML = icon['Clock']+'<span class="ms-2">Recent Login History</span>';
+      tableHistory.style.setProperty('max-height','525px');
+      tableHistory.style.setProperty('border-bottom-left-radius','var(--custom-rounding)');
+      tableHistory.style.setProperty('border-bottom-right-radius','var(--custom-rounding)');
+      var tabHistory = new Tabulator("#tableHistory",{
+        data: data['RecentLogins'],
+        layout: "fitColumns",
+        selectable: 1,
+        columns: [
+          { title: "Logged In", field: "logged_in", formatter: function(cell, formatterParams, onRendered) {
+            return luxon.DateTime.fromISO(cell.getValue().split(' ').join('T'),{zone:"utc"}).setZone("system").toFormat('yyyy-MMM-dd HH:mm:ss');
+          }},
+          { title: "IP Address", field: "ip_address" }
+        ]
+      });
+
     end;
   end;
 
@@ -137,7 +154,7 @@ begin
     }));
   end;
 
-  (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1');
+  (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1','important');
 
 
 end;
