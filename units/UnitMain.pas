@@ -564,8 +564,9 @@ begin
 
     // Create Toast Header
     var toasth = document.createElement('div');
-    toasth.className = 'toast-header bg-danger text-white mb-1 position-relative';
-    toasth.innerHTML = '<div style="position:absolute; border-radius: var(--custom-rounding); display:block; top:39px; left:2px; width:99%; height:5px; background: var(--bs-danger);"></div>'+
+    toasth.className = 'toast-header bg-danger text-white pb-3 position-relative';
+    toasth.innerHTML = '<div style="position:absolute; border-radius: var(--custom-rounding); z-index: 2; display:block; top:37px; left:4px; width:98%; height:5px; background: var(--bs-danger);"></div>'+
+                       '<div style="position:absolute; border-radius: var(--custom-rounding); z-index: 1; display:block; top:36px; left:3px; width:98%; height:7px; background: var(--bs-dark);"></div>'+
                        '<strong class="me-auto">'+Header+'</strong>'+
                        '<small class="text-light">just now</small>'+
                        '<button type="button" onclick="pas.UnitMain.MainForm.ActivityDetected = true;"; class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>';
@@ -589,7 +590,7 @@ begin
       else {
         toast.setAttribute('countdown',toast.getAttribute('countdown')-1);
         toast.lastElementChild.innerHTML = Body.replace('$S',parseInt(toast.getAttribute('countdown')/2));
-        toast.firstElementChild.firstElementChild.style.setProperty('width', parseInt(99*toast.getAttribute('countdown')/(Timeout/500))+'%');
+        toast.firstElementChild.firstElementChild.style.setProperty('width', parseInt(98*toast.getAttribute('countdown')/(Timeout/500))+'%');
       }
     },500);
 

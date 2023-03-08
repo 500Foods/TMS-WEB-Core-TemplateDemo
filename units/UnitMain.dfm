@@ -1,6 +1,7 @@
 object MainForm: TMainForm
   Width = 1228
   Height = 843
+  Caption = '3'
   Color = clSilver
   CSSLibrary = cssBootstrap
   ElementFont = efCSS
