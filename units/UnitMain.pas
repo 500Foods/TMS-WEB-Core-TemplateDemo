@@ -46,6 +46,7 @@ type
     App_Version: String;
     App_Release: String;
     App_Start: TDateTime;
+    App_Start_UTC: TDateTime;
     App_Session: String;
 
     LoggedIn: Boolean;
@@ -115,6 +116,7 @@ begin
   App_Version := '1.0';
   App_Release := '2022-Feb-28';
   App_Start := Now();
+  App_Start_UTC := TTimeZone.Local.ToUniversalTime(Now);
 
   // MainForm Options
   MainForm.Caption := App_Name;
@@ -131,7 +133,7 @@ begin
 
   // JWT Handling
   JWT := '';
-  JWT_Expiry := TTimeZone.Local.ToUniversalTime(Now);
+  JWT_Expiry := App_Start_UTC;
   Remember := True;
 
   // User Information
@@ -177,7 +179,7 @@ begin
   // Create an App Session key - just an encoded timestamp
   // https://github.com/marko-36/base29-shortener
   App_Session := '';
-  i := DateTimeToUnix(TTimeZone.local.ToUniversalTime(App_Start));
+  i := DateTimeToUnix(App_Start_UTC);
   asm
     const c = ['B','b','C','c','D','d','F','f','G','g','H','h','J','j','K','k','L','M','m','N','n','P','p','Q','q','R','r','S','s','T','t','V','W','w','X','x','Z','z','0','1','2','3','4','5','6','7','8','9'];
     var sLen = Math.floor(Math.log(i)/Math.log(c.length)) +1;
@@ -193,7 +195,7 @@ begin
   LogAction(' -> Version '+App_Version, False);
   LogAction(' -> Release '+App_Release, False);
   LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_Start), False);
-  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', TTimeZone.Local.ToUniversalTime(App_Start))+' UTC', False);
+  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_StarT_UTC)+' UTC', False);
   LogAction(' -> App Session: '+App_Session, False);
   asm
     this.LogAction(' -> '+window.ValidForms.length+' Forms', false);
@@ -406,6 +408,7 @@ begin
   if CurrentFormName <> 'Login' then
   begin
     LogAction('Logout: '+Reason, False);
+    LogAction('Session Duration: '+FormatDateTime('h"h "m"m "s"s"', Now - App_Start), False);
     Toast(DMIcons.Icon('Logout')+'Logout','Processing. Please wait.',1000);
 
     await(JSONRequest('ISystemService.Logout',[ActionLogCurrent.Text]));
