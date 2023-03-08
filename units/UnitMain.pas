@@ -455,6 +455,9 @@ var
 begin
   JWT := aJWT;
 
+  // Roles Disabled by Default
+  Role_Administrator := False;
+
   // Get JSON Claims from JWT
   JWTClaims := TJSONObject.ParseJSONValue(Window.atob(Copy(JWT, Pos('.',JWT)+1, LastDelimiter('.',JWT)-Pos('.',JWT)-1))) as TJSONObject;
 
@@ -494,16 +497,26 @@ begin
       TWebLocalStorage.SetValue('Login.Expiry', FloatToStr(MainForm.JWT_Expiry));
     end;
 
+    // Extract Roles
+    Role_Administrator := False;
+    i := 0;
+    while i < User_Roles.Count do
+    begin
+      if User_Roles[i] = '1' then Role_Administrator := True;
+      i := i + 1;
+    end;
+
+    LogAction('Processing Token', False);
+    LogAction(' -> Name: '+User_FirstName+' '+User_LastName, False);
+    LogAction(' -> EMail: '+User_Email, False);
+    LogAction(' -> Roles: '+User_Roles.CommaText, False);
+    LogAction(' -> Administrator: '+BoolToStr(Role_Administrator,True), False);
+    LogAction(' -> Expires: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss',JWT_Expiry)+' UTC',False);
+    LogAction(' -> Remaining: '+FormatDateTime('n"m "s"s"',(JWT_Expiry - TTimeZone.Local.ToUniversalTime(Now))),False);
+    LogAction('Token Processed', False);
+
   end;
 
-  // Extract Roles
-  Role_Administrator := False;
-  i := 0;
-  while i < User_Roles.Count do
-  begin
-    if User_Roles[i] = '1' then Role_Administrator := True;
-    i := i + 1;
-  end;
 end;
 
 procedure TMainForm.tmrJWTRenewalTimer(Sender: TObject);
@@ -664,12 +677,23 @@ begin
         } end;
 
         // Log the error, but leave out the URI (because it includes the password)
-        LogAction('Request Exception:'+Endpoint, False);
+        LogAction('ERROR Request Exception Received From'+Endpoint, False);
         LogAction(' --> ['+E.ClassName+']', False);
         LogAction(' --> '+Copy(E.Message,1,Pos('Uri:',E.Message)-2), False);
         LogAction(' --> '+Copy(E.Message,Pos('Status code:',E.Message),16), False);
         LogAction(' --> '+ErrorCode, False);
         LogAction(' --> '+ErrorMessage, False);
+
+        // Will tamp these down a bit once we get a better feel for the kinds of errors
+        // that come up regularly.
+        Toast(DMIcons.Icon('Bug_Menu')+'Unexpected Error',
+          '[ '+E.ClassName+' ] '+Endpoint+'<br />'+
+          Copy(E.Message,1,Pos('Uri:',E.Message)-2)+'<br />'+
+          Copy(E.Message,Pos('Status code:',E.Message),16)+'<br />'+
+          ErrorCode+'<br />'+
+          ErrorMessage
+        ,45000);
+
       end;
     end;
   end;
@@ -781,15 +805,17 @@ begin
   end;
 
   // We've got a JWT
-  if Pos('Bearer ',NewJWT) = 1 then
+  if Pos('Bearer ', NewJWT) = 1 then
   begin
+    // How long did it take?
     LogAction('Login Successful ('+IntToStr(MilliSecondsBetween(Now, ElapsedTime))+'ms)', False);
-    Result := 'Success';
-    LoggedIn := True;
 
-    // Figure out what to do with the JWT
+    // Do stuff with the JWT
     ProcessJWT(NewJWT);
 
+    // All done
+    Result := 'Success';
+    LoggedIn := True;
   end
   else
   begin
