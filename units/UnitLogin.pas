@@ -143,10 +143,12 @@ var
   CheckForm: String;
   CheckSubForm: String;
   CheckForms: Boolean;
+  UserPass: Boolean;
 begin
   tmrLoginStart.Enabled := False;
   LoggedIn := False;
   CheckForms := False;
+  UserPass := False;
 
   // Check for valid state information
   CheckForm := TWebLocalStorage.GetValue('Login.CurrentForm');
@@ -179,20 +181,19 @@ begin
   if not(LoggedIn) then
   begin
     // Update Icons
-    document.getElementById('ticon-username').innerHTML := DMIcons.Icon('Username');
-    document.getElementById('ticon-password').innerHTML := DMIcons.Icon('Password');
+    document.getElementById('icon-username').innerHTML := DMIcons.Icon('Username');
+    document.getElementById('icon-password').innerHTML := DMIcons.Icon('Password');
 
     // Check if we have remembered a Username
     Remembered :=  TWebLocalStorage.GetValue('Login.Username');
     if Remembered <> '' then
     begin
       editUsername.Text := Remembered;
-      editPassword.SetFocus;
       editUsernameChange(Sender);
+      UserPass := True;
     end
     else
     begin
-      editUsername.SetFocus;
       editUsernameChange(Sender);
     end;
 
@@ -217,6 +218,12 @@ begin
 
     // Show the login form
     divLoginBox.ElementHandle.style.setProperty('opacity','1');
+
+    // Try to set the focus to one of these two elements
+    if UserPass
+    then editPassword.SetFocus
+    else editUsername.SetFocus;
+
 
   end;
 

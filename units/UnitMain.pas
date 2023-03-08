@@ -30,7 +30,7 @@ type
     procedure WebFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     [async] procedure Logout(Reason: String);
     [async] procedure LoadForm(Form: String; FormIcon: String);
-    [async] procedure LoadSubForm(SubForm: String; divSubForm: TWebHTMLDiv; SubFormIcon: String);
+    [async] procedure LoadSubForm(SubForm: String; SubFormIcon: String);
     [async] function JSONRequest(Endpoint: String; Params: Array of JSValue):String;
     [async] procedure XDataConnect;
     [async] function XDataLogin(Username: String; Password: String):String;
@@ -46,6 +46,7 @@ type
     App_Version: String;
     App_Release: String;
     App_Start: TDateTime;
+    App_Session: String;
 
     LoggedIn: Boolean;
     ActivityDetected: Boolean;
@@ -104,6 +105,8 @@ begin
 end;
 
 procedure TMainForm.WebFormCreate(Sender: TObject);
+var
+  i: Int64;
 begin
 
   // Application Information
@@ -147,7 +150,7 @@ begin
   ActionLog.Delimiter := chr(10);
   ActionLogCurrent := TStringList.Create;
   ActionLogCurrent.Delimiter := chr(10);
-  CurrentFormName := 'MODULE/ORM-SUBFORM';
+  CurrentFormName := 'Module / Dashboard - Page';
   LogAction('============================================================', False);
 
   // Form Management
@@ -171,11 +174,27 @@ begin
     ]
   end;
 
+  // Create an App Session key - just an encoded timestamp
+  // https://github.com/marko-36/base29-shortener
+  App_Session := '';
+  i := DateTimeToUnix(TTimeZone.local.ToUniversalTime(App_Start));
+  asm
+    const c = ['B','b','C','c','D','d','F','f','G','g','H','h','J','j','K','k','L','M','m','N','n','P','p','Q','q','R','r','S','s','T','t','V','W','w','X','x','Z','z','0','1','2','3','4','5','6','7','8','9'];
+    var sLen = Math.floor(Math.log(i)/Math.log(c.length)) +1;
+    for(var ex=sLen-1; ex>-1; --ex){
+      this.App_Session += c[Math.floor(i / Math.pow(c.length,ex))];
+      i = [i % Math.pow(c.length,ex)];
+    }
+  end;
+
   // Application Details
   LogAction('Application Startup', False);
   LogAction(' -> '+App_Name, False);
   LogAction(' -> Version '+App_Version, False);
   LogAction(' -> Release '+App_Release, False);
+  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_Start), False);
+  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', TTimeZone.Local.ToUniversalTime(App_Start))+' UTC', False);
+  LogAction(' -> App Session: '+App_Session, False);
   asm
     this.LogAction(' -> '+window.ValidForms.length+' Forms', false);
     this.LogAction(' -> '+window.ValidSubForms.length+' SubForms', false);
@@ -184,11 +203,11 @@ begin
   LogAction('============================================================', False);
 
   // Setup the Log Viewer
+  divLog.Visible := False;
   divLog.Top := divHost.Top;
   divLog.Left := divHost.Left;
   divLog.Width := divHost.Width;
   divLog.Height := divHost.Height;
-  divLog.Visible := False;
 
   // Setup global sleep function :)
   asm window.sleep = async function(msecs) {return new Promise((resolve) => setTimeout(resolve, msecs)); } end;
@@ -206,22 +225,23 @@ begin
   asm
     window.addEventListener('beforeunload', function (e) {
 
-// Option 1:
-// This logs out user when tab is closed
-// Highest security
-//      pas.UnitMain.MainForm.Logout('Browser Closed');
+      // Option 1:
+      // This logs out user when tab is closed
+      // Highest security
+      // pas.UnitMain.MainForm.Logout('Browser Closed');
 
-// Option 2:
-// Do nothing
-// Lower security but more convenient
-// - don't have to login as often.
-// - survvies browser restart.
+      // Option 2:
+      // Do nothing
+      // Lower security but more convenient
+      // - don't have to login as often.
+      // - survvies browser restart.
 
-// Option 3:
-// This enables annoying browser dialog
-// Can be used with either of the above options
-//      e.preventDefault();
-//      e.returnValue = '';
+      // Option 3:
+      // This enables annoying browser dialog
+      // Can be used with either of the above options
+      //      e.preventDefault();
+      //      e.returnValue = '';
+
     });
 
   end;
@@ -291,10 +311,11 @@ begin
 
 end;
 
-procedure TMainForm.LoadSubForm(SubForm: String; divSubForm: TWebHTMLDiv; SubFormIcon: String);
+procedure TMainForm.LoadSubForm(SubForm: String; SubFormIcon: String);
 var
   ElapsedTime: TDateTime;
   ValidSubForm: Boolean;
+  divSubForm: TJSElement;
 
   procedure AfterCreate(AForm: TObject);
   begin
@@ -316,10 +337,9 @@ begin
   end;
 
   // Hide the old SubForm
-  asm
-    document.getElementById('divSubForm').style.setProperty('opacity','0','important');
-    await sleep(500);
-  end;
+  divSubForm := document.getElementById('divSubForm');
+  asm divSubForm.style.setProperty('opacity','0','important'); end;
+  asm await sleep(500); end;
 
   // Remove the old SubForm
   if Assigned(CurrentSubForm) then
@@ -342,9 +362,9 @@ begin
   TWebLocalStorage.SetValue('Login.CurrentSubFormIcon', SubFormIcon);
 
   // Launch SubForm
-  if      (SubForm = 'UserProfileSub')   then CurrentSubForm := TUserProfileSubForm.CreateNew(divSubForm.ElementID, @AfterCreate)
-  else if (SubForm = 'UserActionsSub')   then CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.ElementID, @AfterCreate)
-  else if (SubForm = 'AdministratorSub') then CurrentSubForm := TAdministratorSubForm.CreateNew(divSubForm.ElementID, @AfterCreate);
+  if      (SubForm = 'UserProfileSub')   then CurrentSubForm := TUserProfileSubForm.CreateNew(divSubForm.id, @AfterCreate)
+  else if (SubForm = 'UserActionsSub')   then CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.id, @AfterCreate)
+  else if (SubForm = 'AdministratorSub') then CurrentSubForm := TAdministratorSubForm.CreateNew(divSubForm.id, @AfterCreate);
 
 end;
 

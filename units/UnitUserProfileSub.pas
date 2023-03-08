@@ -45,7 +45,7 @@ var
 implementation
 
 uses
-  UnitMain, UnitIcons;
+  UnitMain, UnitIcons, UnitMenus;
 
 {$R *.dfm}
 
@@ -159,9 +159,7 @@ end;
 
 procedure TUserProfileSubForm.bcDashboardClick(Sender: TObject);
 begin
-  asm
-    pas.UnitMain.MainForm.CurrentForm.MenuClicked(pas.UnitMain.MainForm.CurrentFormName.replace('Form',''),'Dashboard','Sub', false)
-  end;
+  DMMenus.MenuClicked(StringReplace(MainForm.CurrentFormName,'Form','',[]),'Dashboard',StringReplace(MainForm.CurrentFormName,'Form','',[])+'Sub', True)
 end;
 
 end.

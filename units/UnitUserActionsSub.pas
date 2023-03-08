@@ -27,16 +27,10 @@ var
 
 implementation
 
-uses UnitMain, UnitIcons;
+uses UnitMain, UnitIcons, UnitMenus;
 
 {$R *.dfm}
 
-procedure TUserActionsSubForm.bcDashboardClick(Sender: TObject);
-begin
-  asm
-    pas.UnitMain.MainForm.CurrentForm.MenuClicked(pas.UnitMain.MainForm.CurrentFormName.replace('Form',''),'Dashboard','Sub', false)
-  end;
-end;
 
 procedure TUserActionsSubForm.WebFormCreate(Sender: TObject);
 begin
@@ -62,6 +56,11 @@ begin
 
   (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1','important');
   MainForm.LogAction('', False);
+end;
+
+procedure TUserActionsSubForm.bcDashboardClick(Sender: TObject);
+begin
+  DMMenus.MenuClicked(StringReplace(MainForm.CurrentFormName,'Form','',[]),'Dashboard',StringReplace(MainForm.CurrentFormName,'Form','',[])+'Sub', True)
 end;
 
 end.

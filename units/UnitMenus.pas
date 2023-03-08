@@ -12,9 +12,9 @@ type
   public
     { Public declarations }
     procedure AddDashboards(SideMenu: String; Dashboard: String);
-    [async] procedure MenuClicked(Dashboard: String; MenuGroup: String; MenuName: String);
     procedure AddMenuGroup(SideMenu: String; MenuGroup:String; Dashboard: String);
     procedure AddMenuItem(MenuGroup:String; MenuItem: String; Dashboard: String);
+    [async] procedure MenuClicked(Dashboard: String; MenuGroup: String; MenuName: String; UserAction: Boolean);
   end;
 
 var
@@ -72,7 +72,7 @@ begin
       // Create menu item
       var menuEntry = document.createElement('li');
       menuEntry.className = 'nav-item cursor-pointer';
-      menuEntry.setAttribute('id',dash.replace('_','')+'_Dashboard_'+Dashboard.replace('_',''));
+      menuEntry.setAttribute('id',dash.replace('_','')+'_Dashboard_'+Dashboard.replace('_','')+'Sub');
       var menuLink = document.createElement('div');
       menuLink.innerHTML = icon[dash.replace('_','')+'_Menu']+'<p>'+dash+'</p>';
 
@@ -89,7 +89,8 @@ begin
         pas.UnitMenus.DMMenus.MenuClicked(
           menu.target.id.split('_')[0],
           menu.target.id.split('_')[1],
-          menu.target.id.split('_')[2]
+          menu.target.id.split('_')[2],
+          true
         );
       });
     });
@@ -152,25 +153,26 @@ begin
       pas.UnitMenus.DMMenus.MenuClicked(
         menu.target.id.split('_')[0],
         menu.target.id.split('_')[1],
-        menu.target.id.split('_')[2]
+        menu.target.id.split('_')[2],
+        true
       );
     });
   end;
 end;
 
-procedure TDMMenus.MenuClicked(Dashboard: String; MenuGroup: String; MenuName: String);
+procedure TDMMenus.MenuClicked(Dashboard: String; MenuGroup: String; MenuName: String; UserAction: Boolean);
 begin
-  // Hide either the current subform or the main form
+  // Load either a new dashboard or a subform on the current dashboard
   if MainForm.CurrentFormName = Dashboard+'Form' then
   begin
-    asm
-      document.getElementById('divSubForm').style.setProperty('opacity','0','important')
-      pas.UnitMain.MainForm.CurrentForm.MenuClicked(Dashboard, MenuGroup, MenuName, false);
-    end
+    // Load a SubForm (aka Page)
+    if (UserAction) then MainForm.LogAction('Page Selected ['+Dashboard+'] ['+MenuGroup+'] ['+MenuName+']',true);
+    MainForm.LoadSubForm(MenuName,DMIcons.Icon(MenuName+'_Menu'));
   end
   else
   begin
-    MainForm.LogAction('Dashboard Selected ['+Dashboard+'] ['+MenuGroup+'] ['+MenuName+']',true);
+    // Load a Form (aka Dashboard)
+    if (UserAction) then MainForm.LogAction('Dash Selected ['+Dashboard+'] ['+MenuGroup+'] ['+MenuName+']',true);
     MainForm.LoadForm(Dashboard+'Form',DMIcons.Icon(Dashboard+'_Menu'));
   end;
 end;
