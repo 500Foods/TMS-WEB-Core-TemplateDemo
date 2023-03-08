@@ -19,7 +19,6 @@ type
     divToasts: TWebHTMLDiv;
     tmrJWTRenewal: TWebTimer;
     tmrJWTRenewalWarning: TWebTimer;
-    [async] procedure WebFormCreate(Sender: TObject);
     procedure LogAction(Action: String; Extend: Boolean);
     procedure btnShowLogClick(Sender: TObject);
     procedure btnLoginFormClick(Sender: TObject);
@@ -28,15 +27,17 @@ type
     procedure Toast(Header: String; Body: String; Timeout: Integer);
     procedure ProcessJWT(aJWT: String);
     procedure WebFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tmrJWTRenewalWarningTimer(Sender: TObject);
+    procedure WebFormClick(Sender: TObject);
+    procedure FinalRequest;
+    [async] procedure WebFormCreate(Sender: TObject);
     [async] procedure Logout(Reason: String);
     [async] procedure LoadForm(Form: String; FormIcon: String);
     [async] procedure LoadSubForm(SubForm: String; SubFormIcon: String);
-    [async] function JSONRequest(Endpoint: String; Params: Array of JSValue):String;
     [async] procedure XDataConnect;
-    [async] function XDataLogin(Username: String; Password: String):String;
     [async] procedure tmrJWTRenewalTimer(Sender: TObject);
-    procedure tmrJWTRenewalWarningTimer(Sender: TObject);
-    procedure WebFormClick(Sender: TObject);
+    [async] function XDataLogin(Username: String; Password: String):String;
+    [async] function JSONRequest(Endpoint: String; Params: Array of JSValue):String;
   private
     { Private declarations }
   public
@@ -99,12 +100,6 @@ uses
   UnitUserProfileSub, UnitUserActionsSub,
   UnitAdministrator, UnitAdministratorSub;
 
-procedure TMainForm.WebFormClick(Sender: TObject);
-begin
-  if (CurrentFormName <> 'LoginForm')
-  then ActivityDetected := True;
-end;
-
 procedure TMainForm.WebFormCreate(Sender: TObject);
 var
   i: Int64;
@@ -164,7 +159,7 @@ begin
   CurrentSubFormIcon := '';
 
   // Forms and SubForms that we've defined so far in this project
-  asm
+  asm {
     window.ValidForms = [
       'AdministratorForm',
       'LoginForm'
@@ -174,12 +169,13 @@ begin
       'UserActionsSub',
       'UserProfileSub'
     ]
-  end;
+  } end;
 
   // Create an App Session key - just a custom Base48-encoded timestamp
   // https://github.com/marko-36/base29-shortener
   App_Session := '';
   i := DateTimeToUnix(App_Start_UTC);
+
   asm
     // Encode Integer (eg: Unix Timestamp) into String
     const c = ['B','b','C','c','D','d','F','f','G','g','H','h','J','j','K','k','L','M','m','N','n','P','p','Q','q','R','r','S','s','T','t','V','W','w','X','x','Z','z','0','1','2','3','4','5','6','7','8','9'];
@@ -198,21 +194,21 @@ begin
     // return i
   end;
 
-
   // Application Details
   LogAction('Application Startup', False);
   LogAction(' -> '+App_Name, False);
   LogAction(' -> Version '+App_Version, False);
   LogAction(' -> Release '+App_Release, False);
   LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_Start), False);
-  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_StarT_UTC)+' UTC', False);
+  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_Start_UTC)+' UTC', False);
   LogAction(' -> App Session: '+App_Session, False);
-  asm
+  asm {
     this.LogAction(' -> '+window.ValidForms.length+' Forms', false);
     this.LogAction(' -> '+window.ValidSubForms.length+' SubForms', false);
     this.LogAction(' -> '+Object.keys(pas.UnitIcons.DMIcons.Lookup).length+' Icons', false);
-  end;
+  } end;
   LogAction('============================================================', False);
+
 
   // Setup the Log Viewer
   divLog.Visible := False;
@@ -234,8 +230,10 @@ begin
   LoadForm('LoginForm', DMIcons.Icon('Login'));
 
   // What to do if the browser closes unexpectedly
-  asm
-    window.addEventListener('beforeunload', function (e) {
+  asm {
+    window.addEventListener('beforeunload', async function (e) {
+
+      pas.UnitMain.MainForm.FinalRequest();
 
       // Option 1:
       // This logs out user when tab is closed
@@ -246,7 +244,7 @@ begin
       // Do nothing
       // Lower security but more convenient
       // - don't have to login as often.
-      // - survvies browser restart.
+      // - survives browser restart.
 
       // Option 3:
       // This enables annoying browser dialog
@@ -256,8 +254,21 @@ begin
 
     });
 
-  end;
+  } end;
 
+end;
+
+procedure TMainForm.WebFormClick(Sender: TObject);
+begin
+  if (CurrentFormName <> 'LoginForm')
+  then ActivityDetected := True;
+end;
+
+procedure TMainForm.FinalRequest;
+begin
+  LogAction('Application Unloaded',False);
+  LogAction('Session Duration: '+FormatDateTime('h"h "m"m "s"s"', Now - App_Start), False);
+  JSONRequest('ISystemService.Renew',[App_Session, ActionLogCurrent.Text]);
 end;
 
 procedure TMainForm.WebFormKeyDown(Sender: TObject; var Key: Word;    Shift: TShiftState);
@@ -322,14 +333,13 @@ begin
   else if (Form = 'AdministratorForm') then CurrentForm := TAdministratorForm.CreateNew(divHost.ElementID, @AfterCreate);
 
 end;
-
 procedure TMainForm.LoadSubForm(SubForm: String; SubFormIcon: String);
 var
   ElapsedTime: TDateTime;
   ValidSubForm: Boolean;
   divSubForm: TJSElement;
 
-  procedure AfterCreate(AForm: TObject);
+  procedure AfterSubCreate(AForm: TObject);
   begin
     LogAction('Load SubForm: '+AForm.ClassName+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime)-500)+'ms)', False);
   end;
@@ -374,11 +384,11 @@ begin
   TWebLocalStorage.SetValue('Login.CurrentSubFormIcon', SubFormIcon);
 
   // Launch SubForm
-  if      (SubForm = 'UserProfileSub')   then CurrentSubForm := TUserProfileSubForm.CreateNew(divSubForm.id, @AfterCreate)
-  else if (SubForm = 'UserActionsSub')   then CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.id, @AfterCreate)
-  else if (SubForm = 'AdministratorSub') then CurrentSubForm := TAdministratorSubForm.CreateNew(divSubForm.id, @AfterCreate);
-
+  if      (SubForm = 'UserProfileSub')   then CurrentSubForm := TUserProfileSubForm.CreateNew(divSubForm.id, @AfterSubCreate)
+  else if (SubForm = 'UserActionsSub')   then CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.id, @AfterSubCreate)
+  else if (SubForm = 'AdministratorSub') then CurrentSubForm := TAdministratorSubForm.CreateNew(divSubForm.id, @AfterSubCreate);
 end;
+
 
 procedure TMainForm.LogAction(Action: String; Extend: Boolean);
 var
@@ -520,7 +530,7 @@ begin
     begin
     // Otherwise perform an automatic logout of this session
       LogAction('Login NOT Renewed', False);
-      Logout('NNoRenewal');
+      Logout('NoRenewal');
     end
   end
   else
@@ -617,6 +627,7 @@ begin
     divLog.HTML.Text := '<pre>'+ActionLog.DelimitedText+'</pre>';
   end;
 end;
+
 
 function TMainForm.JSONRequest(Endpoint: String; Params: array of JSValue): String;
 var
@@ -789,9 +800,9 @@ begin
 end;
 
 procedure TMainForm.StopLinkerRemoval(P: Pointer);                          begin end;
-procedure TMainForm.PreventCompilerHint(S: string);               overload; begin end;
 procedure TMainForm.PreventCompilerHint(I: integer);              overload; begin end;
 procedure TMainForm.PreventCompilerHint(J: JSValue);              overload; begin end;
+procedure TMainForm.PreventCompilerHint(S: string);               overload; begin end;
 procedure TMainForm.PreventCompilerHint(H: TJSHTMLElement);       overload; begin end;
 
 end.

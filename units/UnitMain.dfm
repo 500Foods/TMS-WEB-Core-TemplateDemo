@@ -50,6 +50,7 @@ object MainForm: TMainForm
     ChildOrder = 2
     ElementFont = efCSS
     Role = ''
+    Visible = False
   end
   object btnLoginForm: TWebButton
     Left = 8

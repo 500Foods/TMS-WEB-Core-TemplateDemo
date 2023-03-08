@@ -90,6 +90,16 @@ begin
   end;
 end;
 
+procedure TLoginForm.WebFormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = VK_RETURN)
+     and (trim(editUsername.Text) <> '')
+     and (Trim(editPassword.Text) <> '')
+  then btnLoginClick(Sender)
+  else editUsernameChange(Sender);
+end;
+
 procedure TLoginForm.WebFormCreate(Sender: TObject);
 begin
   // Update Title
@@ -102,15 +112,7 @@ begin
   tmrLoginStart.Enabled := True;
 end;
 
-procedure TLoginForm.WebFormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if (Key = VK_RETURN)
-     and (trim(editUsername.Text) <> '')
-     and (Trim(editPassword.Text) <> '')
-  then btnLoginClick(Sender)
-  else editUsernameChange(Sender);
-end;
+
 
 procedure TLoginForm.editUsernameChange(Sender: TObject);
 begin
