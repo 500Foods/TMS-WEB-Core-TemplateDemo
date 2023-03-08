@@ -176,18 +176,28 @@ begin
     ]
   end;
 
-  // Create an App Session key - just an encoded timestamp
+  // Create an App Session key - just a custom Base48-encoded timestamp
   // https://github.com/marko-36/base29-shortener
   App_Session := '';
   i := DateTimeToUnix(App_Start_UTC);
   asm
+    // Encode Integer (eg: Unix Timestamp) into String
     const c = ['B','b','C','c','D','d','F','f','G','g','H','h','J','j','K','k','L','M','m','N','n','P','p','Q','q','R','r','S','s','T','t','V','W','w','X','x','Z','z','0','1','2','3','4','5','6','7','8','9'];
     var sLen = Math.floor(Math.log(i)/Math.log(c.length)) +1;
     for(var ex=sLen-1; ex>-1; --ex){
       this.App_Session += c[Math.floor(i / Math.pow(c.length,ex))];
       i = [i % Math.pow(c.length,ex)];
     }
+
+    // Decode String into Integer
+    // var s = this.App_Session;
+    // i = 0;
+    // for (var ex=0; ex<s.length; ++ex){
+    //   i += c.indexOf(s.substring(ex,ex+1)) * Math.pow(c.length,s.length-1-ex);
+    // }
+    // return i
   end;
+
 
   // Application Details
   LogAction('Application Startup', False);
@@ -411,7 +421,7 @@ begin
     LogAction('Session Duration: '+FormatDateTime('h"h "m"m "s"s"', Now - App_Start), False);
     Toast(DMIcons.Icon('Logout')+'Logout','Processing. Please wait.',1000);
 
-    await(JSONRequest('ISystemService.Logout',[ActionLogCurrent.Text]));
+    await(JSONRequest('ISystemService.Logout',[App_Session, ActionLogCurrent.Text]));
 
     JWT := '';
     TWebLocalStorage.SetValue('Login.CurrentForm','Login');
@@ -499,7 +509,7 @@ begin
   // Renew JWT if there has been activity of some kind
   if ActivityDetected then
   begin
-    ResponseString := await(JSONRequest('ISystemService.Renew',[ActionLogSend]));
+    ResponseString := await(JSONRequest('ISystemService.Renew',[App_Session, ActionLogSend]));
     if Copy(ResponseString,1,6) =  'Bearer' then
     begin
       LogAction('Login Renewed', False);
