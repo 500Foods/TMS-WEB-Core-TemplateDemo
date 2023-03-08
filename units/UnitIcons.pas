@@ -45,6 +45,7 @@ begin
     Icon[ "Anniversary"         ] = '<i class="fa-solid fa-champagne-glasses"></i>';
     Icon[ "ArrowRight_Nav"      ] = '<i class="nav-arrow fa-solid fa-angle-right"></i>';
     Icon[ "Birthday"            ] = '<i class="fa-solid fa-cake-candles"></i>';
+    Icon[ "Bug_Menu"            ] = '<i class="fa-solid fa-bug me-2 fa-fw"></i>';
     Icon[ "Certificate"         ] = '<span class="fa-solid fa-certificate me-2"></span>';
     Icon[ "Clock"               ] = '<i class="fa-solid fa-clock fa-fw"></i>';
     Icon[ "Dashboard_Menu"      ] = '<i class="fa-solid fa-gauge-high me-2 fa-fw"></i>';
@@ -80,6 +81,7 @@ begin
       Icon[ "Anniversary"         ] = '<i class="fa-duotone fa-champagne-glasses"></i>';
       Icon[ "ArrowRight_Nav"      ] = '<i class="nav-arrow fa-duotone fa-caret-right"></i>';
       Icon[ "Birthday"            ] = '<i class="fa-duotone fa-cake-candles"></i>';
+      Icon[ "Bug_Menu"            ] = '<i class="fa-duotone fa-mosquito me-2 fa-fw"></i>';
       Icon[ "Certificate"         ] = '<span class="fa-duotone fa-certificate me-2"></span>';
       Icon[ "Clock"               ] = '<i class="fa-duotone fa-clock fa-fw fa-swap-opacity"></i>';
       Icon[ "Dashboard_Menu"      ] = '<i class="fa-duotone fa-chart-simple me-2 fa-fw"></i>';

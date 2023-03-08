@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Classes, JS, Web, WEBLib.Graphics, WEBLib.Controls,
   WEBLib.Forms, WEBLib.Dialogs, Vcl.Controls, Vcl.StdCtrls, WEBLib.StdCtrls,
   WEBLib.WebCtrls, System.DateUtils, WEBLib.ExtCtrls, XData.Web.Connection,
-  XData.Web.Client, WEBLib.Toast, WEBLib.JSON, jsdelphisystem, WEBLib.Storage;
+  XData.Web.Client, WEBLib.JSON, jsdelphisystem, WEBLib.Storage;
 
 type
   TMainForm = class(TWebForm)
@@ -288,7 +288,7 @@ begin
   if not(ValidForm) then
   begin
     LogAction('ERROR: Form Not Found: '+Form, False);
-    Toast('Form Error', 'Form Not Found: <br />[ '+Form+' ]',15000);
+    Toast(DMIcons.Icon('Bug_Menu')+'Form Error', 'Form Not Found: <br />[ '+Form+' ]',15000);
     exit;
   end;
 
@@ -344,7 +344,7 @@ begin
   if not(ValidSubForm) then
   begin
     LogAction('SubForm Not Found: '+SubForm, False);
-    Toast('ERROR: SubForm Error', 'SubForm Not Found: <br />[ '+SubForm+' ]',15000);
+    Toast(DMIcons.Icon('Bug_Menu')+'ERROR: SubForm Error', 'SubForm Not Found: <br />[ '+SubForm+' ]',15000);
     exit;
   end;
 
@@ -533,7 +533,7 @@ procedure TMainForm.tmrJWTRenewalWarningTimer(Sender: TObject);
 begin
   tmrJWTRenewalWarning.Enabled := False;
   if not(ActivityDetected)
-  then Toast(DMIcons.Icon('Logout')+'Auto Logout','No activity has been detected.  Auto Logout in $S seconds.', 60000);
+  then Toast(DMIcons.Icon('Logout')+'Auto Logout','No activity has been detected.<br />Auto Logout in $S seconds.', 60000);
 end;
 
 procedure TMainForm.Toast(Header, Body: String; Timeout: Integer);
@@ -550,42 +550,41 @@ begin
     toast.setAttribute('aria-live','assertive');
     toast.setAttribute('aria-atomic','true');
     toast.setAttribute('data-bs-delay', Timeout);
+    toast.setAttribute('countdown',parseInt(2*Timeout/1000));
 
     // Create Toast Header
     var toasth = document.createElement('div');
-    toasth.className = 'toast-header bg-danger text-white';
-    toasth.innerHTML = '<strong class="me-auto">'+Header+'</strong>'+
+    toasth.className = 'toast-header bg-danger text-white mb-1 position-relative';
+    toasth.innerHTML = '<div style="position:absolute; border-radius: var(--custom-rounding); display:block; top:39px; left:2px; width:99%; height:5px; background: var(--bs-danger);"></div>'+
+                       '<strong class="me-auto">'+Header+'</strong>'+
                        '<small class="text-light">just now</small>'+
                        '<button type="button" onclick="pas.UnitMain.MainForm.ActivityDetected = true;"; class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>';
 
     // Create Toast Body
     var toastb = document.createElement('div');
     toastb.className = 'toast-body';
-    toastb.innerHTML = Body;
+    toastb.innerHTML = Body.replace('$S',parseInt(Timeout/1000));
 
     // Make Toast
     toast.appendChild(toasth);
     toast.appendChild(toastb);
     divToasts.appendChild(toast);
 
+    // Add countdown timer
+    const toastc = setInterval(function() {
+      if (((Timeout == 60000) && (pas.UnitMain.MainForm.ActivityDetected == true)) || ((toast.getAttribute('countdown') | 0) <= 0)) {
+        clearInterval(toastc);
+        toast.remove();
+      }
+      else {
+        toast.setAttribute('countdown',toast.getAttribute('countdown')-1);
+        toast.lastElementChild.innerHTML = Body.replace('$S',parseInt(toast.getAttribute('countdown')/2));
+        toast.firstElementChild.firstElementChild.style.setProperty('width', parseInt(99*toast.getAttribute('countdown')/(Timeout/500))+'%');
+      }
+    },500);
+
     // Show Toast
     var newtoast = new bootstrap.Toast(toast).show();
-
-    // Add a Toast countdown timer
-    if (Timeout == 60000) {
-      toast.setAttribute('countdown',60);
-      toast.lastElementChild.innerHTML = Body.replace('$S',toast.getAttribute('countdown'));
-      var toastc = setInterval(function() {
-        if (pas.UnitMain.MainForm.ActivityDetected == false) {
-          toast.setAttribute('countdown',toast.getAttribute('countdown')-1);
-          toast.lastElementChild.innerHTML = Body.replace('$S',toast.getAttribute('countdown'));
-        }
-        else {
-          clearInterval(toastc);
-          toast.remove();
-        }
-      },1000);
-    }
 
   end;
 end;
