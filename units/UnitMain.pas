@@ -113,8 +113,8 @@ begin
   // Application Information
   App_Name := 'TMS WEB Core Template Demo';
   App_Short := 'Template';
-  App_Version := '1.0';
-  App_Release := '2022-Feb-28';
+  App_Version := '1.1';
+  App_Release := '2022-Mar-08';
   App_Start := Now();
   App_Start_UTC := TTimeZone.Local.ToUniversalTime(Now);
 
