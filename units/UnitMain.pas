@@ -341,7 +341,7 @@ var
 
   procedure AfterSubCreate(AForm: TObject);
   begin
-    LogAction('Load SubForm: '+AForm.ClassName+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime)-500)+'ms)', False);
+    LogAction('Load SubForm: '+SubForm+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime)-500)+'ms)', False);
   end;
 
 begin

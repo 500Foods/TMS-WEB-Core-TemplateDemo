@@ -296,6 +296,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <None Include="css\adminlte.rtl.css"/>
         <None Include="css\adminlte.rtl.min.css"/>
         <None Include="js\adminlte.min.js"/>
+        <None Include="js\adminlte-custom.js"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -423,13 +424,13 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="assets\img\photo4.jpg" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="assets\img\photo3.jpg" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="assets\img\photo3.jpg" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="assets\img\photo4.jpg" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -586,6 +587,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="css\template.css" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="js\adminlte-custom.js" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>

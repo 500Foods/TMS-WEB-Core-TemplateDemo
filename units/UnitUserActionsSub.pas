@@ -45,8 +45,8 @@ begin
   actionsHistory.ElementHandle.style.setProperty('margin','16px');
 
   asm
-    menuSidebar.replaceWith(menuSidebar.cloneNode(true));
-    pas.UnitMain.MainForm.CurrentForm.CreateMenu();
+//    menuSidebar.replaceWith(menuSidebar.cloneNode(true));
+//    pas.UnitMain.MainForm.CurrentForm.CreateMenu();
     window.document.dispatchEvent(new Event("DOMContentLoaded", {
       bubbles: true,
       cancelable: true

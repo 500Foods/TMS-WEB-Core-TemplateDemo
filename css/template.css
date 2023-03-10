@@ -56,7 +56,9 @@ html[data-bs-theme="light"] #divHost {
 
 
 /* Sometimes it is handy to have this */
-.cursor-pointer {
+
+li.cursor-pointer,
+div.cursor-pointer {
   cursor: pointer;
 }
 

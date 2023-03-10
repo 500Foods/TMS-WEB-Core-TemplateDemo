@@ -94,6 +94,8 @@ begin
   btnActions.Caption := DMIcons.Icon('Actions')+'Actions';
   btnLogout.Caption  := DMIcons.Icon('Logout')+'Logout';
 
+  CreateMenu();
+
   asm {
 
     const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper'
