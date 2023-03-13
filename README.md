@@ -10,6 +10,16 @@ Initially, only a few features have been implemented.  Starting with a Login pag
 
 NOTE: The project can be configured for multiple icon sources.  Font Awesome 6 Pro Duotone icons are shown in this example. While the project supports these as a configuration option, these icons (and the required license) are not included in this project.
 
+## Deployment
+
+An optional configuration file can be used to pass the URL for the XData server when deploying this project in a production setting (or anywhere other than the default development environment).  At the moment, this is just a JSON file with a single entry.  The app looks for it in 'td_configuration.json' in the same folder as the app itself (wherever Project1.html is, for example). This needs to be readable by the app.  If there are any access issues, be sure that it is accessible from the browser first (eg: http://localhost/Project1/td_configuration.json).  Here's an example of what the file should contain.
+```
+{
+  "Server": "http://localhost:12345/tms/xdata"
+}
+```
+Note that you can also use this mechanism to test the development code for this project against something other than the development XData server.
+
 ## Usage Note: Post-Build Command
 
 The Delphi project included in this repository is configured with a post-build command that is used to further customize the html and css files that are generated after this project is built.  The command defined in the project file references a script that is outside this repository. It should be updated to reference the script that is included in the PostBuild folder in this repository.  This change can be implemented by changing the  **Project** | **Options** | **Build Events** | **Post-build events** | **Command** entry:
