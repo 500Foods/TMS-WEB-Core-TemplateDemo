@@ -57,6 +57,7 @@ type
     App_Start: TDateTime;
     App_Start_UTC: TDateTime;
     App_Session: String;
+    App_TZ: String;
 
     Server_URL: String;
 
@@ -142,6 +143,9 @@ begin
   // Overide some locale options?
   FormatSettings.TimeSeparator := ':';
   FormatSettings.DateSeparator := '-';
+  asm
+    this.App_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  end;
 
   // Load Icon Set
   IconSet := document.documentElement.getAttribute('iconset');
@@ -225,7 +229,7 @@ begin
   LogAction(' -> '+App_Name, False);
   LogAction(' -> Version '+App_Version, False);
   LogAction(' -> Release '+App_Release, False);
-  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_Start), False);
+  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_Start)+' '+App_TZ, False);
   LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_Start_UTC)+' UTC', False);
   LogAction(' -> App Session: '+App_Session, False);
   asm {
@@ -667,7 +671,7 @@ begin
     LogAction(' -> EMail: '+User_Email, False);
     LogAction(' -> Roles: '+User_Roles.CommaText, False);
     LogAction(' -> Administrator: '+BoolToStr(Role_Administrator,True), False);
-    LogAction(' -> Expires: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss',JWT_Expiry)+' UTC',False);
+    LogAction(' -> Expires: '+(JWTClaims.GetValue('unt') as TJSONString).Value,False);
     LogAction(' -> Remaining: '+FormatDateTime('n"m "s"s"',(JWT_Expiry - TTimeZone.Local.ToUniversalTime(Now))),False);
     LogAction('Token Processed', False);
 
@@ -989,16 +993,12 @@ begin
 
   ElapsedTime := Now;
   NewJWT := '';
-  TZ := '';
   ErrorCode := '';
   ErrorMessage := '';
 
   LogAction(' ', False);
   LogAction('Attempting Login', False);
 
-  asm
-    TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  end;
 
   // Call it again in case it has been disconnected
   await(XDataConnect);
@@ -1013,7 +1013,7 @@ begin
         Username,
         Password,
         'Testing', // API_KEY
-        TZ
+        App_TZ
       ]));
 
       Blob := Response.Result;
