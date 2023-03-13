@@ -44,6 +44,7 @@ begin
     Icon[ "Administrator_Menu"  ] = '<i class="fa-solid fa-screwdriver-wrench fa-fw me-2"></i>';
     Icon[ "Anniversary"         ] = '<i class="fa-solid fa-champagne-glasses"></i>';
     Icon[ "ArrowRight_Nav"      ] = '<i class="nav-arrow fa-solid fa-angle-right"></i>';
+    Icon[ "Back"                ] = '<i class="fa-solid fa-left"></i>';
     Icon[ "Birthday"            ] = '<i class="fa-solid fa-cake-candles"></i>';
     Icon[ "Bug_Menu"            ] = '<i class="fa-solid fa-bug me-2 fa-fw"></i>';
     Icon[ "Certificate"         ] = '<span class="fa-solid fa-certificate me-2"></span>';
@@ -54,6 +55,7 @@ begin
     Icon[ "EMail"               ] = '<i class="fa-solid fa-envelope fa-fw"></i>';
     Icon[ "Endpoints_Menu"      ] = '<i class="fa-solid fa-handshake fa-fw me-2"></i>';
     Icon[ "FailedLogins_Menu"   ] = '<i class="fa-solid fa-thumbs-down fa-fw me-2"></i>';
+    Icon[ "Forward"             ] = '<i class="fa-solid fa-right"></i>';
     Icon[ "IPAllow_Menu"        ] = '<i class="fa-solid fa-circle-check fa-fw me-2"></i>';
     Icon[ "IPBlock_Menu"        ] = '<i class="fa-solid fa-circle-xmark fa-fw me-2"></i>';
     Icon[ "Labels_Menu"         ] = '<i class="fa-solid fa-tags fa-fw"></i>';
@@ -80,6 +82,7 @@ begin
       Icon[ "Administrator_Menu"  ] = '<i class="fa-duotone fa-screwdriver-wrench fa-fw me-2"></i>';
       Icon[ "Anniversary"         ] = '<i class="fa-duotone fa-champagne-glasses"></i>';
       Icon[ "ArrowRight_Nav"      ] = '<i class="nav-arrow fa-duotone fa-caret-right"></i>';
+      Icon[ "Back"                ] = '<i class="fa-duotone fa-left"></i>';
       Icon[ "Birthday"            ] = '<i class="fa-duotone fa-cake-candles"></i>';
       Icon[ "Bug_Menu"            ] = '<i class="fa-duotone fa-mosquito me-2 fa-fw"></i>';
       Icon[ "Certificate"         ] = '<span class="fa-duotone fa-certificate me-2"></span>';
@@ -90,6 +93,7 @@ begin
       Icon[ "EMail"               ] = '<i class="fa-duotone fa-envelope fa-swap-opacity fa-fw"></i>';
       Icon[ "Endpoints_Menu"      ] = '<i class="fa-duotone fa-handshake fa-fw me-2"></i>';
       Icon[ "FailedLogins_Menu"   ] = '<i class="fa-duotone fa-thumbs-down fa-fw me-2"></i>';
+      Icon[ "Forward"             ] = '<i class="fa-duotone fa-right"></i>';
       Icon[ "IPAllow_Menu"        ] = '<i class="fa-duotone fa-circle-check fa-fw me-2"></i>';
       Icon[ "IPBlock_Menu"        ] = '<i class="fa-duotone fa-circle-xmark fa-fw me-2"></i>';
       Icon[ "Labels_Menu"         ] = '<i class="fa-duotone fa-tags fa-fw me-2"></i>';

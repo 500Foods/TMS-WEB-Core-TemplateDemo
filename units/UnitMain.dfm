@@ -13,6 +13,7 @@ object MainForm: TMainForm
   ParentFont = False
   OnClick = WebFormClick
   OnCreate = WebFormCreate
+  OnHashChange = WebFormHashChange
   OnKeyDown = WebFormKeyDown
   object divHost: TWebHTMLDiv
     Left = 135

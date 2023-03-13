@@ -418,6 +418,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="assets\img\photo4.jpg" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="assets\img\boxed-bg.jpg" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -425,12 +431,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="assets\img\photo3.jpg" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="assets\img\photo4.jpg" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>

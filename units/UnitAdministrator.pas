@@ -22,11 +22,15 @@ type
     labelLoggedIn: TWebLabel;
     menuSidebar: TWebHTMLDiv;
     divSubform: TWebHTMLDiv;
+    btnBack: TWebButton;
+    btnForward: TWebButton;
     procedure btnLogoutClick(Sender: TObject);
     procedure btnProfileClick(Sender: TObject);
     procedure btnActionsClick(Sender: TObject);
     [async] procedure WebFormCreate(Sender: TObject);
     procedure CreateMenu;
+    procedure btnBackClick(Sender: TObject);
+    procedure btnForwardClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -45,6 +49,16 @@ uses UnitMain, UnitIcons, UnitMenus;
 procedure TAdministratorForm.btnActionsClick(Sender: TObject);
 begin
   DMMenus.MenuClicked('Administrator', 'User', 'UserActionsSub', True);
+end;
+
+procedure TAdministratorForm.btnBackClick(Sender: TObject);
+begin
+  MainForm.NavHistoryBack;
+end;
+
+procedure TAdministratorForm.btnForwardClick(Sender: TObject);
+begin
+  MainForm.NavHistoryForward;
 end;
 
 procedure TAdministratorForm.btnLogoutClick(Sender: TObject);
@@ -89,12 +103,21 @@ begin
   // Set linked element values that we already know
   labelLoggedIn.HTML := '<small>Logged in at '+FormatDateTime('hh:nn',Now)+'<small>';
 
-  // User Menu Buttons Buttons
+  // User Menu Buttons
   btnProfile.Caption := DMIcons.Icon('Profile')+'Profile';
   btnActions.Caption := DMIcons.Icon('Actions')+'Actions';
   btnLogout.Caption  := DMIcons.Icon('Logout')+'Logout';
+  btnBack.Caption    := DMIcons.Icon('Back');
+  btnForward.Caption := DMIcons.Icon('Forward');
 
   CreateMenu();
+
+  // Set our current state as the state we want to go back to
+//  MainForm.Position := window.history.length;
+//  MainForm.StartPosition := window.history.length;
+//  window.history.pushState(MainForm.CaptureState, '', MainForm.URL);
+//  MainForm.Position := MainForm.Position + 1;
+//  MainForm.UpdateNav;
 
   asm {
 

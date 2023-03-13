@@ -167,13 +167,13 @@ begin
   begin
     // Load a SubForm (aka Page)
     if (UserAction) then MainForm.LogAction('Page Selected ['+Dashboard+'] ['+MenuGroup+'] ['+MenuName+']',true);
-    MainForm.LoadSubForm(MenuName,DMIcons.Icon(MenuName+'_Menu'));
+    MainForm.LoadSubForm(MenuName, True);
   end
   else
   begin
     // Load a Form (aka Dashboard)
     if (UserAction) then MainForm.LogAction('Dash Selected ['+Dashboard+'] ['+MenuGroup+'] ['+MenuName+']',true);
-    MainForm.LoadForm(Dashboard+'Form',DMIcons.Icon(Dashboard+'_Menu'));
+    MainForm.LoadForm(Dashboard+'Form');
   end;
 end;
 

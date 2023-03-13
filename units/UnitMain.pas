@@ -32,12 +32,18 @@ type
     procedure FinalRequest;
     [async] procedure WebFormCreate(Sender: TObject);
     [async] procedure Logout(Reason: String);
-    [async] procedure LoadForm(Form: String; FormIcon: String);
-    [async] procedure LoadSubForm(SubForm: String; SubFormIcon: String);
+    [async] procedure LoadForm(Form: String);
+    [async] procedure LoadSubForm(SubForm: String; NewInstance: Boolean);
     [async] procedure XDataConnect;
     [async] procedure tmrJWTRenewalTimer(Sender: TObject);
     [async] function XDataLogin(Username: String; Password: String):String;
     [async] function JSONRequest(Endpoint: String; Params: Array of JSValue):String;
+    procedure WebFormHashChange(Sender: TObject; oldURL, newURL: string);
+    function CaptureState:JSValue;
+    procedure RevertState(StateData: JSValue);
+    procedure UpdateNav;
+    procedure NavHistoryBack;
+    procedure NavHistoryForward;
   private
     { Private declarations }
   public
@@ -60,10 +66,14 @@ type
 
     CurrentForm: TWebForm;
     CurrentFormName: String;
+    CurrentFormNiceName: String;
+    CurrentFormShortName: String;
     CurrentFormIcon: String;
 
     CurrentSubForm: TWebForm;
     CurrentSubFormName: String;
+    CurrentSubFormNiceName: String;
+    CurrentSubFormShortName: String;
     CurrentSubFormIcon: String;
 
     JWT: String;
@@ -80,6 +90,11 @@ type
     Role_Administrator: Boolean;
 
     ToastCount: Integer;
+
+    // Back/Forward History
+    StartPosition: Integer;
+    Position: Integer;
+    URL: String;
 
     procedure StopLinkerRemoval(P: Pointer);
     procedure PreventCompilerHint(I: integer); overload;
@@ -227,7 +242,7 @@ begin
 
   // Launch Login
   CurrentFormName := 'LoginForm';
-  LoadForm('LoginForm', DMIcons.Icon('Login'));
+  LoadForm('LoginForm');
 
   // What to do if the browser closes unexpectedly
   asm {
@@ -256,6 +271,43 @@ begin
 
   } end;
 
+
+  // Set our current state as the state we want to go back to
+  Position := window.history.length;
+  StartPosition := window.history.length;
+  URL := window.location.href;
+  window.history.pushState(CaptureState, '', URL);
+  Position := window.history.length;
+  window.history.pushState(CaptureState, '', URL);
+
+  // What to do when we hit back/forward button
+  asm
+    window.addEventListener('popstate', function(popstateEvent)  {
+      pas.UnitMain.MainForm.RevertState(popstateEvent.state);
+    });
+  end;
+end;
+
+procedure TMainForm.WebFormHashChange(Sender: TObject; oldURL, newURL: string);
+var
+  NewForm: String;
+  NewSubForm: String;
+begin
+//  asm
+//    if (newURL.split('#').length == 2) {
+//      if (newURL.split('#')[1].split('/').length == 2) {
+//        NewForm = newURL.split('#')[1].split('/')[0];
+//        NewSubForm = newURL.split('#')[1].split('/')[1];
+//      }
+//    }
+//  end;
+//
+//  if (NewForm <> CurrentFormName) and (NewForm <> '')
+//  then LoadForm(NewForm);
+//
+//  if (NewSubForm <> CurrentSubFormName) and (NewSubForm <> '')
+//  then LoadSubForm(NewSubForm, False);
+
 end;
 
 procedure TMainForm.WebFormClick(Sender: TObject);
@@ -276,7 +328,7 @@ begin
   if (Key = VK_F4) then Logout('F4');
 end;
 
-procedure TMainForm.LoadForm(Form: String; FormIcon: String);
+procedure TMainForm.LoadForm(Form: String);
 var
   ElapsedTime: TDateTime;
   ValidForm: Boolean;
@@ -319,21 +371,32 @@ begin
 
   // Note the new Form
   CurrentFormName := Form;
-  CurrentFormIcon := FormIcon;
   divHost.ElementHandle.className := Form;
   LogAction('Load Form: '+Form, False);
   if (Form <> 'LoginForm') then
   begin
     TWebLocalStorage.SetValue('Login.CurrentForm', Form);
-    TWebLocalStorage.SetValue('Login.CurrentFormIcon', FormIcon);
   end;
 
   // Launch Form
-  if      (Form = 'LoginForm')         then CurrentForm := TLoginForm.CreateNew(divHost.ElementID, @AfterCreate)
-  else if (Form = 'AdministratorForm') then CurrentForm := TAdministratorForm.CreateNew(divHost.ElementID, @AfterCreate);
+  if (Form = 'LoginForm') then
+  begin
+    CurrentFormNiceName := 'Login';
+    CurrentFormShortName := 'Login';
+    CurrentFormIcon := DMIcons.Icon('Login');
+    CurrentForm := TLoginForm.CreateNew(divHost.ElementID, @AfterCreate);
+  end
+  else if (Form = 'AdministratorForm') then
+  begin
+    CurrentFormNiceName := 'Administrator';
+    CurrentFormShortName := 'Admin';
+    CurrentFormIcon := DMIcons.Icon('Administrator_Menu');
+    CurrentForm := TAdministratorForm.CreateNew(divHost.ElementID, @AfterCreate);
+  end;
 
 end;
-procedure TMainForm.LoadSubForm(SubForm: String; SubFormIcon: String);
+
+procedure TMainForm.LoadSubForm(SubForm: String; NewInstance: Boolean);
 var
   ElapsedTime: TDateTime;
   ValidSubForm: Boolean;
@@ -342,11 +405,27 @@ var
   procedure AfterSubCreate(AForm: TObject);
   begin
     LogAction('Load SubForm: '+SubForm+' Loaded ('+IntToStr(MillisecondsBetween(Now, ElapsedTime)-500)+'ms)', False);
+
+    document.getElementById('labelDashboard').innerHTML := CurrentSubFormIcon+CurrentSubFormNiceName;
+    document.getElementById('bcDashboards').innerHTML := DMICons.Icon('Dashboard_Menu')+'Dashboards';
+    document.getElementById('bcDashboard').innerHTML := CurrentFormIcon+CurrentFormNiceName;
+    document.getElementById('bcCurrent').innerHTML := CurrentSubFormIcon+CurrentSubFormNiceName;
+
+    URL := '#'+CurrentFormName+'/'+CurrentSubFormName;
+    window.history.replaceState(MainForm.CaptureState, '', URL);
+    UpdateNav;
+
   end;
 
 begin
-  // Time this action
+  if SubForm = CurrentSubFormName then exit;
+
+    // Time this action
   ElapsedTime := Now;
+  asm
+    console.log('Load SubForm: '+SubForm+' '+NewInstance);
+  end;
+
 
   // Is this a valid SubForm?
   ValidSubForm := False;
@@ -366,6 +445,13 @@ begin
   // Remove the old SubForm
   if Assigned(CurrentSubForm) then
   begin
+    // Save to History
+    if NewInstance then
+    begin
+      MainForm.Position := MainForm.Position + 1;
+      window.history.pushState(MainForm.CaptureState, '', MainForm.URL);
+    end;
+
     LogAction('Drop SubForm: '+CurrentSubFormName, False);
     CurrentSubForm.Close;
     asm
@@ -373,20 +459,39 @@ begin
     end;
   end;
 
+
   // Note the new SubForm
   CurrentSubFormName := SubForm;
-  CurrentSubFormIcon := SubFormIcon;
   asm
     document.getElementById('divSubForm').className = 'app-main '+SubForm;
   end;
   LogAction('Load SubForm: '+SubForm, False);
-  TWebLocalStorage.SetValue('Login.CurrentSubForm', SubForm);
-  TWebLocalStorage.SetValue('Login.CurrentSubFormIcon', SubFormIcon);
 
   // Launch SubForm
-  if      (SubForm = 'UserProfileSub')   then CurrentSubForm := TUserProfileSubForm.CreateNew(divSubForm.id, @AfterSubCreate)
-  else if (SubForm = 'UserActionsSub')   then CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.id, @AfterSubCreate)
-  else if (SubForm = 'AdministratorSub') then CurrentSubForm := TAdministratorSubForm.CreateNew(divSubForm.id, @AfterSubCreate);
+  if (SubForm = 'UserProfileSub') then
+  begin
+    CurrentSubFormNiceName := 'User Profile';
+    CurrentSubFormShortName := 'Profile';
+    CurrentSubFormIcon := DMIcons.Icon('Profile_Menu');
+    CurrentSubForm := TUserProfileSubForm.CreateNew(divSubForm.id, @AfterSubCreate);
+  end
+  else if (SubForm = 'UserActionsSub') then
+  begin
+    CurrentSubFormNiceName := 'User Actions';
+    CurrentSubFormShortName := 'Actions';
+    CurrentSubFormIcon := DMIcons.Icon('Actions_Menu');
+    CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.id, @AfterSubCreate);
+  end
+  else if (SubForm = 'AdministratorSub') then
+  begin
+    CurrentSubFormNiceName := 'Admininistrator Dashboard';
+    CurrentSubFormShortName := 'AdminDash';
+    CurrentSubFormIcon := DMIcons.Icon('Administrator_Menu');
+    CurrentSubForm := TAdministratorSubForm.CreateNew(divSubForm.id, @AfterSubCreate);
+  end;
+
+  TWebLocalStorage.SetValue('Login.CurrentSubForm', SubForm);
+
 end;
 
 
@@ -439,6 +544,7 @@ begin
     TWebLocalStorage.RemoveKey('Login.Expiry');
 
     asm
+      window.history.replaceState(null,null,window.location.href.split('#')[0]);
       await sleep(1000);
       divHost.style.setProperty('opacity','0');
       await sleep(1000);
@@ -446,6 +552,16 @@ begin
 
     window.location.reload(true);
   end;
+end;
+
+procedure TMainForm.NavHistoryBack;
+begin
+  window.history.back;
+end;
+
+procedure TMainForm.NavHistoryForward;
+begin
+  window.history.forward;
 end;
 
 procedure TMainForm.ProcessJWT(aJWT: String);
@@ -517,6 +633,39 @@ begin
 
   end;
 
+end;
+
+procedure TMainForm.RevertState(StateData: JSValue);
+var
+ PriorForm: String;
+ PriorSubForm: String;
+begin
+  asm
+    if (StateData !== null) {
+      this.Position = StateData.Position;
+      this.URL = StateData.URL;
+      PriorForm = StateData.Form;
+      PriorSubForm = StateData.SubForm;
+    }
+    console.log(StateData);
+  end;
+
+  // Disable Back button
+  if Position <= StartPosition then
+  begin
+    Position := Position + 1;
+    window.history.pushState(CaptureState, '', URL);
+    UpdateNav;
+  end
+  else
+  begin
+
+    if (PriorForm <> CurrentFormName) and (PriorForm <> '')
+    then LoadForm(PriorForm);
+
+    if (PriorSubForm <> CurrentSubFormName) and (PriorSubForm <> '')
+    then LoadSubForm(PriorSubForm, False);
+  end;
 end;
 
 procedure TMainForm.tmrJWTRenewalTimer(Sender: TObject);
@@ -613,11 +762,43 @@ begin
   end;
 end;
 
+procedure TMainForm.UpdateNav;
+begin
+  asm
+//console.log('Position = '+this.Position);
+//console.log('Start = '+this.StartPosition);
+//console.log('History = '+window.history.length);
+//console.log('');
+
+    var backbtns = document.getElementsByClassName('nav-history-back');
+    if (this.Position <= (this.StartPosition+1)) {
+      for (var i = 0; i < backbtns.length; i++) {
+        backbtns[i].setAttribute('disabled','');
+      }
+    } else {
+      for (var i = 0; i < backbtns.length; i++) {
+        backbtns[i].removeAttribute('disabled');
+      }
+    }
+
+    var forwardbtns = document.getElementsByClassName('nav-history-forward');
+    if (this.Position == window.history.length) {
+      for (var i = 0; i < forwardbtns.length; i++) {
+        forwardbtns[i].setAttribute('disabled','');
+      }
+    } else {
+      for (var i = 0; i < forwardbtns.length; i++) {
+        forwardbtns[i].removeAttribute('disabled');
+      }
+    }
+  end;
+end;
+
 procedure TMainForm.btnClearFormClick(Sender: TObject);
 begin
   // More for testing purposes than anything else
   LogAction('CLICK: Clear Form', True);
-  LoadForm('Clear','');
+  LoadForm('Clear');
   Toast('divHost Component','Cleared.',15000);
 end;
 
@@ -642,6 +823,19 @@ begin
   end;
 end;
 
+
+function TMainForm.CaptureState: JSValue;
+begin
+   // Return state of some kind
+   asm
+     Result = {
+       "Position": this.Position,
+       "URL": this.URL,
+       "Form": this.CurrentFormName,
+       "SubForm": this.CurrentSubFormName,
+     }
+   end;
+end;
 
 function TMainForm.JSONRequest(Endpoint: String; Params: array of JSValue): String;
 var
@@ -705,7 +899,7 @@ end;
 procedure TMainForm.btnLoginFormClick(Sender: TObject);
 begin
   LogAction('CLICK: Login Form', False);
-  LoadForm('Login', DMIcons.Icon('Login'));
+  LoadForm('Login');
 end;
 
 procedure TMainForm.XDataConnect;

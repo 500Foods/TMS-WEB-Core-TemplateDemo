@@ -74,7 +74,10 @@ begin
     // Load selected form
     if MainForm.Role_Administrator then
     begin
-      MainForm.LoadForm('AdministratorForm', DMIcons.Icon('Administrator_Menu'));
+      MainForm.LoadForm('AdministratorForm');
+      window.history.pushState(MainForm.CaptureState, '', MainForm.URL);
+      MainForm.Position := window.history.length;
+      MainForm.StartPosition := MainForm.Position - 1;
     end;
 
 
@@ -169,7 +172,10 @@ begin
           LoggedIn := True;
           MainForm.LogAction('AutoLogin - JWT Time Remaining: '+IntToStr(SecondsBetween(MainForm.JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)))+'s', False);
           MainForm.ProcessJWT(TWebLocalStorage.GetValue('Login.JWT'));
-          MainForm.LoadForm(CheckForm, TWebLocalStorage.GetValue('Login.CurrentFormIcon') );
+          MainForm.LoadForm(CheckForm);
+          window.history.pushState(MainForm.CaptureState, '', MainForm.URL);
+          MainForm.Position := window.history.length;
+          MainForm.StartPosition := MainForm.Position - 1;
         end
         else
         begin

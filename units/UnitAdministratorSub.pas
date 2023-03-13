@@ -8,9 +8,6 @@ uses
 
 type
   TAdministratorSubForm = class(TWebForm)
-    bcDashboard: TWebLabel;
-    bcDashboards: TWebLabel;
-    labelDashboard: TWebLabel;
     procedure WebFormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -30,9 +27,6 @@ uses
 
 procedure TAdministratorSubForm.WebFormCreate(Sender: TObject);
 begin
-  labelDashboard.HTML := DMIcons.Icon('Administrator_Menu')+'Administrator Dashboard';
-  bcDashboards.HTML := DMICons.Icon('Dashboard_Menu')+'Dashboards';
-  bcDashboard.HTML := DMIcons.Icon('Administrator_Menu')+'Administrator';
 
   asm {
 

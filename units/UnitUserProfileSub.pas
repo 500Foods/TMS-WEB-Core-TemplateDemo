@@ -9,10 +9,6 @@ uses
 
 type
   TUserProfileSubForm = class(TWebForm)
-    labelDashboard: TWebLabel;
-    bcDashboards: TWebLabel;
-    bcDashboard: TWebLabel;
-    bcCurrent: TWebLabel;
     iconBirthday: TWebLabel;
     labelBirthday: TWebLabel;
     iconAnniversary: TWebLabel;
@@ -54,10 +50,6 @@ var
   ResponseString: String;
 
 begin
-  labelDashboard.HTML := DMIcons.Icon('Profile_Menu')+'User Profile';
-  bcDashboards.HTML := DMICons.Icon('Dashboard_Menu')+'Dashboards';
-  bcDashboard.HTML := mainForm.CurrentFormIcon+MainForm.CurrentFormName;
-  bcCurrent.hTML := DMIcons.Icon('Profile_Menu')+'User Profile';
 
   ResponseString := await(MainForm.JSONRequest('IPersonService.profile',[]));
   if ResponseString <> '' then

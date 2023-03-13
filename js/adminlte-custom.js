@@ -25,11 +25,10 @@
 
 
 window.addCUSTOMEventListener = function(element,a,b,c) {
-  console.log(element+'aEV orverride');
   if (element.classList.contains('LTE')) {
-    console.log(element+'aEV orverride: blocked');
+//    console.log(element+'aEV orverride: blocked');
   } else {
-    console.log(element+'aEV orverride: added');
+//    console.log(element+'aEV orverride: added');
     element.classList.add('LTE');
     element.addEventListener(a,b,c);
   }

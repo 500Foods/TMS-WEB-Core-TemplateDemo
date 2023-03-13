@@ -8,10 +8,6 @@ uses
 
 type
   TUserActionsSubForm = class(TWebForm)
-    labelDashboard: TWebLabel;
-    bcDashboards: TWebLabel;
-    bcDashboard: TWebLabel;
-    bcCurrent: TWebLabel;
     actionsTitle: TWebLabel;
     actionsHistory: TWebLabel;
     procedure WebFormCreate(Sender: TObject);
@@ -34,11 +30,6 @@ uses UnitMain, UnitIcons, UnitMenus;
 
 procedure TUserActionsSubForm.WebFormCreate(Sender: TObject);
 begin
-  labelDashboard.HTML := DMIcons.Icon('Actions_Menu')+'User Actions';
-  bcDashboards.HTML := DMICons.Icon('Dashboard_Menu')+'Dashboards';
-  bcDashboard.HTML := mainForm.CurrentFormIcon+MainForm.CurrentFormName;
-  bcCurrent.hTML := DMIcons.Icon('Actions_Menu')+'User Actions';
-
   actionsTitle.HTML := DMIcons.Icon('Actions_Menu')+'User Actions';
   actionsHistory.HTML := '<pre>'+MainForm.ActionLog.Text+'</pre>';
   actionsHistory.ElementHandle.style.setProperty('max-height',IntToStr(MainForm.Height - 325)+'px');
@@ -56,6 +47,7 @@ begin
 
   (document.getElementById('divSubForm') as TJSHTMLElement).style.setProperty('opacity', '1','important');
   MainForm.LogAction('', False);
+
 end;
 
 procedure TUserActionsSubForm.bcDashboardClick(Sender: TObject);
