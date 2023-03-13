@@ -6,8 +6,8 @@ uses
   System.SysUtils, System.Classes, JS, Web, WEBLib.Graphics, WEBLib.Controls,
   WEBLib.Forms, WEBLib.Dialogs, Vcl.Controls, Vcl.StdCtrls, WEBLib.StdCtrls,
   WEBLib.WebCtrls, System.DateUtils, WEBLib.ExtCtrls, XData.Web.Connection,
-  XData.Web.Client, WEBLib.JSON, jsdelphisystem, WEBLib.Storage,
-  WEBLib.REST;
+  XData.Web.Client, jsdelphisystem, WEBLib.Storage,
+  WEBLib.REST, WEBLib.JSON;
 
 type
   TMainForm = class(TWebForm)
@@ -138,6 +138,10 @@ begin
   // MainForm Options
   MainForm.Caption := App_Name;
   MainForm.divHost.ElementHandle.style.setProperty('opacity','0');
+
+  // Overide some locale options?
+  FormatSettings.TimeSeparator := ':';
+  FormatSettings.DateSeparator := '-';
 
   // Load Icon Set
   IconSet := document.documentElement.getAttribute('iconset');
@@ -326,12 +330,14 @@ begin
       pas.UnitMain.MainForm.RevertState(popstateEvent.state);
     });
   end;
+
+  PreventCompilerHint(i);
 end;
 
 procedure TMainForm.WebFormHashChange(Sender: TObject; oldURL, newURL: string);
-var
-  NewForm: String;
-  NewSubForm: String;
+//var
+//  NewForm: String;
+//  NewSubForm: String;
 begin
 //  asm
 //    if (newURL.split('#').length == 2) {
@@ -612,21 +618,21 @@ begin
   JWTClaims := TJSONObject.ParseJSONValue(Window.atob(Copy(JWT, Pos('.',JWT)+1, LastDelimiter('.',JWT)-Pos('.',JWT)-1))) as TJSONObject;
 
   // Extract user information
-  User_FirstName :=  (JWTClaims.Get('fnm').JSONValue as TJSONString).Value;
-  User_MiddleName :=  (JWTClaims.Get('mnm').JSONValue as TJSONString).Value;
-  User_LastName :=  (JWTClaims.Get('lnm').JSONValue as TJSONString).Value;
-  User_EMail :=  (JWTClaims.Get('eml').JSONValue as TJSONString).Value;
+  User_FirstName :=  (JWTClaims.GetValue('fnm') as TJSONString).Value;
+  User_MiddleName :=  (JWTClaims.GetValue('mnm') as TJSONString).Value;
+  User_LastName :=  (JWTClaims.GetValue('lnm') as TJSONString).Value;
+  User_EMail :=  (JWTClaims.GetValue('eml') as TJSONString).Value;
 
   // If roles have changed since logging in, then inform the user
   if (CurrentFormName <> 'Login')
-     and (User_Roles.CommaText <> (JWTClaims.Get('rol').JSONValue as TJSONString).Value)
+     and (User_Roles.CommaText <> (JWTClaims.GetValue('rol') as TJSONString).Value)
      and (User_Roles.CommaText <> '')
   then Toast(DMIcons.Icon('Certificate')+'Updated Roles', 'The roles for this account have been updated. Please Logout and Login again to access them.', 15000);
-  User_Roles.CommaText :=  (JWTClaims.Get('rol').JSONValue as TJSONString).Value;
-  Roles := (JWTClaims.Get('rol').JSONValue as TJSONString).Value;
+  User_Roles.CommaText :=  (JWTClaims.GetValue('rol') as TJSONString).Value;
+  Roles := (JWTClaims.GetValue('rol') as TJSONString).Value;
 
   // Set renewal to one minute before expiration
-  JWT_Expiry := UnixToDateTime((JWTClaims.Get('exp').JSONValue as TJSONNumber).AsInt);
+  JWT_Expiry := UnixToDateTime((JWTClaims.GetValue('exp') as TJSONNumber).AsInt);
   tmrJWTRenewal.Enabled := False;
   tmrJWTRenewal.Interval := MillisecondsBetween(JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)) - 30000;
   tmrJWTRenewalWarning.Interval := MillisecondsBetween(JWT_Expiry, TTimeZone.Local.ToUniversalTime(Now)) - 90000;
@@ -860,15 +866,16 @@ end;
 
 function TMainForm.CaptureState: JSValue;
 begin
-   // Return state of some kind
-   asm
-     Result = {
-       "Position": this.Position,
-       "URL": this.URL,
-       "Form": this.CurrentFormName,
-       "SubForm": this.CurrentSubFormName,
-     }
-   end;
+  Result := nil;
+  // Return state of some kind
+  asm
+    Result = {
+      "Position": this.Position,
+      "URL": this.URL,
+      "Form": this.CurrentFormName,
+      "SubForm": this.CurrentSubFormName,
+    }
+  end;
 end;
 
 function TMainForm.JSONRequest(Endpoint: String; Params: array of JSValue): String;
