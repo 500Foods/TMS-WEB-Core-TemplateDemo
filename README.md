@@ -18,6 +18,8 @@ An optional configuration file can be used to pass the URL for the XData server 
   "Server": "http://localhost:12345/tms/xdata"
 }
 ```
+Note that you can also use this mechanism to test the development code for this project against something other than the development XData server.
+
 ## Usage Note: Post-Build Command
 
 The Delphi project included in this repository is configured with a post-build command that is used to further customize the html and css files that are generated after this project is built.  The command defined in the project file references a script that is outside this repository. It should be updated to reference the script that is included in the PostBuild folder in this repository.  This change can be implemented by changing the  **Project** | **Options** | **Build Events** | **Post-build events** | **Command** entry:
