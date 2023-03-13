@@ -130,8 +130,8 @@ begin
   // Application Information
   App_Name := 'TMS WEB Core Template Demo';
   App_Short := 'Template';
-  App_Version := '1.1';
-  App_Release := '2022-Mar-08';
+  App_Version := '1.2';
+  App_Release := '2022-Mar-13';
   App_Start := Now();
   App_Start_UTC := TTimeZone.Local.ToUniversalTime(Now);
 
@@ -230,13 +230,13 @@ begin
     this.LogAction(' -> '+Object.keys(pas.UnitIcons.DMIcons.Lookup).length+' Icons', false);
   } end;
   LogAction('============================================================', False);
-  LogAction('', False);
+  LogAction(' ', False);
 
   // Output top console in case anyone is looking
   console.log(App_Name);
   console.log('Version '+App_Version);
   console.log('Release '+App_Release);
-  console.log('');
+  console.log(' ');
 
   // Setup the Log Viewer
   divLog.Visible := False;
@@ -251,7 +251,7 @@ begin
   // Figure out what our server connection might be
   Server_URL := '';
   try
-    asm ConfigURL = window.location.origin+(window.location.pathname.split('/').slice(0,-1).join('/')+'/td_configduration.json').replace('/\/\//g','/'); end;
+    asm ConfigURL = window.location.origin+(window.location.pathname.split('/').slice(0,-1).join('/')+'/td_configuration.json').replace('/\/\//g','/'); end;
     LogAction('Loading Configuration from '+ConfigURL, False);
     console.log('Loading Configuration from '+ConfigURL);
     WebHTTPRequest1.URL := ConfigURL;
@@ -273,8 +273,8 @@ begin
     LogAction('Server (Config Missing-Using Default): '+Server_URL, False);
     console.log('Server (Config Missing-Using Default): '+Server_URL);
   end;
-  LogAction('', False);
-  console.log('');
+  LogAction(' ', False);
+  console.log(' ');
 
   // Connect to XData - it will finish on its own time but give it a moment to connect
   XDataConnect;
@@ -383,7 +383,7 @@ begin
   ElapsedTime := Now;
 
   // Big change
-  LogAction('', False);
+  LogAction(' ', False);
 
   // Is this a valid Form?
   ValidForm := False;
@@ -802,7 +802,7 @@ begin
 //console.log('Position = '+this.Position);
 //console.log('Start = '+this.StartPosition);
 //console.log('History = '+window.history.length);
-//console.log('');
+//console.log(' ');
 
     var backbtns = document.getElementsByClassName('nav-history-back');
     if (this.Position <= (this.StartPosition+1)) {
@@ -986,7 +986,7 @@ begin
   ErrorCode := '';
   ErrorMessage := '';
 
-  LogAction('', False);
+  LogAction(' ', False);
   LogAction('Attempting Login', False);
 
   asm
