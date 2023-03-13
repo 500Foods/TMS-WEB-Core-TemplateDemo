@@ -418,14 +418,8 @@ var
   end;
 
 begin
-  if SubForm = CurrentSubFormName then exit;
-
-    // Time this action
+  // Time this action
   ElapsedTime := Now;
-  asm
-    console.log('Load SubForm: '+SubForm+' '+NewInstance);
-  end;
-
 
   // Is this a valid SubForm?
   ValidSubForm := False;
@@ -647,7 +641,7 @@ begin
       PriorForm = StateData.Form;
       PriorSubForm = StateData.SubForm;
     }
-    console.log(StateData);
+//    console.log(StateData);
   end;
 
   // Disable Back button
