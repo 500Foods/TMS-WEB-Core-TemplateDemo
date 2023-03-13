@@ -6,7 +6,8 @@ uses
   System.SysUtils, System.Classes, JS, Web, WEBLib.Graphics, WEBLib.Controls,
   WEBLib.Forms, WEBLib.Dialogs, Vcl.Controls, Vcl.StdCtrls, WEBLib.StdCtrls,
   WEBLib.WebCtrls, System.DateUtils, WEBLib.ExtCtrls, XData.Web.Connection,
-  XData.Web.Client, WEBLib.JSON, jsdelphisystem, WEBLib.Storage;
+  XData.Web.Client, WEBLib.JSON, jsdelphisystem, WEBLib.Storage,
+  WEBLib.REST;
 
 type
   TMainForm = class(TWebForm)
@@ -19,6 +20,7 @@ type
     divToasts: TWebHTMLDiv;
     tmrJWTRenewal: TWebTimer;
     tmrJWTRenewalWarning: TWebTimer;
+    WebHttpRequest1: TWebHttpRequest;
     procedure LogAction(Action: String; Extend: Boolean);
     procedure btnShowLogClick(Sender: TObject);
     procedure btnLoginFormClick(Sender: TObject);
@@ -55,6 +57,8 @@ type
     App_Start: TDateTime;
     App_Start_UTC: TDateTime;
     App_Session: String;
+
+    Server_URL: String;
 
     LoggedIn: Boolean;
     ActivityDetected: Boolean;
@@ -118,6 +122,9 @@ uses
 procedure TMainForm.WebFormCreate(Sender: TObject);
 var
   i: Int64;
+  ConfigResponse: TJSXMLHttpRequest;
+  ConfigData: TJSONObject;
+  ConfigURL: String;
 begin
 
   // Application Information
@@ -223,7 +230,13 @@ begin
     this.LogAction(' -> '+Object.keys(pas.UnitIcons.DMIcons.Lookup).length+' Icons', false);
   } end;
   LogAction('============================================================', False);
+  LogAction('', False);
 
+  // Output top console in case anyone is looking
+  console.log(App_Name);
+  console.log('Version '+App_Version);
+  console.log('Release '+App_Release);
+  console.log('');
 
   // Setup the Log Viewer
   divLog.Visible := False;
@@ -235,8 +248,35 @@ begin
   // Setup global sleep function :)
   asm window.sleep = async function(msecs) {return new Promise((resolve) => setTimeout(resolve, msecs)); } end;
 
-  // Connect to XData - it will finish on its own time but give it a moment to connect
+  // Figure out what our server connection might be
+  Server_URL := '';
+  try
+    asm ConfigURL = window.location.origin+(window.location.pathname.split('/').slice(0,-1).join('/')+'/td_configduration.json').replace('/\/\//g','/'); end;
+    LogAction('Loading Configuration from '+ConfigURL, False);
+    console.log('Loading Configuration from '+ConfigURL);
+    WebHTTPRequest1.URL := ConfigURL;
+    ConfigResponse := await( TJSXMLHttpRequest, WebHTTPRequest1.Perform() );
+    if String(COnfigResponse.Response) <> '' then
+    begin
+      ConfigData := TJSONObject.ParseJSONValue(String(ConfigResponse.Response)) as TJSONObject;
+      Server_URL := (ConfigData.GetValue('Server') as TJSONString).Value;
+      LogAction('Server (Configured): '+Server_URL, False);
+      console.log('Server (Configured): '+Server_URL);
+    end;
+  except on E:Exception do
+    begin
+    end
+  end;
+  if (Server_URL = '') then
+  begin
+    Server_URL := 'http://localhost:12345/tms/xdata';
+    LogAction('Server (Config Missing-Using Default): '+Server_URL, False);
+    console.log('Server (Config Missing-Using Default): '+Server_URL);
+  end;
   LogAction('', False);
+  console.log('');
+
+  // Connect to XData - it will finish on its own time but give it a moment to connect
   XDataConnect;
   asm await sleep(100); end;
 
@@ -906,7 +946,7 @@ begin
   begin
 
     // Should be updated to point at our XData server, wherever it may be
-    XDataConn.URL := 'http://localhost:12345/tms/xdata';
+    XDataConn.URL := Server_URL;
 
     // Try and establish a connection to the server
     try

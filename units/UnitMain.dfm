@@ -117,4 +117,8 @@ object MainForm: TMainForm
     Left = 56
     Top = 384
   end
+  object WebHttpRequest1: TWebHttpRequest
+    Left = 48
+    Top = 472
+  end
 end

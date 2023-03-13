@@ -175,28 +175,13 @@ object AdministratorForm: TAdministratorForm
     ElementFont = efCSS
     Role = ''
   end
-  object btnBack: TWebButton
-    Left = 296
-    Top = 264
-    Width = 96
-    Height = 25
-    Caption = 'Back'
-    ChildOrder = 13
-    ElementClassName = 'btn btn-link nav-history-back'
-    ElementID = 'btnBack'
-    ElementFont = efCSS
-    HeightStyle = ssAuto
-    HeightPercent = 100.000000000000000000
-    WidthPercent = 100.000000000000000000
-    OnClick = btnBackClick
-  end
   object btnForward: TWebButton
-    Left = 296
-    Top = 295
+    Left = 284
+    Top = 273
     Width = 96
     Height = 25
     Caption = 'Forward'
-    ChildOrder = 13
+    ChildOrder = 7
     ElementClassName = 'btn btn-link nav-history-forward'
     ElementID = 'btnForward'
     ElementFont = efCSS
@@ -204,5 +189,20 @@ object AdministratorForm: TAdministratorForm
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
     OnClick = btnForwardClick
+  end
+  object btnBack: TWebButton
+    Left = 284
+    Top = 242
+    Width = 96
+    Height = 25
+    Caption = 'Back'
+    ChildOrder = 7
+    ElementClassName = 'btn btn-link nav-history-back'
+    ElementID = 'btnBack'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    WidthPercent = 100.000000000000000000
+    OnClick = btnBackClick
   end
 end

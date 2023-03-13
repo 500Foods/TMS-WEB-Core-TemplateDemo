@@ -22,8 +22,8 @@ type
     labelLoggedIn: TWebLabel;
     menuSidebar: TWebHTMLDiv;
     divSubform: TWebHTMLDiv;
-    btnBack: TWebButton;
     btnForward: TWebButton;
+    btnBack: TWebButton;
     procedure btnLogoutClick(Sender: TObject);
     procedure btnProfileClick(Sender: TObject);
     procedure btnActionsClick(Sender: TObject);
@@ -107,8 +107,10 @@ begin
   btnProfile.Caption := DMIcons.Icon('Profile')+'Profile';
   btnActions.Caption := DMIcons.Icon('Actions')+'Actions';
   btnLogout.Caption  := DMIcons.Icon('Logout')+'Logout';
-  btnBack.Caption    := DMIcons.Icon('Back');
-  btnForward.Caption := DMIcons.Icon('Forward');
+  btnBack.Caption := DMIcons.Icon('Back');
+  btnBack.ElementHandle.setAttribute('disabled','');
+  btnForward.Caption  := DMIcons.Icon('Forward');
+  btnForward.ElementHandle.setAttribute('disabled','');
 
   CreateMenu();
 
