@@ -61,10 +61,10 @@ begin
 //      console.log(data);
 
       iconBirthday.innerHTML = icon['Birthday'];
-      labelBirthday.innerHTML =  luxon.DateTime.fromISO(data['Profile'][0]['birthdate'].split(' ')[0]).toFormat('yyyy-MMM-dd');
+      labelBirthday.innerHTML =  luxon.DateTime.fromISO(data['Profile'][0]['birthdate'].split(' ')[0]).toFormat(window.DisplayDateFormat);
 
       iconAnniversary.innerHTML = icon['Anniversary'];
-      labelAnniversary.innerHTML = luxon.DateTime.fromISO(data['Role'][0]['valid_after'].split(' ')[0]).toFormat('yyyy-MMM-dd');
+      labelAnniversary.innerHTML = luxon.DateTime.fromISO(data['Role'][0]['valid_after'].split(' ')[0]).toFormat(window.DisplayDateFormat);
 
       var email = -1;
       var phone = -1;
@@ -89,7 +89,7 @@ begin
         labelPhone.innerHTML = '<a title="'+data['Contact'][phone]['value']+'" href="tel:'+data['Contact'][phone]['value']+'">'+data['Contact'][phone]['value']+'</a>';
       }
 
-      var lastlogin = luxon.DateTime.fromISO(data['RecentLogins'][0]['logged_in'].split(' ').join('T'),{zone:"utc"}).setZone("system").toFormat('yyyy-MMM-dd HH:mm');
+      var lastlogin = luxon.DateTime.fromISO(data['RecentLogins'][0]['logged_in'].split(' ').join('T'),{zone:"utc"}).setZone("system").toFormat(window.DisplayDateTimeFormat);
       iconLastLogin.innerHTML = icon['Login'];
       labelLastLogin.innerHTML = '<span title="'+lastlogin+'">'+lastlogin+'</span>';
 
@@ -127,7 +127,7 @@ begin
         selectable: 1,
         columns: [
           { title: "Logged In", field: "logged_in", formatter: function(cell, formatterParams, onRendered) {
-            return luxon.DateTime.fromISO(cell.getValue().split(' ').join('T'),{zone:"utc"}).setZone("system").toFormat('yyyy-MMM-dd HH:mm:ss');
+            return luxon.DateTime.fromISO(cell.getValue().split(' ').join('T'),{zone:"utc"}).setZone("system").toFormat(window.DisplayDateTimeFormat);
           }},
           { title: "IP Address", field: "ip_address" }
         ]

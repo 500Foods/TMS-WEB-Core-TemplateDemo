@@ -57,7 +57,15 @@ type
     App_Start: TDateTime;
     App_Start_UTC: TDateTime;
     App_Session: String;
+
     App_TZ: String;
+    App_TZOffset: Integer;
+    App_LogDateTimeFormat: String;
+    App_DisplayDateTimeFormat: String;
+    App_LogDateFormat: String;
+    App_DisplayDateFormat: String;
+    App_LogTimeFormat: String;
+    App_DisplayTimeFormat: String;
 
     Server_URL: String;
 
@@ -145,6 +153,25 @@ begin
   FormatSettings.DateSeparator := '-';
   asm
     this.App_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    this.App_TZOffset = new Date().getTimezoneOffset();
+  end;
+
+  // These are intended for use with Delphi's FormatDateTime
+  App_LogDateTimeFormat := 'yyyy-MM-dd HH:nn:ss.zzz';
+  App_DisplayDateTimeFormat := 'yyyy-MMM-dd HH:nn:ss';
+  App_LogDateFormat := 'yyyy-MM-dd';
+  App_DisplayDateFormat := 'yyyy-MMM-dd';
+  App_LogTimeFormat := 'HH:nn:ss.zzz';
+  App_DisplayTimeFormat := 'HH:nn:ss';
+
+  // These are intended for use with Luxon's toFormat
+  asm
+    window.LogDateTimeFormat = this.App_LogDateTimeFormat.replace('nn','mm');
+    window.DisplayDateTimeFormat = this.App_DisplayDateTimeFormat.replace('nn','mm');
+    window.LogDateFormat = this.App_LogDateFormat.replace('nn','mm');
+    window.DisplayDateFormat = this.App_DisplayDateFormat.replace('nn','mm');
+    window.LogTimeFormat = this.App_LogTimeFormat.replace('nn','mm');
+    window.DisplayTimeFormat = this.App_DisplayTimeFormat.replace('nn','mm');
   end;
 
   // Load Icon Set
@@ -229,8 +256,8 @@ begin
   LogAction(' -> '+App_Name, False);
   LogAction(' -> Version '+App_Version, False);
   LogAction(' -> Release '+App_Release, False);
-  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_Start)+' '+App_TZ, False);
-  LogAction(' -> App Started: '+FormatDateTime('yyyy-MMM-dd hh:nn:ss.zzz', App_Start_UTC)+' UTC', False);
+  LogAction(' -> App Started: '+FormatDateTime(App_DisplayDateTimeFormat, App_Start)+' '+App_TZ, False);
+  LogAction(' -> App Started: '+FormatDateTime(App_LogDateTimeFormat, App_Start_UTC)+' UTC', False);
   LogAction(' -> App Session: '+App_Session, False);
   asm {
     this.LogAction(' -> '+window.ValidForms.length+' Forms', false);
@@ -554,8 +581,8 @@ begin
   Module := Module.PadRight(30);
 
   // Log the action to a TStringList
-  ActionLog.Add(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz',  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+Module+']  '+FilterAction);
-  ActionLogCurrent.Add(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz',  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+Module+']  '+FilterAction);
+  ActionLog.Add(FormatDateTime(App_LogDateTimeFormat,  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+Module+']  '+FilterAction);
+  ActionLogCurrent.Add(FormatDateTime(App_LogDateTimeFormat,  TTimeZone.Local.ToUniversalTime(Now))+' UTC  ['+Module+']  '+FilterAction);
 
   // Log to Console
 //  console.Log(FilterAction);

@@ -151,7 +151,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TWebForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="units\UnitAdministrator.pas">
+        <DCCReference Include="units\Administrator\UnitAdministrator.pas">
             <Form>AdministratorForm</Form>
             <FormType>dfm</FormType>
             <DesignClass>TWebForm</DesignClass>
@@ -166,16 +166,16 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TWebDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="units\UnitUserProfileSub.pas">
+        <DCCReference Include="units\User\UnitUserProfileSub.pas">
             <Form>UserProfileSubForm</Form>
             <DesignClass>TWebForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="units\UnitUserActionsSub.pas">
+        <DCCReference Include="units\User\UnitUserActionsSub.pas">
             <Form>UserActionsSubForm</Form>
             <FormType>dfm</FormType>
             <DesignClass>TWebForm</DesignClass>
         </DCCReference>
-        <DCCReference Include="units\UnitAdministratorSub.pas">
+        <DCCReference Include="units\Administrator\UnitAdministratorSub.pas">
             <Form>AdministratorSubForm</Form>
             <FormType>dfm</FormType>
             <DesignClass>TWebForm</DesignClass>
@@ -418,6 +418,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="assets\img\boxed-bg.jpg" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="assets\img\photo4.jpg" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -425,12 +431,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="assets\img\photo3.jpg" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="assets\img\boxed-bg.jpg" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
