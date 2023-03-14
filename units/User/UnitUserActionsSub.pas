@@ -58,7 +58,7 @@ begin
         StrToInt(Copy(LogLine,21,3))
       );
       NewDate := IncMinute(OldDate, - MainForm.App_TZOffset);
-      LogLine := FormatDateTime(MainForm.App_DisplayDateTimeFormat+'.zzz', NewDate)+Copy(LogLine,28,length(LogLine));
+      LogLine := FormatDateTime(MainForm.App_LogDateTimeFormat, NewDate)+Copy(LogLine,28,length(LogLine));
     end;
 
     LocalActionLog.Add(LogLine);

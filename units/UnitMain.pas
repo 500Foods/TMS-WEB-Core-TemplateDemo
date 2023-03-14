@@ -158,7 +158,7 @@ begin
 
   // These are intended for use with Delphi's FormatDateTime
   App_LogDateTimeFormat := 'yyyy-MM-dd HH:nn:ss.zzz';
-  App_DisplayDateTimeFormat := 'yyyy-MMM-dd HH:nn:ss';
+  App_DisplayDateTimeFormat := 'yyyy-MMM-dd HH:nn';
   App_LogDateFormat := 'yyyy-MM-dd';
   App_DisplayDateFormat := 'yyyy-MMM-dd';
   App_LogTimeFormat := 'HH:nn:ss.zzz';
@@ -256,7 +256,7 @@ begin
   LogAction(' -> '+App_Name, False);
   LogAction(' -> Version '+App_Version, False);
   LogAction(' -> Release '+App_Release, False);
-  LogAction(' -> App Started: '+FormatDateTime(App_DisplayDateTimeFormat, App_Start)+' '+App_TZ, False);
+  LogAction(' -> App Started: '+FormatDateTime(App_LogDateTimeFormat, App_Start)+' '+App_TZ, False);
   LogAction(' -> App Started: '+FormatDateTime(App_LogDateTimeFormat, App_Start_UTC)+' UTC', False);
   LogAction(' -> App Session: '+App_Session, False);
   asm {
@@ -1013,7 +1013,6 @@ var
   Blob: JSValue;
   NewJWT: String;
   ElapsedTime: TDateTime;
-  TZ: String;
   ErrorCode: String;
   ErrorMessage: String;
 begin
