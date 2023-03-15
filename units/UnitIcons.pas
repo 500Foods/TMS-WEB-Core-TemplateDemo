@@ -55,6 +55,7 @@ begin
     Icon[ "EMail"               ] = '<i class="fa-solid fa-envelope fa-fw"></i>';
     Icon[ "Endpoints_Menu"      ] = '<i class="fa-solid fa-handshake fa-fw me-2"></i>';
     Icon[ "FailedLogins_Menu"   ] = '<i class="fa-solid fa-thumbs-down fa-fw me-2"></i>';
+    Icon[ "Forgot"              ] = '<span class="fa-stack fa-1x"><i class="fa-solid fa-lock fa-stack-1x"></i><i class="fa-solid fa-ban fa-stack-2x" style="color:Tomato"></i></span>';
     Icon[ "Forward"             ] = '<i class="fa-solid fa-right"></i>';
     Icon[ "IPAllow_Menu"        ] = '<i class="fa-solid fa-circle-check fa-fw me-2"></i>';
     Icon[ "IPBlock_Menu"        ] = '<i class="fa-solid fa-circle-xmark fa-fw me-2"></i>';
@@ -93,6 +94,7 @@ begin
       Icon[ "EMail"               ] = '<i class="fa-duotone fa-envelope fa-swap-opacity fa-fw"></i>';
       Icon[ "Endpoints_Menu"      ] = '<i class="fa-duotone fa-handshake fa-fw me-2"></i>';
       Icon[ "FailedLogins_Menu"   ] = '<i class="fa-duotone fa-thumbs-down fa-fw me-2"></i>';
+      Icon[ "Forgot"              ] = '<span class="fa-stack fa-1x"><i class="fa-duotone fa-lock fa-swap-opacity fa-stack-1x"></i><i class="fa-solid fa-ban fa-stack-2x" style="color:Tomato"></i></span>';
       Icon[ "Forward"             ] = '<i class="fa-duotone fa-right"></i>';
       Icon[ "IPAllow_Menu"        ] = '<i class="fa-duotone fa-circle-check fa-fw me-2"></i>';
       Icon[ "IPBlock_Menu"        ] = '<i class="fa-duotone fa-circle-xmark fa-fw me-2"></i>';

@@ -41,14 +41,14 @@ procedure TLoginForm.btnLoginClick(Sender: TObject);
 var
   LoginCheck: String;
 begin
-  btnLogin.Caption := 'Authorizing...';
+  btnLogin.Caption := '<span>Authorizing...</span>';
 
   LoginCheck := await(MainForm.XDataLogin(editUSername.Text, editPassword.Text));
 
   if LoginCheck = 'Success' then
   begin
     // Briefly show successful login message
-    btnLogin.Caption := 'Login Successful';
+    btnLogin.Caption := '<span>Successful</span>';
     asm await sleep(500); end;
 
     // Remove Toasts
@@ -84,7 +84,7 @@ begin
   end
   else
   begin
-    btnLogin.Caption := 'Please Try Again';
+    btnLogin.Caption := DMIcons.Icon('Login')+'<span class="m-2">Login</span>';
     LoginCheck := StringReplace(LoginCheck,': ',':<br />',[]);
     LoginCheck := StringReplace(LoginCheck,'. ','.<br />',[]);
     if Trim(LoginCheck) = '/'
@@ -113,9 +113,8 @@ begin
 
   // Check for autologin
   tmrLoginStart.Enabled := True;
+
 end;
-
-
 
 procedure TLoginForm.editUsernameChange(Sender: TObject);
 begin
@@ -189,6 +188,9 @@ begin
   if not(LoggedIn) then
   begin
     // Update Icons
+    btnLogin.Caption := DMIcons.Icon('Login')+'<span class="mx-2">Login</span>';
+    btnForgot.Caption := DMIcons.Icon('Forgot')+'<span class="ms-1 me-2">Forgot Password</span>';
+
     document.getElementById('icon-username').innerHTML := DMIcons.Icon('Username');
     document.getElementById('icon-password').innerHTML := DMIcons.Icon('Password');
 

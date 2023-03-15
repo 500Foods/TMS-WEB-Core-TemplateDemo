@@ -51,6 +51,7 @@ object LoginForm: TLoginForm
     ChildOrder = 2
     ElementID = 'btnLogin'
     ElementFont = efCSS
+    ElementPosition = epIgnore
     Enabled = False
     HeightPercent = 100.000000000000000000
     WidthPercent = 100.000000000000000000
@@ -91,6 +92,7 @@ object LoginForm: TLoginForm
     ChildOrder = 2
     ElementID = 'btnForgot'
     ElementFont = efCSS
+    ElementPosition = epIgnore
     Enabled = False
     HeightStyle = ssAuto
     HeightPercent = 100.000000000000000000
