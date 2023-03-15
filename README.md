@@ -18,7 +18,7 @@ An optional configuration file can be used to pass the URL for the XData server 
   "Server": "http://localhost:12345/tms/xdata"
 }
 ```
-Note that you can also use this mechanism to test the development code for this project against something other than the development XData server.
+Note also that this mechanism can be used to test development client code against something other than the development XData server.  For example, the Server value could be pointed at a different test or production server.
 
 ## Usage Note: Post-Build Command
 
