@@ -121,4 +121,10 @@ object MainForm: TMainForm
     Left = 48
     Top = 472
   end
+  object tmrCapture: TWebTimer
+    Enabled = False
+    OnTimer = tmrCaptureTimer
+    Left = 48
+    Top = 544
+  end
 end

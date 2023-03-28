@@ -1,5 +1,5 @@
-<html lang="en">
-  <body class="layout-fixed bg-body-tertiary">
+
+  <div class="layout-fixed">
     <div class="app-wrapper">
       <!-- Navbar --><nav class="app-header navbar navbar-expand bg-body">
   <div class="container-fluid">
@@ -23,6 +23,11 @@
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
           <i class="fa-solid fa-search"></i>
         </a>
+      </li>
+
+      <!-- Navbar Recording -->
+      <li class="nav-item">
+         <button id="btnRecording">00:00:00</button>
       </li>
 
       <!-- Messages Dropdown Menu -->
@@ -132,20 +137,11 @@
             </p>
           </li>
           <!-- Menu Body -->
-          <li class="user-body">
-            <div class="row">
-              <div class="col-4 text-center">
-                <a href="#">Followers</a>
-              </div>
-              <div class="col-4 text-center">
-                <a href="#">Sales</a>
-              </div>
-              <div class="col-4 text-center">
-                <a href="#">Friends</a>
-              </div>
-            </div>
-            <!-- /.row -->
+          <li class="d-flex m-2 gap-2 overflow-hidden">
+            <button id="btnRecord">Record</button>
+            <button id="btnPlayback">Playback</button>
           </li>
+          <hr class="m-0 p-0">
           <!-- Menu Footer-->
           <li class="d-flex m-2 gap-2">
             <button id="btnProfile">Profile</button>
@@ -224,14 +220,13 @@
       </main>
       <!-- /.app-content -->
 
-    <!-- Main Footer --><footer class="app-footer">
-  <!-- To the end -->
-  <div class="float-end d-none d-sm-inline">
-    <label id="labelSlogan" style="color:var(--bs-heading-color); font-size:0.875rem;"></label>
+    <!-- Main Footer -->
+    <footer class="app-footer">
+      <div class="float-end d-none d-sm-inline">
+        <label id="labelSlogan" style="color:var(--bs-heading-color); font-size:0.875rem;"></label>
+      </div>
+      <label id="labelCopyright" style="color:var(--bs-heading-color); font-size:0.875rem;"></label>
+    </footer>
   </div>
-  <!-- Default to the start -->
-  <label id="labelCopyright" style="color:var(--bs-heading-color); font-size:0.875rem;"></label>
-</footer>
-    </div>
-  </body>
-</html>
+</div>
+

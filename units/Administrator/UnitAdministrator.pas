@@ -24,6 +24,9 @@ type
     divSubform: TWebHTMLDiv;
     btnForward: TWebButton;
     btnBack: TWebButton;
+    btnRecord: TWebButton;
+    btnPlayback: TWebButton;
+    btnRecording: TWebButton;
     procedure btnLogoutClick(Sender: TObject);
     procedure btnProfileClick(Sender: TObject);
     procedure btnActionsClick(Sender: TObject);
@@ -31,6 +34,8 @@ type
     procedure CreateMenu;
     procedure btnBackClick(Sender: TObject);
     procedure btnForwardClick(Sender: TObject);
+    procedure btnRecordClick(Sender: TObject);
+    procedure btnPlaybackClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -66,9 +71,19 @@ begin
   MainForm.Logout('Button');
 end;
 
+procedure TAdministratorForm.btnPlaybackClick(Sender: TObject);
+begin
+  MainForm.PlaybackSession;
+end;
+
 procedure TAdministratorForm.btnProfileClick(Sender: TObject);
 begin
   DMMenus.MenuClicked('Administrator', 'User', 'UserProfileSub', True);
+end;
+
+procedure TAdministratorForm.btnRecordClick(Sender: TObject);
+begin
+  MainForm.RecordSession;
 end;
 
 procedure TAdministratorForm.CreateMenu;
@@ -107,6 +122,11 @@ begin
   btnProfile.Caption := DMIcons.Icon('Profile')+'Profile';
   btnActions.Caption := DMIcons.Icon('Actions')+'Actions';
   btnLogout.Caption  := DMIcons.Icon('Logout')+'Logout';
+
+  btnRecord.Caption := DMIcons.Icon('Record')+'Start Recording';
+  btnPlayback.Caption := DMIcons.Icon('Playback')+'Playback';
+
+
   btnBack.Caption := DMIcons.Icon('Back');
   btnBack.ElementHandle.setAttribute('disabled','');
   btnForward.Caption  := DMIcons.Icon('Forward');
@@ -158,7 +178,11 @@ begin
     setTheme(getPreferredTheme());
     const showActiveTheme = theme => {
       const activeThemeIcon = document.querySelector('.theme-icon-active i, .theme-icon-active svg')
-      const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+      var btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+      if (btnToActive == undefined) {
+       theme='dark';
+       btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+      }
       const svgOfActiveBtn = btnToActive.querySelector('i,svg').getAttribute('class')
       document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
         element.classList.remove('active')

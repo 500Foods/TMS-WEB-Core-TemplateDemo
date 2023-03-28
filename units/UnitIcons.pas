@@ -67,8 +67,10 @@ begin
     Icon[ "Password"            ] = '<span class="fa-solid fa-lock"></span>';
     Icon[ "People_Menu"         ] = '<i class="fa-solid fa-people-group fa-fw me-2"></i>';
     Icon[ "Photo"               ] = '<i class="fa-solid fa-portrait"></i>';
+    Icon[ "Playback"            ] = '<i class="fa-solid fa-circle-play me-2 fa-lg"></i>';
     Icon[ "Profile"             ] = '<span class="fa-solid fa-user-secret me-2"></span>';
     Icon[ "Profile_Menu"        ] = '<i class="fa-solid fa-user-secret fa-fw me-2"></i>';
+    Icon[ "Record"              ] = '<i class="fa-solid fa-circle-dot me-2 fa-lg" ></i>';
     Icon[ "Telephone"           ] = '<i class="fa-solid fa-phone fa-fw"></i>';
     Icon[ "TelephoneHome"       ] = '<i class="fa-solid fa-phone fa-fw"></i>';
     Icon[ "TelephoneMobile"     ] = '<i class="fa-solid fa-mobile fa-fw"></i>';
@@ -106,8 +108,10 @@ begin
       Icon[ "Password"            ] = '<span class="fa-duotone fa-lock fa-swap-opacity"></span>';
       Icon[ "People_Menu"         ] = '<i class="fa-duotone fa-people-group fa-fw me-2"></i>';
       Icon[ "Photo"               ] = '<i class="fa-duotone fa-portrait"></i>';
+      Icon[ "Playback"            ] = '<i class="fa-duotone fa-circle-play fa-lg me-2"></i>';
       Icon[ "Profile"             ] = '<span class="fa-duotone fa-user-secret me-2"></span>';
       Icon[ "Profile_Menu"        ] = '<i class="fa-duotone fa-user-secret fa-fw me-2"></i>';
+      Icon[ "Record"              ] = '<i class="fa-duotone fa-circle-dot fa-lg me-2"></i>';
       Icon[ "Telephone"           ] = '<i class="fa-duotone fa-phone-office fa-swap-opacity fa-fw"></i>';
       Icon[ "TelephoneHome"       ] = '<i class="fa-duotone fa-phone-rotary fa-fw"></i>';
       Icon[ "TelephoneMobile"     ] = '<i class="fa-duotone fa-mobile fa-fw"></i>';

@@ -19,7 +19,6 @@ body {
   background-size: 20px 20px;
 }
 
-
 /* Custom Variables */
 :root {
   --custom-rounding: 0.75rem;
@@ -34,7 +33,6 @@ body {
   --bs-btn-disabled-opacity: 0.3;
   transition: opacity var(--custom-delay-short);
 }
-
 
 
 /* Dark Theme Background */

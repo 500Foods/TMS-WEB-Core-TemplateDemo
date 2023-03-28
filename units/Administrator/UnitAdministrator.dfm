@@ -205,4 +205,49 @@ object AdministratorForm: TAdministratorForm
     WidthPercent = 100.000000000000000000
     OnClick = btnBackClick
   end
+  object btnRecord: TWebButton
+    Left = 404
+    Top = 35
+    Width = 96
+    Height = 25
+    Caption = 'Record Session'
+    ChildOrder = 7
+    ElementClassName = 'btn btn-warning w-100 text-nowrap'
+    ElementID = 'btnRecord'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    WidthPercent = 100.000000000000000000
+    OnClick = btnRecordClick
+  end
+  object btnPlayback: TWebButton
+    Left = 404
+    Top = 66
+    Width = 96
+    Height = 25
+    Caption = 'Playback Session'
+    ChildOrder = 7
+    ElementClassName = 'btn btn-info w-100 text-nowrap'
+    ElementID = 'btnPlayback'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    WidthPercent = 100.000000000000000000
+    OnClick = btnPlaybackClick
+  end
+  object btnRecording: TWebButton
+    Left = 404
+    Top = 97
+    Width = 96
+    Height = 25
+    Caption = 'Recording'
+    ChildOrder = 7
+    ElementClassName = 'btn btn-warning d-none'
+    ElementID = 'btnRecording'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    WidthPercent = 100.000000000000000000
+    OnClick = btnRecordClick
+  end
 end

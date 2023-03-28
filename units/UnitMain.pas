@@ -21,6 +21,7 @@ type
     tmrJWTRenewal: TWebTimer;
     tmrJWTRenewalWarning: TWebTimer;
     WebHttpRequest1: TWebHttpRequest;
+    tmrCapture: TWebTimer;
     procedure LogAction(Action: String; Extend: Boolean);
     procedure btnShowLogClick(Sender: TObject);
     procedure btnLoginFormClick(Sender: TObject);
@@ -46,6 +47,9 @@ type
     procedure UpdateNav;
     procedure NavHistoryBack;
     procedure NavHistoryForward;
+    procedure tmrCaptureTimer(Sender: TObject);
+    procedure RecordSession;
+    [async] procedure PlaybackSession;
   private
     { Private declarations }
   public
@@ -108,6 +112,10 @@ type
     StartPosition: Integer;
     Position: Integer;
     URL: String;
+
+    // Screen Recording
+    RecordingSession: Boolean;
+    CaptureData: JSValue;
 
     procedure StopLinkerRemoval(P: Pointer);
     procedure PreventCompilerHint(I: integer); overload;
@@ -182,6 +190,7 @@ begin
   // Application State
   LoggedIn := False;
   LogVisible := False;
+  RecordingSession := False;
 
   // JWT Handling
   JWT := '';
@@ -282,6 +291,25 @@ begin
 
   // Setup global sleep function :)
   asm window.sleep = async function(msecs) {return new Promise((resolve) => setTimeout(resolve, msecs)); } end;
+
+  // console.image function
+  asm
+    function getBox(width, height) {
+      return {
+        string: "+",
+        style: "font-size: 1px; padding: " + Math.floor(height/4) + "px " + Math.floor(width/2) + "px; line-height: " + height/2 + "px;"
+    }}
+
+    console.image = function(url, scale) {
+      scale = scale || 1;
+      var img = new Image();
+      img.onload = function() {
+        var dim = getBox(this.width * scale, this.height * scale);
+        console.log("%c" + dim.string, dim.style + "background: url(" + url + "); background-size: " + (this.width * scale) + "px " + (this.height * scale) + "px; color: transparent;");
+      };
+      img.src = url;
+    }
+  end;
 
   // Figure out what our server connection might be
   Server_URL := '';
@@ -706,6 +734,32 @@ begin
 
 end;
 
+procedure TMainForm.RecordSession;
+begin
+  if RecordingSession = False then
+  begin
+    RecordingSession := True;
+    asm
+      var Icon = pas.UnitIcons.DMIcons.Lookup;
+      btnRecording.innerHTML = Icon['Record']+'00:00:00';
+      btnRecord.innerHTML = Icon['Record']+'Stop Recording';
+      btnRecording.classList.remove('d-none');
+      pas.UnitMain.MainForm.CaptureData = [];
+    end;
+    MainForm.tmrCapture.Enabled := True;
+  end
+  else
+  begin
+    RecordingSession := False;
+    asm
+      var Icon = pas.UnitIcons.DMIcons.Lookup;
+      btnRecording.classList.add('d-none');
+      btnRecord.innerHTML = Icon['Record']+'Start Recording';
+    end;
+    MainForm.tmrCapture.Enabled := False;
+  end;
+end;
+
 procedure TMainForm.RevertState(StateData: JSValue);
 var
  PriorForm: String;
@@ -736,6 +790,22 @@ begin
 
     if (PriorSubForm <> CurrentSubFormName) and (PriorSubForm <> '')
     then LoadSubForm(PriorSubForm, False);
+  end;
+end;
+
+procedure TMainForm.tmrCaptureTimer(Sender: TObject);
+begin
+  asm
+    // Maximum capture - 600 frames (10m @ 1 fps)
+    if (pas.UnitMain.MainForm.CaptureData.length < 600) {
+      modernScreenshot.domToPng(document.querySelector('#divHost'), {scale:1.0, width: Math.ceil(window.innerWidth / 2) * 2, height: Math.ceil(window.innerHeight / 2) * 2 }).then(dataURI => {
+//        console.image(dataURI,0.5);
+        pas.UnitMain.MainForm.CaptureData.push(dataURI);
+        var icon = pas.UnitIcons.DMIcons.Lookup;
+        var rectime = new Date(1000 * pas.UnitMain.MainForm.CaptureData.length).toISOString().substr(11, 8);
+        btnRecording.innerHTML = icon['Record']+rectime;
+      });
+    }
   end;
 end;
 
@@ -1087,10 +1157,124 @@ begin
   PreventCompilerHint(Blob);
 end;
 
+
+procedure TMainForm.PlaybackSession;
+var
+  FrameCount: Integer;
+  PlaybackRate: Double;
+begin
+
+  asm FrameCount = pas.UnitMain.MainForm.CaptureData.length; end;
+
+  if FrameCount = 0 then
+  begin
+
+  end
+  else
+  begin
+
+    PlaybackRate := 1;
+
+    asm
+      // Load and initialize ffmpeg
+      const { createFFmpeg, fetchFile } = FFmpeg;
+      const ffmpeg = createFFmpeg({
+//        log: true,
+        mainName: 'main',
+        corePath: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js'
+      });
+      await ffmpeg.load();
+
+
+      function dataURLtoFile(dataurl, filename) {
+        var arr = dataurl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mime });
+      }
+
+      ffmpeg.setProgress(async function({ ratio })  {
+        console.log('FFmpeg Progress: '+ratio);
+      });
+
+
+      const image2video = async () => {
+
+        // Add image files to ffmpeg internal filesystem
+        FrameCount = pas.UnitMain.MainForm.CaptureData.length;
+        for (let i = 0; i < FrameCount; i += 1) {
+          const num = `000${i}`.slice(-4);
+          ffmpeg.FS('writeFile', 'tmp.'+num+'.png', await fetchFile(dataURLtoFile(pas.UnitMain.MainForm.CaptureData[i],'frame-'+i+'.png')));
+        }
+
+        // Perform the conversion the conversion
+        await ffmpeg.run('-framerate', String(PlaybackRate), '-pattern_type', 'glob', '-i', '*.png','-c:v', 'libx264', '-pix_fmt', 'yuv420p', 'out.mp4');
+
+        // Get the resulting video file
+        const data = ffmpeg.FS('readFile', 'out.mp4');
+
+        // Delete image files from ffmpeg internal filesystem
+        for (let i = 0; i < FrameCount; i += 1) {
+          const num = `000${i}`.slice(-4);
+          ffmpeg.FS('unlink', 'tmp.'+num+'.png');
+        }
+        ffmpeg.exit;
+
+        // Create a place to show the video
+        const video = document.createElement('video');
+
+        // Load the video file into the page element
+        video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+
+        // Set some attributes
+        video.id = "video";
+        video.controls = true;
+        video.loop = true;
+
+        // Set some styles
+        video.style.setProperty('position','fixed');
+        video.style.setProperty('left','0px');
+        video.style.setProperty('top','0px');
+        video.style.setProperty('width','100%');
+        video.style.setProperty('height','100%');
+        video.style.setProperty('z-index','1000000');
+
+        // Add to the page
+        document.body.appendChild(video);
+
+        // Load and start playing the video
+        video.load();
+        video.play();
+
+        // Wait for a double-click to unload the video
+        video.addEventListener('dblclick',function() {
+          video.pause();
+          video.removeAttribute('src');
+          video.load();
+          video.src = '';
+          video.srcObject = null;
+          video.remove()
+        });
+
+      }
+
+      image2video();
+
+    end;
+  end;
+end;
+
 procedure TMainForm.StopLinkerRemoval(P: Pointer);                          begin end;
+procedure TMainForm.PreventCompilerHint(H: TJSHTMLElement);       overload; begin end;
 procedure TMainForm.PreventCompilerHint(I: integer);              overload; begin end;
 procedure TMainForm.PreventCompilerHint(J: JSValue);              overload; begin end;
 procedure TMainForm.PreventCompilerHint(S: string);               overload; begin end;
-procedure TMainForm.PreventCompilerHint(H: TJSHTMLElement);       overload; begin end;
+
 
 end.
+
