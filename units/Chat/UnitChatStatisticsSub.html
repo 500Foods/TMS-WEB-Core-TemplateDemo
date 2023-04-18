@@ -1,0 +1,164 @@
+
+        <div class="app-content-header">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-6">
+                <h3 id="labelDashboard" class="mb-0">User Profile</h3>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li id="bcDashboards" class="breadcrumb-item active">Dashboards</li>
+                  <li id="bcDashboard" class="breadcrumb-item">Dashboard</li>
+                  <li id="bcCurrent" class="breadcrumb-item active" aria-current="page">User Actions</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-content">
+          <div class="container-fluid">
+
+            <!-- Info boxes -->
+            <div class="row">
+
+              <!-- Chat Usage -->
+              <div class="col-12 col-sm-6 col-md-4">
+                <div class="info-box">
+                  <span id="ChatUsage" class="info-box-icon text-bg-primary shadow-sm"></span>
+                  <div class="info-box-content lh-1">
+                    <span class="info-box-text">ChatAI Usage</span>
+                    <span id="ChatUsage1" class="info-box-number"></span>
+                    <span id="ChatUsage2" class="info-box-number"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Image Usage -->
+              <div class="col-12 col-sm-6 col-md-4">
+                <div class="info-box">
+                  <span id="ImageUsage" class="info-box-icon text-bg-danger shadow-sm"></span>
+                  <div class="info-box-content lh-1">
+                    <span class="info-box-text">ImageAI Usage</span>
+                    <span id="ImageUsage1" class="info-box-number"></span>
+                    <span id="ImageUsage2" class="info-box-number"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Combined Usage -->
+              <div class="col-12 col-sm-6 col-md-4">
+                <div class="info-box">
+                  <span id="CombinedUsage" class="info-box-icon text-bg-success shadow-sm"></span>
+                  <div class="info-box-content lh-1">
+                    <span class="info-box-text">Combined Usage</span>
+                    <span id="CombinedUsage1" class="info-box-number"></span>
+                    <span id="CombinedUsage2" class="info-box-number"></span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+            <!-- Main row -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row">
+
+
+                  <!-- CHAT -->
+                  <div class="col-md-8">
+                    <div class="card direct-chat direct-chat-warning">
+                      <div class="card-header">
+                        <h3 class="card-title">Chat with Willard</h3>
+                        <div class="card-tools">
+                          <div class="btn-group">
+                            <button id="ChatModelSelection" type="button" class="btn btn-tool dropdown-toggle border-0" data-bs-toggle="dropdown">
+                            </button>
+                            <div id="ChatModelMenu" class="dropdown-menu dropdown-menu-end" role="menu">
+                            </div>
+                          </div>
+                          <div class="btn-group">
+                            <button id="ChatCountSelection" type="button" disabled class="btn btn-tool dropdown-toggle border-0" data-bs-toggle="dropdown">
+                              Images: 1
+                            </button>
+                            <div id="ChatCountMenu" class="dropdown-menu dropdown-menu-end" role="menu">
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">1</div>
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">2</div>
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">3</div>
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">4</div>
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">5</div>
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">6</div>
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">7</div>
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">8</div>
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">9</div>
+                              <div class="dropdown-item cursor-pointer ChatCountMenuItem">10</div>
+                            </div>
+                          </div>
+                          <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                            <i class="fa-solid fa-minus"></i>
+                          </button>
+                          <button type="button" class="btn btn-tool" data-lte-dismiss="card-remove">
+                            <i class="fa-solid fa-times"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="card-body p-1">
+                        <!-- Conversations are loaded here -->
+                        <div id="ChatWindow" class="direct-chat-messages">
+                        </div>
+                      </div>
+
+                      <!-- Chat Footer-->
+                      <div class="card-footer p-2">
+                        <div class="input-group d-flex">
+                          <textarea id="memoChat" oninput="this.style.height = ''; this.style.height = this.scrollHeight+3 +'px'"></textarea>
+                          <div class="input-group-append">
+                            <button id="btnChatSend"></button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> <!--  Chat -->
+
+                  <!-- Recent Activity -->
+                  <div class="col-md-4">
+                    <div class="card">
+
+                      <div class="card-header">
+                        <h3 class="card-title">Recent Activity</h3>
+                        <div class="card-tools">
+                          <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                            <i class="fa-solid fa-minus"></i>
+                          </button>
+                          <button type="button" class="btn btn-tool" data-lte-dismiss="card-remove">
+                            <i class="fa-solid fa-times"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="card-body m-1 p-0">
+                        <div id="Recents" class="m-0 p-0 d-flex flex-column flex-nowrap flex-fill">
+
+                          <!-- Recent Images -->
+                          <div id="ImageRecent" class="flex-fill h-100 d-flex flex-wrap flex-row m-1 p-0 gap-1 overflow-auto">
+                          </div>
+
+                          <!-- Recent Conversations -->
+                          <div id="ChatRecent" class="flex-fill lh-1 h-100 m-1 p-0 overflow-auto">
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+

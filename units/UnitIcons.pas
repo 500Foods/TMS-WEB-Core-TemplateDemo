@@ -48,7 +48,11 @@ begin
     Icon[ "Birthday"            ] = '<i class="fa-solid fa-cake-candles"></i>';
     Icon[ "Bug_Menu"            ] = '<i class="fa-solid fa-bug me-2 fa-fw"></i>';
     Icon[ "Certificate"         ] = '<span class="fa-solid fa-certificate me-2"></span>';
+    Icon[ "Chat"                ] = '<i class="fa-solid fa-comments fa-lg"></i>';
+    Icon[ "ChatImage"           ] = '<i class="fa-solid fa-robot fa-lg"></i>';
+    Icon[ "Check"               ] = '<i class="fa-solid fa-check fa-lg mx-2"></i>';
     Icon[ "Clock"               ] = '<i class="fa-solid fa-clock fa-fw"></i>';
+    Icon[ "Close"               ] = '<i class="fa-solid fa-xmark fa-3x"></i>';
     Icon[ "Dashboard_Menu"      ] = '<i class="fa-solid fa-gauge-high me-2 fa-fw"></i>';
     Icon[ "Dashboard_Nav"       ] = '<i class="nav-icon fa-solid fa-gauge-high me-2 fa-fw"></i>';
     Icon[ "Database_Menu"       ] = '<i class="fa-solid fa-database fa-fw me-2"></i>';
@@ -57,6 +61,7 @@ begin
     Icon[ "FailedLogins_Menu"   ] = '<i class="fa-solid fa-thumbs-down fa-fw me-2"></i>';
     Icon[ "Forgot"              ] = '<span class="fa-stack fa-1x"><i class="fa-solid fa-lock fa-stack-1x"></i><i class="fa-solid fa-ban fa-stack-2x" style="color:Tomato"></i></span>';
     Icon[ "Forward"             ] = '<i class="fa-solid fa-right"></i>';
+    Icon[ "Image"               ] = '<i class="fa-solid fa-image fa-lg"></i>';
     Icon[ "IPAllow_Menu"        ] = '<i class="fa-solid fa-circle-check fa-fw me-2"></i>';
     Icon[ "IPBlock_Menu"        ] = '<i class="fa-solid fa-circle-xmark fa-fw me-2"></i>';
     Icon[ "Labels_Menu"         ] = '<i class="fa-solid fa-tags fa-fw"></i>';
@@ -71,10 +76,15 @@ begin
     Icon[ "Profile"             ] = '<span class="fa-solid fa-user-secret me-2"></span>';
     Icon[ "Profile_Menu"        ] = '<i class="fa-solid fa-user-secret fa-fw me-2"></i>';
     Icon[ "Record"              ] = '<i class="fa-solid fa-circle-dot me-2 fa-lg" ></i>';
+    Icon[ "Robot"               ] = '<i class="fa-solid fa-robot fa-lg me-2"></i>';
+    Icon[ "Robot_Avatar"        ] = '<i class="fa-solid fa-robot fa-2x direct-chat-img"></i>';
+    Icon[ "Scissors"            ] = '<i class="fa-solid fa-scissors fa-lg mx-2"></i>';
+    Icon[ "Send"                ] = '<i class="fa-solid fa-paper-plane fa-lg me-2"></i>';
     Icon[ "Telephone"           ] = '<i class="fa-solid fa-phone fa-fw"></i>';
     Icon[ "TelephoneHome"       ] = '<i class="fa-solid fa-phone fa-fw"></i>';
     Icon[ "TelephoneMobile"     ] = '<i class="fa-solid fa-mobile fa-fw"></i>';
     Icon[ "Tokens_Menu"         ] = '<i class="fa-solid fa-shield fa-fw me-2"></i>';
+    Icon[ "User_Avatar"         ] = '<i class="fa-solid fa-user-graduate fa-xl direct-chat-img"></i>';
     Icon[ "Username"            ] = '<span class="fa-solid fa-envelope"></span>';
 
     // Override these icons if we're using FontAwesome 6 Pro Duo
@@ -89,7 +99,11 @@ begin
       Icon[ "Birthday"            ] = '<i class="fa-duotone fa-cake-candles"></i>';
       Icon[ "Bug_Menu"            ] = '<i class="fa-duotone fa-mosquito me-2 fa-fw"></i>';
       Icon[ "Certificate"         ] = '<span class="fa-duotone fa-certificate me-2"></span>';
+      Icon[ "Chat"                ] = '<i class="fa-duotone fa-comments fa-lg"></i>';
+      Icon[ "ChatImage"           ] = '<i class="fa-duotone fa-robot fa-lg"></i>';
+      Icon[ "Check"               ] = '<i class="fa-duotone fa-check fa-lg mx-2"></i>';
       Icon[ "Clock"               ] = '<i class="fa-duotone fa-clock fa-fw fa-swap-opacity"></i>';
+      Icon[ "Close"               ] = '<i class="fa-solid fa-xmark fa-3x fa-swap-opacity"></i>';
       Icon[ "Dashboard_Menu"      ] = '<i class="fa-duotone fa-chart-simple me-2 fa-fw"></i>';
       Icon[ "Dashboard_Nav"       ] = '<i class="nav-icon fa-duotone fa-chart-simple me-2 fa-fw"></i>';
       Icon[ "Database_Menu"       ] = '<i class="fa-duotone fa-database fa-fw me-2"></i>';
@@ -98,6 +112,7 @@ begin
       Icon[ "FailedLogins_Menu"   ] = '<i class="fa-duotone fa-thumbs-down fa-fw me-2"></i>';
       Icon[ "Forgot"              ] = '<span class="fa-stack fa-1x"><i class="fa-duotone fa-lock fa-swap-opacity fa-stack-1x"></i><i class="fa-solid fa-ban fa-stack-2x" style="color:Tomato"></i></span>';
       Icon[ "Forward"             ] = '<i class="fa-duotone fa-right"></i>';
+      Icon[ "Image"               ] = '<i class="fa-duotone fa-image fa-lg"></i>';
       Icon[ "IPAllow_Menu"        ] = '<i class="fa-duotone fa-circle-check fa-fw me-2"></i>';
       Icon[ "IPBlock_Menu"        ] = '<i class="fa-duotone fa-circle-xmark fa-fw me-2"></i>';
       Icon[ "Labels_Menu"         ] = '<i class="fa-duotone fa-tags fa-fw me-2"></i>';
@@ -112,10 +127,15 @@ begin
       Icon[ "Profile"             ] = '<span class="fa-duotone fa-user-secret me-2"></span>';
       Icon[ "Profile_Menu"        ] = '<i class="fa-duotone fa-user-secret fa-fw me-2"></i>';
       Icon[ "Record"              ] = '<i class="fa-duotone fa-circle-dot fa-lg me-2"></i>';
+      Icon[ "Robot"               ] = '<i class="fa-duotone fa-robot fa-lg me-2"></i>';
+      Icon[ "Robot_Avatar"        ] = '<i class="fa-duotone fa-robot fa-2x direct-chat-img"></i>';
+      Icon[ "Scissors"            ] = '<i class="fa-duotone fa-scissors fa-lg mx-2"></i>';
+      Icon[ "Send"                ] = '<i class="fa-duotone fa-paper-plane fa-lg me-2"></i>';
       Icon[ "Telephone"           ] = '<i class="fa-duotone fa-phone-office fa-swap-opacity fa-fw"></i>';
       Icon[ "TelephoneHome"       ] = '<i class="fa-duotone fa-phone-rotary fa-fw"></i>';
       Icon[ "TelephoneMobile"     ] = '<i class="fa-duotone fa-mobile fa-fw"></i>';
       Icon[ "Tokens_Menu"         ] = '<i class="fa-duotone fa-shield fa-fw me-2"></i>';
+      Icon[ "User_Avatar"         ] = '<i class="fa-duotone fa-user-graduate fa-xl direct-chat-img"></i>';
       Icon[ "Username"            ] = '<span class="fa-duotone fa-key fa-swap-opacity"></span>';
     }
 

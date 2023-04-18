@@ -250,4 +250,19 @@ object AdministratorForm: TAdministratorForm
     WidthPercent = 100.000000000000000000
     OnClick = btnRecordClick
   end
+  object btnChatBot: TWebButton
+    Left = 284
+    Top = 321
+    Width = 96
+    Height = 25
+    Caption = 'ChatBot'
+    ChildOrder = 7
+    ElementClassName = 'btn btn-link'
+    ElementID = 'btnChatBot'
+    ElementFont = efCSS
+    HeightStyle = ssAuto
+    HeightPercent = 100.000000000000000000
+    WidthPercent = 100.000000000000000000
+    OnClick = btnChatBotClick
+  end
 end

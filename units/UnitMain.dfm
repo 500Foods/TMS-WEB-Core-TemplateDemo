@@ -44,7 +44,7 @@ object MainForm: TMainForm
   end
   object divLog: TWebHTMLDiv
     Left = 8
-    Top = 615
+    Top = 423
     Width = 121
     Height = 34
     ElementClassName = 'p-1 rounded border bg-light border-dark overflow-auto no-print'
@@ -87,8 +87,8 @@ object MainForm: TMainForm
     OnClick = btnClearFormClick
   end
   object divToasts: TWebHTMLDiv
-    Left = 24
-    Top = 256
+    Left = 16
+    Top = 184
     Width = 100
     Height = 41
     ElementClassName = 'no-print toast-container'
@@ -100,31 +100,70 @@ object MainForm: TMainForm
       '</div>')
     Role = ''
   end
+  object divViewer: TWebHTMLDiv
+    Left = 8
+    Top = 463
+    Width = 121
+    Height = 41
+    ElementID = 'divViewer'
+    ChildOrder = 6
+    ElementPosition = epIgnore
+    ElementFont = efCSS
+    Role = ''
+    Visible = False
+  end
+  object btnViewerClose: TWebButton
+    Left = 50
+    Top = 510
+    Width = 40
+    Height = 50
+    ChildOrder = 7
+    ElementClassName = 'btn btn-link text-decoration-none'
+    ElementID = 'btnViewerClose'
+    ElementFont = efCSS
+    ElementPosition = epIgnore
+    HeightPercent = 100.000000000000000000
+    WidthPercent = 100.000000000000000000
+    OnClick = btnViewerCloseClick
+  end
+  object divViewerImage: TWebHTMLDiv
+    Left = 8
+    Top = 566
+    Width = 121
+    Height = 41
+    ElementID = 'divViewerImage'
+    ChildOrder = 6
+    ElementPosition = epIgnore
+    ElementFont = efCSS
+    Role = ''
+    Visible = False
+    OnClick = divViewerImageClick
+  end
   object XDataConn: TXDataWebConnection
     OnRequest = XDataConnRequest
     Left = 48
-    Top = 168
+    Top = 128
   end
   object tmrJWTRenewal: TWebTimer
     Enabled = False
     OnTimer = tmrJWTRenewalTimer
-    Left = 56
-    Top = 328
+    Left = 48
+    Top = 232
   end
   object tmrJWTRenewalWarning: TWebTimer
     Enabled = False
     OnTimer = tmrJWTRenewalWarningTimer
-    Left = 56
-    Top = 384
+    Left = 48
+    Top = 280
   end
   object WebHttpRequest1: TWebHttpRequest
     Left = 48
-    Top = 472
+    Top = 328
   end
   object tmrCapture: TWebTimer
     Enabled = False
     OnTimer = tmrCaptureTimer
     Left = 48
-    Top = 544
+    Top = 376
   end
 end

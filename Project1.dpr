@@ -12,7 +12,8 @@ uses
   UnitMenus in 'units\UnitMenus.pas' {DMMenus: TWebDataModule},
   UnitUserProfileSub in 'units\User\UnitUserProfileSub.pas' {UserProfileSubForm: TWebForm} {*.html},
   UnitUserActionsSub in 'units\User\UnitUserActionsSub.pas' {UserActionsSubForm: TWebForm} {*.html},
-  UnitAdministratorSub in 'units\Administrator\UnitAdministratorSub.pas' {AdministratorSubForm: TWebForm} {*.html};
+  UnitAdministratorSub in 'units\Administrator\UnitAdministratorSub.pas' {AdministratorSubForm: TWebForm} {*.html},
+  UnitChatStatisticsSub in 'units\Chat\UnitChatStatisticsSub.pas' {ChatStatisticsSubForm: TWebForm} {*.html};
 
 {$R *.res}
 
@@ -22,5 +23,6 @@ begin
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TDMIcons, DMIcons);
   Application.CreateForm(TDMMenus, DMMenus);
+  Application.CreateForm(TChatStatisticsSubForm, ChatStatisticsSubForm);
   Application.Run;
 end.

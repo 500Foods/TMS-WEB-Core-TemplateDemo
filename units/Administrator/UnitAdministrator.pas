@@ -27,6 +27,7 @@ type
     btnRecord: TWebButton;
     btnPlayback: TWebButton;
     btnRecording: TWebButton;
+    btnChatBot: TWebButton;
     procedure btnLogoutClick(Sender: TObject);
     procedure btnProfileClick(Sender: TObject);
     procedure btnActionsClick(Sender: TObject);
@@ -36,6 +37,7 @@ type
     procedure btnForwardClick(Sender: TObject);
     procedure btnRecordClick(Sender: TObject);
     procedure btnPlaybackClick(Sender: TObject);
+    procedure btnChatBotClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -108,6 +110,11 @@ begin
 
 end;
 
+procedure TAdministratorForm.btnChatBotClick(Sender: TObject);
+begin
+  DMMenus.MenuClicked('Administrator', 'Chat', 'ChatStatisticsSub', True);
+end;
+
 procedure TAdministratorForm.WebFormCreate(Sender: TObject);
 var
   ResponseString: String;
@@ -117,6 +124,10 @@ begin
 
   // Set linked element values that we already know
   labelLoggedIn.HTML := '<small>Logged in at '+FormatDateTime('hh:nn',Now)+'<small>';
+
+  // Navbar Buttons
+  btnChatBot.Caption := DMIcons.Icon('Robot');
+  btnChatBot.ElementHandle.setAttribute('title','Chat with '+MainForm.App_ChatBotName);
 
   // User Menu Buttons
   btnProfile.Caption := DMIcons.Icon('Profile')+'Profile';
@@ -224,7 +235,8 @@ begin
     labelSlogan.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[2] as TJSONObject).GetValue('value') as TJSONString).Value;
     labelAppTitle.HTML := (((ResponseJSON.GetValue('Organization') as TJSONArray).Items[1] as TJSONObject).GetValue('value') as TJSONString).Value;
 
-    spanPhoto.HTML := (ResponseJSON.GetValue('Photo') as TJSONString).Value;
+    MainForm.User_Photo := (ResponseJSON.GetValue('Photo') as TJSONString).Value;
+    spanPhoto.HTML := MainForm.User_Photo;
     spanPhoto.ElementHandle.firstElementChild.className := 'user-image rounded-circle shadow';
     spanPhoto.ElementHandle.firstElementChild.setAttribute('alt','User Photo');
 

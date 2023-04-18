@@ -48,10 +48,9 @@ uses
 procedure TUserProfileSubForm.WebFormCreate(Sender: TObject);
 var
   ResponseString: String;
-
 begin
 
-  ResponseString := await(MainForm.JSONRequest('IPersonService.profile',[]));
+  ResponseString := await(MainForm.JSONRequest('IPersonService.Profile',[]));
   if ResponseString <> '' then
   begin
     asm

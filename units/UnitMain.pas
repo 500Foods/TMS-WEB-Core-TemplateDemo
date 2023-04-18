@@ -22,6 +22,9 @@ type
     tmrJWTRenewalWarning: TWebTimer;
     WebHttpRequest1: TWebHttpRequest;
     tmrCapture: TWebTimer;
+    divViewer: TWebHTMLDiv;
+    btnViewerClose: TWebButton;
+    divViewerImage: TWebHTMLDiv;
     procedure LogAction(Action: String; Extend: Boolean);
     procedure btnShowLogClick(Sender: TObject);
     procedure btnLoginFormClick(Sender: TObject);
@@ -50,6 +53,10 @@ type
     procedure tmrCaptureTimer(Sender: TObject);
     procedure RecordSession;
     [async] procedure PlaybackSession;
+    procedure Viewer(Content: String);
+    [async] procedure ViewerClose;
+    procedure btnViewerCloseClick(Sender: TObject);
+    procedure divViewerImageClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -70,6 +77,8 @@ type
     App_DisplayDateFormat: String;
     App_LogTimeFormat: String;
     App_DisplayTimeFormat: String;
+
+    App_ChatBotName: String;
 
     Server_URL: String;
 
@@ -101,6 +110,8 @@ type
     User_MiddleName: String;
     User_LastName: String;
     User_EMail: String;
+    User_Photo: String;
+    User_Account: String;
 
     User_Roles: TStringList;
     Roles: String;
@@ -132,9 +143,13 @@ implementation
 {$R *.dfm}
 
 uses
-  UnitIcons, UnitLogin,
-  UnitUserProfileSub, UnitUserActionsSub,
-  UnitAdministrator, UnitAdministratorSub;
+  UnitIcons,
+  UnitLogin,
+  UnitChatStatisticsSub,
+  UnitUserProfileSub,
+  UnitUserActionsSub,
+  UnitAdministrator,
+  UnitAdministratorSub;
 
 procedure TMainForm.WebFormCreate(Sender: TObject);
 var
@@ -186,6 +201,7 @@ begin
   IconSet := document.documentElement.getAttribute('iconset');
   if IconSet = '' then IconSet := 'default';
   DMIcons.InitializeIcons(IconSet);
+  btnViewerClose.Caption := DMIcons.Icon('Close');
 
   // Application State
   LoggedIn := False;
@@ -202,6 +218,7 @@ begin
   User_MiddleName :=  '';
   User_LastName := '';
   User_EMail := '';
+  User_Account := '';
 
   // Role Information
   User_Roles := TStringList.Create;
@@ -232,6 +249,7 @@ begin
     ];
     window.ValidSubForms = [
       'AdministratorSub',
+      'ChatStatisticsSub',
       'UserActionsSub',
       'UserProfileSub'
     ]
@@ -313,6 +331,8 @@ begin
 
   // Figure out what our server connection might be
   Server_URL := '';
+  App_ChatBotName := 'Willard'; // This is the efault
+
   try
     asm ConfigURL = window.location.origin+(window.location.pathname.split('/').slice(0,-1).join('/')+'/td_configuration.json').replace('/\/\//g','/'); end;
     LogAction('Loading Configuration from '+ConfigURL, False);
@@ -322,9 +342,19 @@ begin
     if String(COnfigResponse.Response) <> '' then
     begin
       ConfigData := TJSONObject.ParseJSONValue(String(ConfigResponse.Response)) as TJSONObject;
+
+      // Get Server URL - Presumably if we've got a config file, this is defined
       Server_URL := (ConfigData.GetValue('Server') as TJSONString).Value;
       LogAction('Server (Configured): '+Server_URL, False);
       console.log('Server (Configured): '+Server_URL);
+
+      // Get our Chatbot Name
+      if ConfigData.GetValue('ChatBotName') <> nil then
+      begin
+        App_ChatBotName := (ConfigData.GetValue('ChatBotName') as TJSONString).Value;
+      end;
+
+
     end;
   except on E:Exception do
     begin
@@ -431,6 +461,10 @@ end;
 procedure TMainForm.WebFormKeyDown(Sender: TObject; var Key: Word;    Shift: TShiftState);
 begin
   if (Key = VK_F4) then Logout('F4');
+
+  if (Key = VK_ESCAPE) and (divViewer.Visible)
+  then window.history.back;
+
 end;
 
 procedure TMainForm.LoadForm(Form: String);
@@ -581,6 +615,13 @@ begin
     CurrentSubFormIcon := DMIcons.Icon('Actions_Menu');
     CurrentSubForm := TUserActionsSubForm.CreateNew(divSubForm.id, @AfterSubCreate);
   end
+  else if (SubForm = 'ChatStatisticsSub') then
+  begin
+    CurrentSubFormNiceName := 'Chat with '+MainForm.App_ChatBotName;
+    CurrentSubFormShortName := 'Chat';
+    CurrentSubFormIcon := DMIcons.Icon('Robot');
+    CurrentSubForm := TChatStatisticsSubForm.CreateNew(divSubForm.id, @AfterSubCreate);
+  end
   else if (SubForm = 'AdministratorSub') then
   begin
     CurrentSubFormNiceName := 'Admininistrator Dashboard';
@@ -681,6 +722,7 @@ begin
   User_MiddleName :=  (JWTClaims.GetValue('mnm') as TJSONString).Value;
   User_LastName :=  (JWTClaims.GetValue('lnm') as TJSONString).Value;
   User_EMail :=  (JWTClaims.GetValue('eml') as TJSONString).Value;
+  User_Account := (JWTClaims.GetValue('anm') as TJSONString).Value;
 
   // If roles have changed since logging in, then inform the user
   if (CurrentFormName <> 'Login')
@@ -765,31 +807,38 @@ var
  PriorForm: String;
  PriorSubForm: String;
 begin
-  asm
-    if (StateData !== null) {
-      this.Position = StateData.Position;
-      this.URL = StateData.URL;
-      PriorForm = StateData.Form;
-      PriorSubForm = StateData.SubForm;
-    }
-//    console.log(StateData);
-  end;
-
-  // Disable Back button
-  if Position <= StartPosition then
+  if divViewer.Visible = True then
   begin
-    Position := Position + 1;
-    window.history.pushState(CaptureState, '', URL);
-    UpdateNav;
+    ViewerClose;
   end
   else
   begin
+    asm
+      if (StateData !== null) {
+        this.Position = StateData.Position;
+        this.URL = StateData.URL;
+        PriorForm = StateData.Form;
+        PriorSubForm = StateData.SubForm;
+      }
+//      console.log(StateData);
+    end;
 
-    if (PriorForm <> CurrentFormName) and (PriorForm <> '')
-    then LoadForm(PriorForm);
+    // Disable Back button
+    if Position <= StartPosition then
+    begin
+      Position := Position + 1;
+      window.history.pushState(CaptureState, '', URL);
+      UpdateNav;
+    end
+    else
+    begin
 
-    if (PriorSubForm <> CurrentSubFormName) and (PriorSubForm <> '')
-    then LoadSubForm(PriorSubForm, False);
+      if (PriorForm <> CurrentFormName) and (PriorForm <> '')
+      then LoadForm(PriorForm);
+
+      if (PriorSubForm <> CurrentSubFormName) and (PriorSubForm <> '')
+      then LoadSubForm(PriorSubForm, False);
+    end;
   end;
 end;
 
@@ -935,6 +984,18 @@ begin
   end;
 end;
 
+procedure TMainForm.Viewer(Content: String);
+begin
+  divViewer.Visible := True;
+  divViewerImage.Visible := True;
+  btnViewerClose.Visible := True;
+  divViewer.ElementHandle.style.setProperty('opacity','0.85');
+  divViewerImage.ElementHandle.style.setProperty('opacity','1');
+  btnViewerClose.ElementHandle.style.setProperty('opacity','1');
+  window.history.pushState(CaptureState, '', URL);
+  divViewerImage.HTML.Text := Content;
+end;
+
 procedure TMainForm.btnClearFormClick(Sender: TObject);
 begin
   // More for testing purposes than anything else
@@ -965,6 +1026,22 @@ begin
 end;
 
 
+procedure TMainForm.btnViewerCloseClick(Sender: TObject);
+begin
+  window.history.back;
+end;
+
+procedure TMainForm.ViewerClose;
+begin
+  divViewer.ElementHandle.style.setProperty('opacity','0');
+  divViewerImage.ElementHandle.style.setProperty('opacity','0');
+  btnViewerClose.ElementHandle.style.setProperty('opacity','0');
+  asm await sleep(500); end;
+  divViewer.Visible := False;
+  divViewerImage.Visible := False;
+  btnViewerClose.Visible := False;
+end;
+
 function TMainForm.CaptureState: JSValue;
 begin
   Result := nil;
@@ -977,6 +1054,11 @@ begin
       "SubForm": this.CurrentSubFormName,
     }
   end;
+end;
+
+procedure TMainForm.divViewerImageClick(Sender: TObject);
+begin
+  window.history.back;
 end;
 
 function TMainForm.JSONRequest(Endpoint: String; Params: array of JSValue): String;
