@@ -222,9 +222,9 @@ begin
       Context = JSON.stringify(this.ChatContext).slice(1,-1);
     end;
 
-    console.log('Model: '+Model);
-    console.log('Choices: '+IntToStr(StrToIntDef(Trim(RightStr(Trim(Choices),2)),1)));
-    console.log('Message: '+MessageString);
+//    console.log('Model: '+Model);
+//    console.log('Choices: '+IntToStr(StrToIntDef(Trim(RightStr(Trim(Choices),2)),1)));
+//    console.log('Message: '+MessageString);
 
     // Refresh the ChatID each time for images
     if Pos('IMAGE', Uppercase(Model)) > 0
@@ -241,7 +241,7 @@ begin
       ChatID  // ChatID
     ]));
 
-    asm console.log(JSON.parse(ResponseString)); end;
+//    asm console.log(JSON.parse(ResponseString)); end;
 
     // Remove the "typing" indicator
     asm ChatWindow.lastElementChild.remove(); end;
@@ -379,7 +379,7 @@ begin
     Here := Self;
     asm
       var data = JSON.parse(ResponseString);
-      console.log(data);
+//      console.log(data);
       if (data.Models.length > 0) {
 
         Here.InitializeChat();
@@ -512,15 +512,19 @@ begin
       });
 
       tabRecentChat.on("rowDblClick", function(e, row){
+
+        // Here's what we're starting with
         var chat = '';
         var conv = row.getCell('conversation').getValue();
         var ctx = JSON.parse('['+row.getCell('context').getValue().replaceAll('\\"','')+']').slice(0,-1);
         var resp = row.getCell('response').getValue();
 
+        // This builds up the container, loads all the classes and so on
         chat = '<section class="w-100 h-100 position-absolute">'+
                '<div class="direct-chat direct-chat-warning border border-secondary bg-dark rounded m-1 pe-3 pb-3 w-100 h-100 position-absolute fs-6">'+
                '<div class="direct-chat-messages p-3 m-2 w-100 h-100 overflow-auto">';
 
+        // Process the context, creating one block per JSON array element
         for (var i = 0; i < ctx.length; i++) {
           if (ctx[i].role == 'assistant') {
             chat += '<div class="direct-chat-msg">'+pas.UnitIcons.DMIcons.Lookup['Robot_Avatar']+'<div class="direct-chat-text">'+ctx[i].content+'</div></div>';
@@ -529,9 +533,12 @@ begin
           }
         }
 
+        // Add in the last question and the last response, and wrap up our HTML
         chat += '<div class="direct-chat-msg end">'+pas.UnitIcons.DMIcons.Lookup['User_Avatar']+'<div class="direct-chat-text">'+conv+'</div></div>'+
                 '<div class="direct-chat-msg">'+pas.UnitIcons.DMIcons.Lookup['Robot_Avatar']+'<div class="direct-chat-text">'+resp+'</div></div>'+
                 '</div></div></section>';
+
+        // Submit it to the viewer just like if we were submitting an image
         pas.UnitMain.MainForm.Viewer(chat);
       });
 
