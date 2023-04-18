@@ -123,6 +123,7 @@ object MainForm: TMainForm
     ElementFont = efCSS
     ElementPosition = epIgnore
     HeightPercent = 100.000000000000000000
+    Visible = False
     WidthPercent = 100.000000000000000000
     OnClick = btnViewerCloseClick
   end

@@ -431,118 +431,130 @@ begin
       }
 
       // Chat Usage
-      ChatUsage1.innerHTML = '<div class="d-flex">'+
-                               '<div style="width:50px;" class="text-white">Requests</div>'+
-                               '<div style="width:60px;" class="text-end text-info">'+data['ChatAI Usage'][1].requests+'</div>'+
-                               '<div style="width:45px;" class="text-end"> / <small>'+data['ChatAI Usage'][1].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">'+data['ChatAI Usage'][0].requests+'</div>'+
-                               '<div style="width:50px;" class="text-end"> / <small>'+data['ChatAI Usage'][0].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">'+data['ChatAI Usage'][2].requests+'</div>'+
-                               '<div style="width:30px;" class="text-end"> / <small>'+data['ChatAI Usage'][2].period+'</small></div>'+
-                             '</div>';
-      ChatUsage2.innerHTML = '<div class="d-flex">'+
-                               '<div style="width:50px;" class="text-white">Costs</div>'+
-                               '<div style="width:60px;" class="text-end text-info">$ '+data['ChatAI Usage'][1].cost.toFixed(3)+'</div>'+
-                               '<div style="width:45px;" class="text-end"> / <small>'  +data['ChatAI Usage'][1].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">$ '+data['ChatAI Usage'][0].cost.toFixed(3)+'</div>'+
-                               '<div style="width:50px;" class="text-end"> / <small>'  +data['ChatAI Usage'][0].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">$ '+data['ChatAI Usage'][2].cost.toFixed(3)+'</div>'+
-                               '<div style="width:30px;" class="text-end"> / <small>'  +data['ChatAI Usage'][2].period+'</small></div>'+
-                             '</div>';
-      ImageUsage1.innerHTML = '<div class="d-flex">'+
-                               '<div style="width:50px;" class="text-white">Requests</div>'+
-                               '<div style="width:60px;" class="text-end text-info">'+data['ImageAI Usage'][1].requests+'</div>'+
-                               '<div style="width:45px;" class="text-end"> / <small>'+data['ImageAI Usage'][1].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">'+data['ImageAI Usage'][0].requests+'</div>'+
-                               '<div style="width:50px;" class="text-end"> / <small>'+data['ImageAI Usage'][0].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">'+data['ImageAI Usage'][2].requests+'</div>'+
-                               '<div style="width:30px;" class="text-end"> / <small>'+data['ImageAI Usage'][2].period+'</small></div>'+
-                             '</div>';
-      ImageUsage2.innerHTML = '<div class="d-flex">'+
-                               '<div style="width:50px;" class="text-white">Costs</div>'+
-                               '<div style="width:60px;" class="text-end text-info">$ '+data['ImageAI Usage'][1].cost.toFixed(3)+'</div>'+
-                               '<div style="width:45px;" class="text-end"> / <small>'  +data['ImageAI Usage'][1].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">$ '+data['ImageAI Usage'][0].cost.toFixed(3)+'</div>'+
-                               '<div style="width:50px;" class="text-end"> / <small>'  +data['ImageAI Usage'][0].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">$ '+data['ImageAI Usage'][2].cost.toFixed(3)+'</div>'+
-                               '<div style="width:30px;" class="text-end"> / <small>'  +data['ImageAI Usage'][2].period+'</small></div>'+
-                             '</div>';
-      CombinedUsage1.innerHTML = '<div class="d-flex">'+
-                               '<div style="width:50px;" class="text-white">Requests</div>'+
-                               '<div style="width:60px;" class="text-end text-info">'+(data['ChatAI Usage'][1].requests+data['ImageAI Usage'][1].requests)+'</div>'+
-                               '<div style="width:45px;" class="text-end"> / <small>' +data['ChatAI Usage'][1].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">'+(data['ChatAI Usage'][0].requests+data['ImageAI Usage'][0].requests)+'</div>'+
-                               '<div style="width:50px;" class="text-end"> / <small>' +data['ChatAI Usage'][0].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">'+(data['ChatAI Usage'][2].requests+data['ImageAI Usage'][2].requests)+'</div>'+
-                               '<div style="width:30px;" class="text-end"> / <small>' +data['ChatAI Usage'][2].period+'</small></div>'+
-                             '</div>';
-      CombinedUsage2.innerHTML = '<div class="d-flex">'+
-                               '<div style="width:50px;" class="text-white">Costs</div>'+
-                               '<div style="width:60px;" class="text-end text-info">$ '+(data['ChatAI Usage'][1].cost+data['ImageAI Usage'][1].cost).toFixed(3)+'</div>'+
-                               '<div style="width:45px;" class="text-end"> / <small>'   +data['ChatAI Usage'][1].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">$ '+(data['ChatAI Usage'][0].cost+data['ImageAI Usage'][0].cost).toFixed(3)+'</div>'+
-                               '<div style="width:50px;" class="text-end"> / <small>'   +data['ChatAI Usage'][0].period+'</small></div>'+
-                               '<div style="width:60px;" class="text-end text-info">$ '+(data['ChatAI Usage'][2].cost+data['ImageAI Usage'][2].cost).toFixed(3)+'</div>'+
-                               '<div style="width:30px;" class="text-end"> / <small>'   +data['ChatAI Usage'][2].period+'</small></div>'+
-                             '</div>';
+      if (data['ChatAI Usage'].length !== 0) {
+        ChatUsage1.innerHTML = '<div class="d-flex">'+
+                                 '<div style="width:50px;" class="text-white">Requests</div>'+
+                                 '<div style="width:60px;" class="text-end text-info">'+data['ChatAI Usage'][1].requests+'</div>'+
+                                 '<div style="width:45px;" class="text-end"> / <small>'+data['ChatAI Usage'][1].period+'</small></div>'+
+                                 '<div style="width:60px;" class="text-end text-info">'+data['ChatAI Usage'][0].requests+'</div>'+
+                                 '<div style="width:50px;" class="text-end"> / <small>'+data['ChatAI Usage'][0].period+'</small></div>'+
+                                 '<div style="width:60px;" class="text-end text-info">'+data['ChatAI Usage'][2].requests+'</div>'+
+                                 '<div style="width:30px;" class="text-end"> / <small>'+data['ChatAI Usage'][2].period+'</small></div>'+
+                               '</div>';
+        ChatUsage2.innerHTML = '<div class="d-flex">'+
+                                 '<div style="width:50px;" class="text-white">Costs</div>'+
+                                 '<div style="width:60px;" class="text-end text-info">$ '+data['ChatAI Usage'][1].cost.toFixed(3)+'</div>'+
+                                 '<div style="width:45px;" class="text-end"> / <small>'  +data['ChatAI Usage'][1].period+'</small></div>'+
+                                 '<div style="width:60px;" class="text-end text-info">$ '+data['ChatAI Usage'][0].cost.toFixed(3)+'</div>'+
+                                 '<div style="width:50px;" class="text-end"> / <small>'  +data['ChatAI Usage'][0].period+'</small></div>'+
+                                 '<div style="width:60px;" class="text-end text-info">$ '+data['ChatAI Usage'][2].cost.toFixed(3)+'</div>'+
+                                 '<div style="width:30px;" class="text-end"> / <small>'  +data['ChatAI Usage'][2].period+'</small></div>'+
+                               '</div>';
+      }
+      if (data['ImageAI Usage'].length !== 0) {
+        ImageUsage1.innerHTML = '<div class="d-flex">'+
+                                 '<div style="width:50px;" class="text-white">Requests</div>'+
+                                 '<div style="width:60px;" class="text-end text-info">'+data['ImageAI Usage'][1].requests+'</div>'+
+                                 '<div style="width:45px;" class="text-end"> / <small>'+data['ImageAI Usage'][1].period+'</small></div>'+
+                                 '<div style="width:60px;" class="text-end text-info">'+data['ImageAI Usage'][0].requests+'</div>'+
+                                 '<div style="width:50px;" class="text-end"> / <small>'+data['ImageAI Usage'][0].period+'</small></div>'+
+                                 '<div style="width:60px;" class="text-end text-info">'+data['ImageAI Usage'][2].requests+'</div>'+
+                                 '<div style="width:30px;" class="text-end"> / <small>'+data['ImageAI Usage'][2].period+'</small></div>'+
+                               '</div>';
+        ImageUsage2.innerHTML = '<div class="d-flex">'+
+                                 '<div style="width:50px;" class="text-white">Costs</div>'+
+                                 '<div style="width:60px;" class="text-end text-info">$ '+data['ImageAI Usage'][1].cost.toFixed(3)+'</div>'+
+                                 '<div style="width:45px;" class="text-end"> / <small>'  +data['ImageAI Usage'][1].period+'</small></div>'+
+                                 '<div style="width:60px;" class="text-end text-info">$ '+data['ImageAI Usage'][0].cost.toFixed(3)+'</div>'+
+                                 '<div style="width:50px;" class="text-end"> / <small>'  +data['ImageAI Usage'][0].period+'</small></div>'+
+                                 '<div style="width:60px;" class="text-end text-info">$ '+data['ImageAI Usage'][2].cost.toFixed(3)+'</div>'+
+                                 '<div style="width:30px;" class="text-end"> / <small>'  +data['ImageAI Usage'][2].period+'</small></div>'+
+                               '</div>';
+      }
+
+      if ((data['ChatAI Usage'].length !== 0) && (data['ImageAI Usage'].length !== 0)) {
+        CombinedUsage1.innerHTML = '<div class="d-flex">'+
+                                     '<div style="width:50px;" class="text-white">Requests</div>'+
+                                     '<div style="width:60px;" class="text-end text-info">'+(data['ChatAI Usage'][1].requests+data['ImageAI Usage'][1].requests)+'</div>'+
+                                     '<div style="width:45px;" class="text-end"> / <small>' +data['ChatAI Usage'][1].period+'</small></div>'+
+                                     '<div style="width:60px;" class="text-end text-info">'+(data['ChatAI Usage'][0].requests+data['ImageAI Usage'][0].requests)+'</div>'+
+                                     '<div style="width:50px;" class="text-end"> / <small>' +data['ChatAI Usage'][0].period+'</small></div>'+
+                                     '<div style="width:60px;" class="text-end text-info">'+(data['ChatAI Usage'][2].requests+data['ImageAI Usage'][2].requests)+'</div>'+
+                                     '<div style="width:30px;" class="text-end"> / <small>' +data['ChatAI Usage'][2].period+'</small></div>'+
+                                   '</div>';
+        CombinedUsage2.innerHTML = '<div class="d-flex">'+
+                                     '<div style="width:50px;" class="text-white">Costs</div>'+
+                                     '<div style="width:60px;" class="text-end text-info">$ '+(data['ChatAI Usage'][1].cost+data['ImageAI Usage'][1].cost).toFixed(3)+'</div>'+
+                                     '<div style="width:45px;" class="text-end"> / <small>'   +data['ChatAI Usage'][1].period+'</small></div>'+
+                                     '<div style="width:60px;" class="text-end text-info">$ '+(data['ChatAI Usage'][0].cost+data['ImageAI Usage'][0].cost).toFixed(3)+'</div>'+
+                                     '<div style="width:50px;" class="text-end"> / <small>'   +data['ChatAI Usage'][0].period+'</small></div>'+
+                                     '<div style="width:60px;" class="text-end text-info">$ '+(data['ChatAI Usage'][2].cost+data['ImageAI Usage'][2].cost).toFixed(3)+'</div>'+
+                                     '<div style="width:30px;" class="text-end"> / <small>'   +data['ChatAI Usage'][2].period+'</small></div>'+
+                                   '</div>';
+        }
 
       // Recent Images
-      for (var i = 0; i < data['ImageAI Recent'].length; i++) {
-        ImageRecent.innerHTML += '<div class="cursor-pointer ViewableImage" title='+data['ImageAI Recent'][i].prompt+'>'+data['ImageAI Recent'][i].generated_image+'</div>';
-      }
-      ImageRecent.addEventListener('click', (e) => {
-        if (e.target.parentElement.classList.contains('ViewableImage')) {
-          e.stopImmediatePropagation();
-          pas.UnitMain.MainForm.Viewer(e.target.parentElement.outerHTML);
+      if (data['ImageAI Recent'].length !== 0) {
+        for (var i = 0; i < data['ImageAI Recent'].length; i++) {
+          ImageRecent.innerHTML += '<div class="cursor-pointer ViewableImage" title='+data['ImageAI Recent'][i].prompt+'>'+data['ImageAI Recent'][i].generated_image+'</div>';
         }
-      });
+        ImageRecent.addEventListener('click', (e) => {
+          if (e.target.parentElement.classList.contains('ViewableImage')) {
+            e.stopImmediatePropagation();
+            pas.UnitMain.MainForm.Viewer(e.target.parentElement.outerHTML);
+          }
+        });
+      }
 
       // Recent Chats
-      var tabRecentChat = new Tabulator("#ChatRecent",{
-        data: data['ChatAI Recent'],
-        layout: "fitColumns",
-        selectable: 1,
-        height: "100%",
-        headerVisible: false,
-        columns: [
-          { title: "Conversation", field: "conversation", formatter: "html" },
-          { title: "Context", field: "context", visible: false },
-          { title: "Response", field: "response", visible: false }
-        ]
-      });
+      if (data['ChatAI Recent'].length !== 0) {
 
-      tabRecentChat.on("rowDblClick", function(e, row){
+        var tabRecentChat = new Tabulator("#ChatRecent",{
+          data: data['ChatAI Recent'],
+          layout: "fitColumns",
+          selectable: 1,
+          height: "100%",
+          headerVisible: false,
+          columns: [
+            { title: "Conversation", field: "conversation", formatter: "html" },
+            { title: "Context", field: "context", visible: false },
+            { title: "Response", field: "response", visible: false }
+          ]
+        });
 
-        // Here's what we're starting with
-        var chat = '';
-        var conv = row.getCell('conversation').getValue();
-        var ctx = JSON.parse('['+row.getCell('context').getValue().replaceAll('\\"','')+']').slice(0,-1);
-        var resp = row.getCell('response').getValue();
+        tabRecentChat.on("rowDblClick", function(e, row){
 
-        // This builds up the container, loads all the classes and so on
-        chat = '<section class="w-100 h-100 position-absolute">'+
-               '<div class="direct-chat direct-chat-warning border border-secondary bg-dark rounded m-1 pe-3 pb-3 w-100 h-100 position-absolute fs-6">'+
-               '<div class="direct-chat-messages p-3 m-2 w-100 h-100 overflow-auto">';
+          // Here's what we're starting with
+          var chat = '';
+          var conv = row.getCell('conversation').getValue();
+          var ctx = JSON.parse('['+row.getCell('context').getValue().replaceAll('\\"','')+']').slice(0,-1);
+          var resp = row.getCell('response').getValue();
 
-        // Process the context, creating one block per JSON array element
-        for (var i = 0; i < ctx.length; i++) {
-          if (ctx[i].role == 'assistant') {
-            chat += '<div class="direct-chat-msg">'+pas.UnitIcons.DMIcons.Lookup['Robot_Avatar']+'<div class="direct-chat-text">'+ctx[i].content+'</div></div>';
-          } else {
-            chat += '<div class="direct-chat-msg end">'+pas.UnitIcons.DMIcons.Lookup['User_Avatar']+'<div class="direct-chat-text">'+ctx[i].content+'</div></div>';
+          // This builds up the container, loads all the classes and so on
+          chat = '<section class="w-100 h-100 position-absolute">'+
+                 '<div class="direct-chat direct-chat-warning border border-secondary bg-dark rounded m-1 pe-3 pb-3 w-100 h-100 position-absolute fs-6">'+
+                 '<div class="direct-chat-messages p-3 m-2 w-100 h-100 overflow-auto">';
+
+          // Process the context, creating one block per JSON array element
+          for (var i = 0; i < ctx.length; i++) {
+            if (ctx[i].role == 'assistant') {
+              chat += '<div class="direct-chat-msg">'+pas.UnitIcons.DMIcons.Lookup['Robot_Avatar']+'<div class="direct-chat-text">'+ctx[i].content+'</div></div>';
+            } else {
+              chat += '<div class="direct-chat-msg end">'+pas.UnitIcons.DMIcons.Lookup['User_Avatar']+'<div class="direct-chat-text">'+ctx[i].content+'</div></div>';
+            }
           }
-        }
 
-        // Add in the last question and the last response, and wrap up our HTML
-        chat += '<div class="direct-chat-msg end">'+pas.UnitIcons.DMIcons.Lookup['User_Avatar']+'<div class="direct-chat-text">'+conv+'</div></div>'+
-                '<div class="direct-chat-msg">'+pas.UnitIcons.DMIcons.Lookup['Robot_Avatar']+'<div class="direct-chat-text">'+resp+'</div></div>'+
-                '</div></div></section>';
+          // Add in the last question and the last response, and wrap up our HTML
+          chat += '<div class="direct-chat-msg end">'+pas.UnitIcons.DMIcons.Lookup['User_Avatar']+'<div class="direct-chat-text">'+conv+'</div></div>'+
+                  '<div class="direct-chat-msg">'+pas.UnitIcons.DMIcons.Lookup['Robot_Avatar']+'<div class="direct-chat-text">'+resp+'</div></div>'+
+                  '</div></div></section>';
 
-        // Submit it to the viewer just like if we were submitting an image
-        pas.UnitMain.MainForm.Viewer(chat);
-      });
+          // Submit it to the viewer just like if we were submitting an image
+          pas.UnitMain.MainForm.Viewer(chat);
+        });
+      }
 
-    end;
+     end;
   end;
 
 
