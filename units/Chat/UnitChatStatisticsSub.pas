@@ -5,22 +5,23 @@ interface
 uses
   System.SysUtils, System.Classes, JS, Web, WEBLib.Graphics, WEBLib.Controls,
   WEBLib.Forms, WEBLib.Dialogs, Vcl.StdCtrls, WEBLib.StdCtrls, Vcl.Controls, WEBLib.JSON,
-  WEBLib.ExtCtrls,System.DateUtils, System.StrUtils, jsDelphiSystem;
+  WEBLib.ExtCtrls,System.DateUtils, System.StrUtils, jsDelphiSystem,
+  WEBLib.WebCtrls;
 
 type
   TChatStatisticsSubForm = class(TWebForm)
     btnChatSend: TWebButton;
     memoChat: TWebMemo;
     WebTimer1: TWebTimer;
-    [async] procedure WebFormCreate(Sender: TObject);
-    [async] procedure btnChatSendClick(Sender: TObject);
-    [async] procedure AddChatResponse(ChatMessage: String; QueryTime:TDateTime; ResponseStatus: String; ResponseIcon: String);
     procedure AddStaticChatResponse(ChatMessage: String);
     procedure AddChatMessage(ChatMessage: String);
     procedure memoChatKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure WebTimer1Timer(Sender: TObject);
     procedure InitializeChat;
     procedure WebFormResize(Sender: TObject);
+    [async] procedure WebFormCreate(Sender: TObject);
+    [async] procedure btnChatSendClick(Sender: TObject);
+    [async] procedure AddChatResponse(ChatMessage: String; QueryTime:TDateTime; ResponseStatus: String; ResponseIcon: String);
   private
     { Private declarations }
   public
@@ -496,12 +497,21 @@ begin
       // Recent Images
       if (data['ImageAI Recent'].length !== 0) {
         for (var i = 0; i < data['ImageAI Recent'].length; i++) {
-          ImageRecent.innerHTML += '<div class="cursor-pointer ViewableImage" title='+data['ImageAI Recent'][i].prompt+'>'+data['ImageAI Recent'][i].generated_image+'</div>';
+          ImageRecent.innerHTML += '<div class="cursor-pointer ViewableImage" title='+data['ImageAI Recent'][i].prompt+'>'+
+                                      (data['ImageAI Recent'][i].generated_image).replace('<img src=','<img class="lazy" data-src=').replace('>',' ')+
+                                      ' src="assets/placeholder92.png" >'+
+                                    '</div>';
         }
+        window.lazyLoadInstance.update();
+
         ImageRecent.addEventListener('click', (e) => {
           if (e.target.parentElement.classList.contains('ViewableImage')) {
             e.stopImmediatePropagation();
-            pas.UnitMain.MainForm.Viewer(e.target.parentElement.outerHTML);
+            var img = e.target.parentElement.outerHTML;
+            img = img.replace('lazy entered loaded','lazy');
+            img = img.replace('data-ll-status="loaded"','');
+            img = img.replace('_tn.','.');
+            pas.UnitMain.MainForm.Viewer(img);
           }
         });
       }

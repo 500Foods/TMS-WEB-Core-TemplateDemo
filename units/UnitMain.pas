@@ -420,6 +420,28 @@ begin
     });
   end;
 
+
+  // Lazy Load images via Vanilla Lazy Load
+  asm
+    // This sets up our image lazy loading system.  Just need to add "lazy" as
+    // a class to an <img> tag and, oddly, to make sure that when adding it via
+    // innerHTML, that it is enclosed in a <div> tag
+    window.lazyLoadInstance = new LazyLoad();
+    var observer = new MutationObserver(function(mutations) {
+      var image_count = 0;
+      mutations.forEach(
+        function(mutation) {
+          for (var m = 0; m < mutation.addedNodes.length; m++) {
+                if (typeof mutation.addedNodes[m].getElementsByClassName !== 'function') {return;}
+                    image_count += mutation.addedNodes[m].getElementsByClassName('lazy').length;
+      }});
+      if (image_count > 0) {
+        window.lazyLoadInstance.update();
+    }});
+    var config = { childList: true, subtree: true };
+    observer.observe(document.documentElement, config);
+  end;
+
   PreventCompilerHint(i);
 end;
 
@@ -553,7 +575,6 @@ var
     URL := '#'+CurrentFormName+'/'+CurrentSubFormName;
     window.history.replaceState(MainForm.CaptureState, '', URL);
     UpdateNav;
-
   end;
 
 begin
