@@ -43,5 +43,24 @@ As with any modern web application, other JavaScript libraries/dependencies have
 - [Bootstrap](https://getbootstrap.com/) - Version 5.3 support added with AdminLTE 4
 - [Luxon](https://moment.github.io/luxon/#/) - Handling date and time conversions
 
+## Repository Information
+[![Count Lines of Code](https://github.com/500Foods/TMS-WEB-Core-TemplateDemo/actions/workflows/main.yml/badge.svg)](https://github.com/500Foods/TMS-WEB-Core-TemplateDemo/actions/workflows/main.yml)
+```
+ -------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+CSS                              5           1933             92          26324
+Pascal                          11            483            731           2032
+HTML                             8            129            198           1215
+JavaScript                       3             21            226           1134
+Delphi Form                     10              0              0            888
+Markdown                         1             15              0             32
+YAML                             2              4              8             15
+PowerShell                       1             15             26              6
+-------------------------------------------------------------------------------
+SUM:                            41           2600           1281          31646
+-------------------------------------------------------------------------------
+```
+
 ## Sponsor / Donate / Support
 If you find this work interesting, helpful, or useful, or that it has sved you time, money, or both, please consider direclty supporting these efforts financially via [GitHub Sponsors](https://github.com/sponsors/500Foods) or donating via [Buy Me a Pizza](https://www.buymeacoffee.com/andrewsimard500). Also, be sure to check out these other [GitHub Repositories](https://github.com/500Foods?tab=repositories&q=&sort=stargazers) that may be of interest to you.
