@@ -51,17 +51,20 @@ While this project is currently under active development, feel free to give it a
 [![Count Lines of Code](https://github.com/500Foods/TMS-WEB-Core-TemplateDemo/actions/workflows/main.yml/badge.svg)](https://github.com/500Foods/TMS-WEB-Core-TemplateDemo/actions/workflows/main.yml)
 <!--CLOC-START -->
 ```
-Last Updated at 2023-11-27 01:52:22 UTC
+Last Updated at 2023-11-27 02:15:52 UTC
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Pascal                           2             48             62            160
-Delphi Form                      1              0              0             39
-Markdown                         1              8              2             39
-YAML                             2             11             13             33
-HTML                             2              7              0             23
+CSS                              5           1933             92          26324
+Pascal                          11            483            731           2032
+HTML                             8            129            198           1215
+JavaScript                       3             21            226           1134
+Delphi Form                     10              0              0            888
+Markdown                         1             17              2             51
+YAML                             2              8             12             33
+PowerShell                       1             15             26              6
 -------------------------------------------------------------------------------
-SUM:                             8             74             77            294
+SUM:                            41           2606           1287          31683
 -------------------------------------------------------------------------------
 ```
 <!--CLOC-END-->
