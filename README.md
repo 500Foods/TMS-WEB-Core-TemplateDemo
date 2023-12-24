@@ -51,7 +51,7 @@ While this project is currently under active development, feel free to give it a
 [![Count Lines of Code](https://github.com/500Foods/TMS-WEB-Core-TemplateDemo/actions/workflows/main.yml/badge.svg)](https://github.com/500Foods/TMS-WEB-Core-TemplateDemo/actions/workflows/main.yml)
 <!--CLOC-START -->
 ```
-Last Updated at 2023-11-27 02:15:52 UTC
+Last Updated at 2023-12-24 05:15:46 UTC
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -60,11 +60,11 @@ Pascal                          11            483            731           2032
 HTML                             8            129            198           1215
 JavaScript                       3             21            226           1134
 Delphi Form                     10              0              0            888
-Markdown                         1             17              2             51
+Markdown                         1             18              2             56
 YAML                             2              8             12             33
 PowerShell                       1             15             26              6
 -------------------------------------------------------------------------------
-SUM:                            41           2606           1287          31683
+SUM:                            41           2607           1287          31688
 -------------------------------------------------------------------------------
 ```
 <!--CLOC-END-->
